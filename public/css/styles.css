@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,300..800;1,300..800&family=Inter:wght@100..900&display=swap');
+/*variables*/
+:root{
+    --mainColor:#F8F8F8;
+    --secondColor:#C12323;
+    --thirdColor:#192126;
+
+}
+
+body,p,a,ul,li{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+li{
+    list-style-type: none;
+}
+/* Basic styles for the navigation bar */
+body {
+    font-family: "Faustina", serif;
+    background-color:var(--mainColor);
+}
+
+.icons{
+    color: var(--thirdColor);
+}
+
+.icons:hover{
+ color: var(--secondColor);
+}
+
+.navbar {
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    background-color: var(--thirdColor);
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: var(--mainColor);
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Style the active tab */
+.active {
+    background-color: var(--secondColor);
+    color: var(--mainColor);
+}
+
+@media screen and (min-width:620px){
+
+}
