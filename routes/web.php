@@ -15,6 +15,10 @@ Route::get('/home', function () {
     return view('userHome');
 });
 
+Route::get('/report', function () {
+    return view('workoutReport');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
