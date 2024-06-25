@@ -18,6 +18,11 @@ body,p,a,ul,li{
 li{
     list-style-type: none;
 }
+
+.page-title{
+    font-weight: bold;
+    font-size: 15px;
+}
 /* Basic styles for the navigation bar */
 body {
     font-family: "Faustina", serif;
@@ -48,6 +53,7 @@ body {
     font-weight: 200;
     color: var(--mainColor);
 }
+
 
 .navbar {
     padding:0;
@@ -107,16 +113,16 @@ body {
 }
 
 .pgtabs .btn{
-    background-color: var(--thirdColor);
+    background-color: var(--thirdColor)!important;
     color:var(--mainColor);
-    border-color: var(--thirdColor);
+    border:0px;
     border-radius: 12px;
     font-family: "Faustina", serif;
     font-size: 14px;
 }
 
-.pgtabs .btn-primary .active{
-    background-color: var(--secondColor);
+.pgtabs .active{
+    background-color: var(--secondColor)!important;
 }
 
 .pgtabs{
@@ -149,6 +155,55 @@ body {
     font-size: 26px;
     font-weight: 700;
     color: var(--secondColor);
+}
+
+/* .equipmentCard{
+    
+} */
+
+.equipmentCardImg{
+    aspect-ratio: 1 / 1;
+    border:#C12323 1px solid;
+    border-radius: 10px;
+}
+
+.equipmentCardTxt{
+    font-size: 13px;
+    text-wrap: nowrap;
+    padding: 8px 0 0 0;
+    font-weight:bold;
+    color: var(--secondColor);
+}
+
+.workoutHistoryDate{
+    color:rgb(130, 129, 129);
+    font-size: 11px;
+}
+
+.workoutHistoryTable{
+    background-color: white;
+}
+
+.workoutHistoryTable td{
+    font-size: 13px;
+    padding:10px;
+    padding-bottom: 0;
+}
+
+/*equipment categories*/
+.categoryCardImg{
+    border-radius: 12px;
+}
+
+.category{
+    border-radius: 15px;
+    font-weight: bold;
+    height:90px;
+    background-image: linear-gradient(to right, rgb(152, 152, 152), rgb(255, 255, 255));
+}
+
+.categoryCardImg{
+    z-index:-1;
 }
 
 .faustina{
