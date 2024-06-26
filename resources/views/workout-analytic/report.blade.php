@@ -2,7 +2,7 @@
 @section('content')
 <div class="content container p-1">
     <div class="">
-        <div class="pgtabs btn-group btn-group-md">
+        <div class="pgtabs pgtab1 btn-group btn-group-md">
             <a href="#" class="btn   " aria-current="page">Goals</a>
             <a href="#" class="btn   active">Reports</a>
             <a href="#" class="btn  ">Leaderboard</a>
@@ -10,9 +10,9 @@
     </div>
 
     <div class=" mt-3">
-        <div class="pgtabs btn-group btn-group-sm" id="report-tab">
-            <a href="#" class="btn   active" aria-current="page">Daily</a>
-            <a href="#" class="btn  ">Monthly</a>
+        <div class="pgtabs pgtab2 btn-group btn-group-sm" id="report-tab">
+            <a href="#" class="btn " aria-current="page">Daily</a>
+            <a href="#" class="btn active">Monthly</a>
             <a href="#" class="btn  ">Annually</a>
         </div>
     </div>
