@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,300..800;1,300..800&family=Inter:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,300..800;1,300..800&family=Inter:wght@100..900&family=Wallpoet&display=swap');
 
 /*variables*/
 :root{
-    --mainColor:#F8F8F8;
+    --mainColor:#f4f4f4;
     --secondColor:#C12323;
     --thirdColor:#192126;
 
@@ -21,7 +20,7 @@ li{
 
 .page-title{
     font-weight: bold;
-    font-size: 15px;
+    font-size: 14px;
 }
 /* Basic styles for the navigation bar */
 body {
@@ -33,8 +32,17 @@ body {
     padding-bottom:60px;
 } */
 
+.form-control:focus{
+    box-shadow:0 0 0 .1rem var(--secondColor);
+    border:none;
+}
+
 .material-symbols-outlined{
     line-height: 1.5;
+}
+
+.btn:focus{
+    box-shadow:none !important;
 }
 
 .blackIcon{
@@ -54,6 +62,22 @@ body {
     color: var(--mainColor);
 }
 
+.redBtn{
+    background-color: var(--secondColor);
+    color:white !important;
+    padding: 4px 12px;
+    border:none;
+}
+
+.redBtn:hover,.redBtn:focus{
+    background-color: var(--secondColor);
+    opacity: 0.8;
+    color:white !important;
+}
+
+.myBtn{
+    border-radius: 12px ;
+}
 
 .navbar {
     padding:0;
@@ -66,6 +90,7 @@ body {
     justify-content: space-around;
     align-items: center;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    z-index:3;
 }
 
 .navtab.active {
@@ -92,7 +117,7 @@ body {
 /* Style the active tab */
 .active {
     background-color: var(--secondColor);
-    color: var(--mainColor);
+    color: white;
 }
 
 /*header*/
@@ -152,7 +177,7 @@ body {
 }
 
 .report-value{
-    font-size: 26px;
+    font-size: 23px;
     font-weight: 700;
     color: var(--secondColor);
 }
@@ -160,6 +185,9 @@ body {
 /* .equipmentCard{
     
 } */
+.searchBox{
+    border-radius: 10px;
+}
 
 .equipmentCardImg{
     aspect-ratio: 1 / 1;
@@ -191,14 +219,41 @@ body {
 }
 
 /*equipment categories*/
+.equipment{
+    border-radius: 15px;
+    border:none;
+}
+.equipmentImg{
+    aspect-ratio: 1/1;
+}
+
+.equipmentTag{
+    font-size: 11px;
+    padding: 0 8px;
+    margin: 5px 0 8px 0!important;
+}
+
+.equipmentTag:hover, .equipmentTag:focus{
+    background-color: none;
+    border-color:var(--secondColor);
+}
+.equipmentTitle{
+    font-size: 14px;
+    font-weight:650;
+}
+
 .categoryCardImg{
     border-radius: 12px;
+    max-height: 100%; 
+    width: auto;
 }
 
 .category{
     border-radius: 15px;
     font-weight: bold;
     height:90px;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(right, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* Chrome10+,Safari5.1+ */
     background-image: linear-gradient(to right, rgb(152, 152, 152), rgb(255, 255, 255));
 }
 

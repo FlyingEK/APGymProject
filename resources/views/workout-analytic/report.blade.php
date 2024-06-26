@@ -3,28 +3,28 @@
 <div class="content container p-1">
     <div class="">
         <div class="pgtabs btn-group btn-group-md">
-            <a href="#" class="btn  btn-primary " aria-current="page">Goals</a>
-            <a href="#" class="btn  btn-primary active">Reports</a>
-            <a href="#" class="btn  btn-primary">Leaderboard</a>
+            <a href="#" class="btn   " aria-current="page">Goals</a>
+            <a href="#" class="btn   active">Reports</a>
+            <a href="#" class="btn  ">Leaderboard</a>
         </div>
     </div>
 
     <div class=" mt-3">
         <div class="pgtabs btn-group btn-group-sm" id="report-tab">
-            <a href="#" class="btn  btn-primary active" aria-current="page">Daily</a>
-            <a href="#" class="btn  btn-primary">Monthly</a>
-            <a href="#" class="btn  btn-primary">Annually</a>
+            <a href="#" class="btn   active" aria-current="page">Daily</a>
+            <a href="#" class="btn  ">Monthly</a>
+            <a href="#" class="btn  ">Annually</a>
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-6">
-            <div class="page-title">Workout Report</div>
+            <div class="page-title" style="padding-right: 0px;">Workout Report</div>
         </div>
         <div class="col-6 d-flex justify-content-end">
             <div class="report-filter">
                 <a href="#">
-                    <i class="material-symbols-outlined redIcon">tune</i><span>  This Month</span>
+                    <i class="material-symbols-outlined redIcon no-wrap">tune</i><span>  This Month</span>
                 </a>
             </div>
         </div>
@@ -56,19 +56,19 @@
             <div class=" row row-cols-3 row-cols-md-3 g-1">
                 <div class="col">
                     <div class="equipmentCard card border-0 shadow-none">
-                        <img src="{{ asset('img/threadmill.jpg') }}" class="equipmentCardImg card-img-top" alt="...">
+                        <img src="{{ asset('/img/treadmill.jpg') }}"  class="equipmentCardImg card-img-top" alt="...">
                         <span class="card-text equipmentCardTxt text-center">10 hours</span>
                     </div>
                 </div>
                 <div class="col">
                     <div class="equipmentCard card border-0 shadow-none">
-                        <img src="{{ asset('img/threadmill.jpg') }}" class="equipmentCardImg card-img-top" alt="...">
+                        <img src="{{ asset('/img/treadmill.jpg') }}"  class="equipmentCardImg card-img-top" alt="...">
                         <span class="card-text equipmentCardTxt text-center">10 hours</span>
                     </div>
                 </div>
                 <div class="col">
                     <div class="equipmentCard card border-0 shadow-none">
-                        <img src="{{ asset('img/threadmill.jpg') }}" class="equipmentCardImg card-img-top" alt="...">
+                        <img src="{{ asset('/img/treadmill.jpg') }}"  class="equipmentCardImg card-img-top" alt="...">
                         <span class="card-text equipmentCardTxt text-center">10 hours</span>
                     </div>
                 </div>
@@ -79,13 +79,13 @@
 
     <div>
         <div class="row mt-4">
-            <div class="col-6">
-                <div class="page-title">Workout History</div>
+            <div class="col-6 ">
+                <div class="page-title" style="padding-right: 0px;">Workout History</div>
             </div>
             <div class="col-6 d-flex justify-content-end">
                 <div class="report-filter">
                     <a href="#">
-                        <i class="material-symbols-outlined redIcon">tune</i><span>  Today</span>
+                        <i class="material-symbols-outlined redIcon no-wrap">tune</i><span>  Today</span>
                     </a>
                 </div>
             </div>
@@ -107,6 +107,10 @@
     </div>
 </div>
 @endsection
+
+@section('javascript')
+    <script src="{{ asset('/js/set-active-class.js') }}"></script>
+@stop
 
 
 
