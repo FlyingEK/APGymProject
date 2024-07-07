@@ -13,16 +13,3 @@
         <a href="#"><span class="whiteIcon material-symbols-outlined">person</span><br>Profile</a>        
     </div>
 </div>
-<script>
-    $(function(){
-        var current = location.pathname;
-        $('.navbar a').each(function(){
-            var $this = $(this);        
-            // if the current path is like this link, make it active
-            if($this.attr('href').indexOf(current) !== -1){
-                $('.navtab').removeClass('active'); 
-                    $this.closest('.navtab').addClass('active');          
-             }
-        });
-    });
-</script>

@@ -106,10 +106,26 @@
         </div>
     </div>
 </div>
+@include('partials.workout-analytic.leaderboard')
+
 @endsection
 
 @section('javascript')
     <script src="{{ asset('/js/set-active-class.js') }}"></script>
+    <script>
+    window.addEventListener('load', function() {
+        const container = document.querySelector('.leaderboard-container');
+        const highlightedPlayer = document.querySelector('.highlighted-player');
+    
+        function setHighlightedPlayerWidth() {
+            const containerWidth = container.offsetWidth;
+            highlightedPlayer.style.width = `${containerWidth}px`;
+        }
+    
+        setHighlightedPlayerWidth();
+        window.addEventListener('resize', setHighlightedPlayerWidth);
+    });
+    </script>
 @stop
 
 

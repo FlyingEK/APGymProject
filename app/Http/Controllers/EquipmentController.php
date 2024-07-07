@@ -10,5 +10,10 @@ class EquipmentController extends Controller
         return view('equipment.index');
     }
 
+    public function viewEquipment()
+    {
+        return view('equipment.view');
+    }
+
 }
 ?>
