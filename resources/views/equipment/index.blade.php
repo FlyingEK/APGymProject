@@ -9,7 +9,7 @@
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
-                    <img class="img-fluid equipmentImg" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
@@ -17,9 +17,9 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
                         <i class="fa-solid fa-helmet-safety"></i> Available
                     </div><br>
-                    <a href="#" class="stretched-link"></a>
+                    <a href="{{route('equipment-view')}}" class="stretched-link"></a>
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="myBtn btn btn-primary redBtn shadow-none">
+                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
                             Use
                         </button>
                     </div>
