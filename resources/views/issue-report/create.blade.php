@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="container px-3 py-2 bg-white my-shadow rounded" class="mt-3">
         <div class="form-title mb-4">Report Issue</div>
@@ -10,12 +10,15 @@
                             <input type="text" class="form-control p-2" id="requestName" placeholder="Request Name" aria-label="Request Name">
                         </div>
                         <div class="mb-3">
-                            <select class="form-select p-2" id="issueType" aria-label="Issue Type">
-                                <option selected>Select Type</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
+                            <div class="custom-select">
+
+                                <select class="form-select p-2" id="issueType" aria-label="Issue Type">
+                                    <option selected>Select Type</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control p-2" id="requestDescription" placeholder="Request Description" style="height: 100px;" aria-label="Request Description"></textarea>

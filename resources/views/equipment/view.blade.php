@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.userLayout')
 @section('content')
 
 <div class="container px-3 py-2 bg-white myShadow equipmentDetail">

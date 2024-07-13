@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="container px-3 py-2 bg-white my-shadow rounded" class="mt-3">
         <div class="form-title mb-4">Report Issue</div>

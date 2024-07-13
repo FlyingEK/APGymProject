@@ -578,3 +578,64 @@ body {
     width: 100vw;
     height: calc(100vw/1.77);
 }
+
+/*select box*/
+.custom-select {
+    position: relative;
+    font-family: Arial;
+  }
+  
+  .custom-select select {
+    display: none; /*hide original SELECT element: */
+  }
+  
+  .select-selected {
+    background-color: white;
+  }
+  
+  .select-selected:after {
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #333448 transparent transparent transparent;
+  }
+  
+  .select-selected.select-arrow-active:after {
+    border-color: transparent transparent #333448 transparent;
+    top: 7px;
+  }
+  
+  .select-items div,.select-selected {
+    color: var(--thirdColor);
+    padding: 8px 16px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    cursor: pointer;
+  }
+  
+  .select-items div{
+    border: 1px solid transparent;
+    border-color: transparent rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .select-items {
+    position: absolute;
+    background-color: white;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+  
+  .select-hide {
+    display: none;
+  }
+  
+  .select-items div:hover, .same-as-selected {
+    background-color: #c123234e;
+  }

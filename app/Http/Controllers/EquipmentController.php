@@ -15,5 +15,25 @@ class EquipmentController extends Controller
         return view('equipment.view');
     }
 
+    public function addEquipment()
+    {
+        return view('equipment.admin.add');
+    }
+
+    public function viewAllEquipment()
+    {
+        return view('equipment.admin.all');
+    }
+
+    public function adminViewEquipment()
+    {
+        return view('equipment.admin.view');
+    }
+
+    public function editEquipment()
+    {
+        return view('equipment.admin.edit');
+    }
+
 }
 ?>
