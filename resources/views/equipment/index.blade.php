@@ -19,7 +19,7 @@
                     </div><br>
                     <a href="{{route('equipment-view')}}" class="stretched-link"></a>
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
+                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
                             Use
                         </button>
                     </div>
@@ -60,4 +60,6 @@
             </div>
         </div>
 </div>
+@include('partials.equipment.equipment-habit-modal')
+
 @endsection

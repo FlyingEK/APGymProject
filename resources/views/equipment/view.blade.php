@@ -15,6 +15,7 @@
             </div>
         </div>
         <hr>
+    </div>
     <div class="row">
         <div class="row mb-3">
             <div class="label mb-3">Instructions:</div>
@@ -37,5 +38,6 @@
             </button>
         </div>
     </div>
+
 </div>
 @endsection

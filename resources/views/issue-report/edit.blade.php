@@ -10,12 +10,14 @@
                             <input type="text" class="form-control p-2" id="requestName" placeholder="Request Name" aria-label="Request Name">
                         </div>
                         <div class="mb-3">
-                            <select class="form-select p-2" id="issueType" aria-label="Issue Type">
-                                <option selected>Select Type</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
+                            <div class="custom-select">
+                                <select class="form-select p-2" id="issueType" aria-label="Issue Type">
+                                    <option selected>Select Type</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control p-2" id="requestDescription" placeholder="Request Description" style="height: 100px;" aria-label="Request Description"></textarea>
@@ -52,4 +54,6 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('/js/img-preview.js') }}"></script>
+    <script src="{{ asset('js/custom-select-box.js') }}"></script>
+
 @stop

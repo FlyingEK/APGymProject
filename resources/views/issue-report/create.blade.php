@@ -11,7 +11,6 @@
                         </div>
                         <div class="mb-3">
                             <div class="custom-select">
-
                                 <select class="form-select p-2" id="issueType" aria-label="Issue Type">
                                     <option selected>Select Type</option>
                                     <option value="1">One</option>
@@ -55,4 +54,5 @@
 @endsection
 @section('javascript')
     <script src="{{ asset('/js/img-preview.js') }}"></script>
+    <script src="{{ asset('js/custom-select-box.js') }}"></script>
 @stop

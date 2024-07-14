@@ -639,3 +639,98 @@ body {
   .select-items div:hover, .same-as-selected {
     background-color: #c123234e;
   }
+
+  .btn-circle {
+    width: 65px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+}
+
+.btn-green {
+    background-color: green;
+    color: white;
+}
+
+.btn-red {
+    background-color: red;
+    color: white;
+}
+
+.sharing {
+    text-align: right;
+}
+
+.sharing .circle {
+    display: inline-block;
+    width: 40px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: red;
+
+}
+
+.timer h1{
+    font-size: 45px;
+    margin-bottom: 0;
+}
+
+.timer h3{
+    font-size: 28px;
+}
+
+.timer p{
+    font-size: 18px;
+}
+
+.workout-card{
+    color:white;
+    border-radius: 15px;
+}
+
+.workour-card .material-symbols-outlined{
+    font-size: 30px !important;
+}
+
+.modal h1{
+    font-size:23px !important;
+    margin-bottom: 0;;
+}
+
+.modal btn{
+    font-size: 20px !important;
+}
+
+circular-progress {
+    --size: 250px;
+    --half-size: calc(var(--size) / 2);
+    --stroke-width: 20px;
+    --radius: calc((var(--size) - var(--stroke-width)) / 2);
+    --circumference: calc(var(--radius) * pi * 2);
+    --dash: calc((var(--progress) * var(--circumference)) / 100);
+  }
+  
+  .circular-progress circle {
+    cx: var(--half-size);
+    cy: var(--half-size);
+    r: var(--radius);
+    stroke-width: var(--stroke-width);
+    fill: none;
+    stroke-linecap: round;
+  }
+  
+  .circular-progress circle.bg {
+    stroke: #ddd;
+  }
+  
+  .circular-progress circle.fg {
+    transform: rotate(-90deg);
+    transform-origin: var(--half-size) var(--half-size);
+    stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
+    transition: stroke-dasharray 0.3s linear 0s;
+    stroke: #5394fd;
+  }

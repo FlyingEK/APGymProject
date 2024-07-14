@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WorkoutAnalyticController;
 use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConstraintController;
 use App\Http\Controllers\IssueReportController;
@@ -22,13 +23,17 @@ Route::get('/home', function () {
     return view('userHome');
 });
 
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
+Route::group(['prefix' => 'workout'],function(){
+    Route::get('/index', [WorkoutController::class, 'index'])->name('workout-index');
+    // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
+});
 Route::group(['prefix' => 'analytic'],function(){
     Route::get('/report', [WorkoutAnalyticController::class, 'report'])->name('analytic-report');
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
