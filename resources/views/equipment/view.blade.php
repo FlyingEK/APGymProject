@@ -1,6 +1,10 @@
 @extends('layouts.userLayout')
 @section('content')
-
+<div class="backLink mb-2">
+    <a href="{{route('equipment-index')}}">
+        <i class="material-symbols-outlined redIcon no-wrap">arrow_back_ios</i><span>  Back</span>
+    </a>
+</div>
 <div class="container px-3 py-2 bg-white myShadow equipmentDetail">
     <div class="row">
         <div class="col-5 ">

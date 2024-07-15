@@ -1,23 +1,11 @@
 @extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    <div class="page-title">Check In to Gym</div>
-    <div class="card workout-card" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
-        <div class="card-body">
-            <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
-            <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div>
-        </div>
-        <div class="m-3 d-flex justify-content-end">
-            <button type="button" class="myBtn btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
-                Queue
-            </button>
-        </div>
-    </div>
     <div class="input-group searchBox mb-2">
         <input type="search" class="form-control rounded border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
       </div>
     <div class="page-title">Available Equipment</div>
-    @for($i=0;$i<3;$i++)
+    @for($i=0;$i<10;$i++)
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
@@ -40,7 +28,6 @@
         </div>
     </div>
     @endfor
-    <div class="page-title mt-4">Categories</div>
         <div class=" row row-cols-2 row-cols-md-2 g-1">
             <div class="col no-padding ">
                 <div class="category card border-0 shadow-none m-2">

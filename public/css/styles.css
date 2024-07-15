@@ -147,6 +147,7 @@ li{
     font-weight: bold;
     font-size: 18px;
 }
+
 /* Basic styles for the navigation bar */
 body {
     font-family: "Faustina", serif;
@@ -405,7 +406,7 @@ body {
 }
 
 .report-value{
-    font-size: 23px;
+    font-size: 32px;
     font-weight: 700;
     color: var(--secondColor);
 }
