@@ -1,4 +1,4 @@
-<div class=" mt-3">
+<div class="inter mt-3">
     <div class="pgtabs pgtab2 btn-group btn-group-sm" id="report-tab">
         <a href="#" class="btn " aria-current="page">Daily</a>
         <a href="#" class="btn activeTab">Monthly</a>
@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="row mt-3">
+<div class=" row mt-3">
     <div class="col-6">
         <div class="page-title" style="padding-right: 0px;">Workout Report</div>
     </div>
@@ -19,21 +19,21 @@
     </div>
 </div>
 
-<div class="card">
+<div class="card inter">
     <div class="card-body">
         <div class = "row align-items-center">
-            <div class = "col-7 custom-padding">
+            <div class = "col-6 custom-padding">
                 <p class="report-label card-text">Days of working out:</p>
             </div>
-            <div class = "col-5 no-padding">
+            <div class = "col-6 no-padding">
                 <p class=" report-value card-text">15 days</p>
             </div>
         </div>
         <div class = "row align-items-center">
-            <div class = "col-7 custom-padding">
+            <div class = "col-6 custom-padding">
                 <p class="report-label card-text">Total Workout Time:</p>
             </div>
-            <div class = "col-5 no-padding">
+            <div class = "col-6 no-padding">
                 <p class= "report-value card-text">35 hours</p>
             </div>
         </div>
