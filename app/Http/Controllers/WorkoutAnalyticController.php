@@ -5,9 +5,14 @@ use Illuminate\Http\Request;
 
 class WorkoutAnalyticController extends Controller
 {
-    public function report()
+    public function index()
     {
-        return view('workout-analytic.report');
+        return view('workout-analytic.index');
+    }
+
+    public function setGoal()
+    {
+        return view('workout-analytic.set-goal');
     }
 
     // public function recordDetails()

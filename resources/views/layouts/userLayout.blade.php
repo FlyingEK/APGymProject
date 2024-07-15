@@ -32,8 +32,8 @@
             var $this = $(this);        
             // if the current path is like this link, make it active
             if($this.attr('href').indexOf(current) !== -1){
-                $('.navtab').removeClass('active'); 
-                    $this.closest('.navtab').addClass('active');          
+                $('.navtab').removeClass('activeTab'); 
+                    $this.closest('.navtab').addClass('activeTab');          
              }
         });
     });

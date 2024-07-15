@@ -78,7 +78,6 @@
   max-height: 300px;
   overflow-y: auto;
   position: relative;
-  padding-bottom: 60px; /* Space for the fixed highlighted player */
 }
 
 .table {
@@ -119,7 +118,7 @@
     bottom: 65px; /* Adjust this value to avoid covering the navbar */
     left: 50%;
     transform: translateX(-50%);
-    /* width: 95%; */
+    width: 90% !important;
     z-index: 1000;
 }
 
@@ -152,7 +151,7 @@ li{
 body {
     font-family: "Faustina", serif;
     background-color:var(--mainColor);
-    margin-bottom: 60px;
+    margin-bottom: 100px;
 }
 
 /* .content{
@@ -222,7 +221,7 @@ body {
     font-size:15px;
 }
 
-.redLink:hover, .report-filter{
+.redLink:hover, .report-filter, .backLink{
     opacity: 0.8;
 }
 
@@ -238,6 +237,10 @@ body {
     align-items: center;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
     z-index:3;
+}
+
+.pgtabs .nav-link{
+    font-size: 17px !important;
 }
 
 .navtab.active {
@@ -262,7 +265,7 @@ body {
 }
 
 /* Style the active tab */
-.active {
+.activeTab {
     background-color: var(--secondColor);
     color: white;
 }
@@ -287,7 +290,7 @@ body {
 .icons{
     line-height:1.5;
 }
-
+/* 
 .pgtabs .btn{
     background-color: var(--thirdColor)!important;
     color:var(--mainColor);
@@ -303,20 +306,94 @@ body {
 
 .pgtabs{
     width:100%;
+} *//* Container for the nav tabs */
+/* Container for the nav tabs */
+.pgtabs {
+    width: 100%;
+    background-color: var(--thirdColor);
+    border-radius: 12px; /* Rounded corners for the whole nav bar */
+    overflow: hidden; /* Ensure content stays within rounded corners */
+    display: flex;
+    justify-content: space-between; /* Distribute buttons evenly with no gap */
+    border: none; /* Remove default border */
 }
+
+/* Style for the nav links (buttons) */
+.pgtabs .nav-link {
+    background-color: var(--thirdColor);
+    color: var(--mainColor) !important;
+    border: none;
+    border-radius: 0; /* No rounded corners for individual buttons */
+    font-family: "Faustina", serif;
+    font-size: 14px;
+    flex-grow: 1; /* Make buttons take equal space */
+    text-align: center;
+    padding: 10px 0; /* Vertical padding */
+    transition: background-color 0.3s; /* Smooth transition for hover */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 !important;
+}
+
+/* Style for the active nav-link (button) */
+.pgtabs .nav-link.active {
+    background-color: var(--secondColor) !important;
+    color: var(--mainColor) !important;
+}
+
+/* Style for the active nav-item */
+.pgtabs .nav-item.active {
+    background-color: var(--secondColor) !important;
+    border-radius: 12px;
+}
+
+/* Hover effect for nav links (buttons) */
+.pgtabs .nav-link:hover {
+    background-color: var(--secondColor) !important;
+}
+
+/* Remove bottom border of nav-tabs */
+.pgtabs .nav-tabs {
+    border-bottom: none;
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Ensure no gaps between buttons */
+}
+
+.pgtabs .nav-item {
+    flex-grow: 1; /* Make each nav item take up equal space */
+    display: flex;
+}
+
+.pgtabs .nav-link:first-child {
+    border-top-left-radius: 12px; /* Rounded corners for the first button */
+    border-bottom-left-radius: 12px;
+}
+
+.pgtabs .nav-link:last-child {
+    border-top-right-radius: 12px; /* Rounded corners for the last button */
+    border-bottom-right-radius: 12px;
+}
+
+
+.tab-content .active{
+    background-color: var(--mainColor);
+}
+
 
 #report-tab .btn{
     font-size: 12px;
 }
 
-.report-filter a{
-    font-size: 14px;
+.report-filter a, .backLink a{
+    font-size: 17px;
     font-weight:bolder;
     color:var(--secondColor);
 }
 
-.report-filter .material-symbols-outlined{
-    font-size: 15px;
+.report-filter .material-symbols-outlined, .backLink .material-symbols-outlined{
+    font-size: 16px;
     vertical-align: top;
 
 }
@@ -705,10 +782,10 @@ body {
     font-size: 20px !important;
 }
 
-circular-progress {
+.circular-progress {
     --size: 250px;
     --half-size: calc(var(--size) / 2);
-    --stroke-width: 20px;
+    --stroke-width: 18px;
     --radius: calc((var(--size) - var(--stroke-width)) / 2);
     --circumference: calc(var(--radius) * pi * 2);
     --dash: calc((var(--progress) * var(--circumference)) / 100);
@@ -732,5 +809,65 @@ circular-progress {
     transform-origin: var(--half-size) var(--half-size);
     stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
     transition: stroke-dasharray 0.3s linear 0s;
-    stroke: #5394fd;
+    stroke: var(--secondColor);
+
   }
+
+  .circular-progress text {
+    fill: #000;
+    dominant-baseline: middle;
+    text-anchor: middle;
+}
+.circular-progress .progress-label {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.circular-progress .progress-value {
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.circular-progress .progress-subtext {
+    font-size: 15px;
+    font-weight: 400;
+    fill: #585858;
+}
+
+.progress{
+    height:20px;
+    font-weight:550;
+}
+
+.progress-text{
+    font-size: 15px;
+    font-weight:600;
+    color: black;
+}
+
+.inter{
+    font-family: 'Inter', sans-serif;
+}
+
+.goalInput th{
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.goalInput td input{
+    padding:8px 16px;
+}
+
+.goalContainer .card{
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 15px;
+    padding: 18px;
+}
+
+.goalCard{
+    padding: 15px;
+}
+
+.backLink{
+    font-size: 17px;
+}

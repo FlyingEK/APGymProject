@@ -1,7 +1,7 @@
 @extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    <div class="report-filter">
+    <div class="backLink">
         <a href="{{route('equipment-index')}}">
             <i class="material-symbols-outlined redIcon no-wrap">home</i><span>  Home</span>
         </a>

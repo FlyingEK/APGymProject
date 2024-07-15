@@ -35,7 +35,8 @@ Route::group(['prefix' => 'workout'],function(){
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
 Route::group(['prefix' => 'analytic'],function(){
-    Route::get('/report', [WorkoutAnalyticController::class, 'report'])->name('analytic-report');
+    Route::get('/', [WorkoutAnalyticController::class, 'index'])->name('analytic-report');
+    Route::get('/setGoal', [WorkoutAnalyticController::class, 'setGoal'])->name('set-goal');
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
 

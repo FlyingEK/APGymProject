@@ -1,4 +1,4 @@
-<div class="leaderboardcontainer mt-5">
+<div class="leaderboardcontainer mt-1">
     <div class="row text-center mb-4 align-items-end">
       <div class="col-4 blackCol">
         <div class="leader smaller">
@@ -45,14 +45,16 @@
     </div>
     
   </div>
-    <table class="table table-borderless highlighted-player">
+  <table class="table table-borderless highlighted-player" >
       <tr>
           <td class="rank">15</td>
           <td class="player-info">
               <img class="leaderboardImg rounded-circle" src="https://cdn-icons-png.flaticon.com/512/186/186037.png" alt="Username">
-              Username
+              Username (You)
           </td>
           <td class="score">5.8</td>
       </tr>
       
   </table>
+
+    

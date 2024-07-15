@@ -1,7 +1,7 @@
 function setActive(selector) {
     $(document).on('click', selector, function() {
-        $(selector).removeClass('active');
-        $(this).addClass('active');
+        $(selector).removeClass('activeTab');
+        $(this).addClass('activeTab');
     });
 }  
 setActive(".pgtab1 a");
