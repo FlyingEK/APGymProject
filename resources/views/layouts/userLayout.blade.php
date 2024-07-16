@@ -14,14 +14,19 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="/css/styles.css" rel="stylesheet">
-    @include('partials.shared.header')
 
+    @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) && !Route::is(['browse-index','reward-recognition-redemption','home','profile','edit-profile','volunteer-dashboard','chat','browse-show','settings','event-history-index','event-history-show','user-reward-certificate']))
+    @include('partials.shared.header')
+    $margin-bottom = 15px;
+    @endif
 
 </head>
 <body>
      @yield('content') 
 </body>
+@if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) && !Route::is(['browse-index','reward-recognition-redemption','home','profile','edit-profile','volunteer-dashboard','chat','browse-show','settings','event-history-index','event-history-show','user-reward-certificate']))
 @include('partials.shared.bottomnav-user')
+@endif
 
 @yield('javascript')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

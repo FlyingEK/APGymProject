@@ -1,9 +1,13 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
 
-    <!-- Session Status -->
+@extends('layouts.userLayout')
+@section('content')
+<div class="auth-container mt-5 d-flex flex-column align-items-center mt-5">
+    <div class="card p-4" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
+        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+            <h3><b>Forgot your password?</b></h3>
+            We will email you a password reset link that will allow you to choose a new one.
+        </div>
+         <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('password.email') }}">
@@ -11,15 +15,19 @@
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <input class="form-control" type="email" placeholder="Email" :value="old('email')" required>
+            @error('email')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+        <div class="d-flex align-items-center justify-content-center mt-4">
+            <button class="redBtn btn" type="submit">
                 {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+            </button>
         </div>
     </form>
-</x-guest-layout>
+    </div>
+</div>
+@endsection
+

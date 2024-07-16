@@ -882,3 +882,37 @@ body {
 .backLink{
     font-size: 17px;
 }
+
+.login-container img, .register-container img{
+    margin-top:40px;
+    height: 150px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+}
+
+.login-container .logo, .register-container .logo{
+    font-size: 45px !important;
+}
+
+#loginForm, #registerForm {
+    width: 90%;
+}
+
+#loginForm input, #registerForm input{
+    background: transparent !important;
+    border-radius: 0;
+    border:none;
+    border-bottom: var(--thirdColor) 1px solid;
+}
+
+#loginForm input:focus, #registerForm input:focus{
+    box-shadow: none;
+    border-bottom: var(--secondColor) 2px solid;
+}
+#loginForm button, #registerForm button{
+padding: 6px;
+}
+
+.authContainer{
+    margin-top: 120px !important;
+}
