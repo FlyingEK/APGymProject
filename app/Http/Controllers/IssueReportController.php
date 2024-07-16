@@ -10,6 +10,12 @@ class IssueReportController extends Controller
         return view('issue-report.index-user');
     }
 
+    public function indexTrainer()
+    {
+        return view('issue-report.index-trainer');
+    }
+
+
     public function create()
     {
         return view('issue-report.create');

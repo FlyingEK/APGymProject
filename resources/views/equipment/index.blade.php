@@ -26,7 +26,7 @@
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
                     <p class="equipmentTitle">Equipment name</p>
-                    <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
+                    <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-success shadow-none">
                         <i class="fa-solid fa-helmet-safety"></i> Available
                     </div><br>
                     <a href="{{route('equipment-view')}}" class="stretched-link"></a>

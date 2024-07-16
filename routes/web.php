@@ -7,6 +7,8 @@ use App\Http\Controllers\WorkoutController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConstraintController;
 use App\Http\Controllers\IssueReportController;
+use App\Http\Controllers\GymController;
+
 
 
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,7 @@ Route::get('/home', function () {
 });
 
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::get('/gym', [GymController::class, 'gymUser'])->name('gym-user');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -45,6 +48,8 @@ Route::group(['prefix' => 'issue'],function(){
     Route::get('/create', [IssueReportController::class, 'create'])->name('issue-create');
     Route::get('/edit', [IssueReportController::class, 'edit'])->name('issue-edit');
     Route::get('/view', [IssueReportController::class, 'viewUser'])->name('issue-user-view');
+    Route::get('/index', [IssueReportController::class, 'indexTrainer'])->name('issue-trainer-index');
+
 });
 
 Route::group(['prefix' => 'constraint'],function(){
@@ -63,11 +68,14 @@ Route::group(['prefix' => 'user'],function(){
 
 Route::group(['prefix' => 'equipment'],function(){
     Route::get('/', [EquipmentController::class, 'index'])->name('equipment-index');
+    Route::get('/equipments', [EquipmentController::class, 'allEquipment'])->name('equipments');
     Route::get('/view', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
     Route::get('/add', [EquipmentController::class, 'addEquipment'])->name('equipment-add');
     Route::get('/all', [EquipmentController::class, 'viewAllEquipment'])->name('equipment-all');
     Route::get('/edit', [EquipmentController::class, 'editEquipment'])->name('equipment-edit');
     Route::get('/adminView', [EquipmentController::class, 'adminViewEquipment'])->name('equipment-admin-view');
+    Route::get('/exceeded', [EquipmentController::class, 'timeExceededEquipment'])->name('equipment-time-exceeded');
+
 
 
     

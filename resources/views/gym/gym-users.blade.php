@@ -1,5 +1,8 @@
-@extends('layouts.userLayout')
+@extends('layouts.trainerLayout')
 @section('content')
+<div class="page-title">
+    Current Gym Users Count: <span class="redIcon">10</span>
+</div>
 <table class="table table-borderless">
     <tbody>
       <!-- Repeat this block for the first 10 users -->
@@ -13,4 +16,6 @@
       </tr>
       @endfor
     </tbody>
+</table>
+    @include('partials/profile/profile-modal')
 @endsection

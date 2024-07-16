@@ -10,6 +10,11 @@ class EquipmentController extends Controller
         return view('equipment.index');
     }
 
+    public function allEquipment()
+    {
+        return view('equipment.all');
+    }
+
     public function viewEquipment()
     {
         return view('equipment.view');
@@ -34,6 +39,12 @@ class EquipmentController extends Controller
     {
         return view('equipment.admin.edit');
     }
+
+    public function timeExceededEquipment()
+    {
+        return view('equipment.trainer.time-exceeded');
+    }
+
 
 }
 ?>
