@@ -6,7 +6,7 @@
 
         <form method="POST" action="{{ route('password.store') }}">
             @csrf
-    
+            @method('post')
             <!-- Password Reset Token -->
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
     
@@ -27,7 +27,7 @@
     
             <!-- Confirm Password -->
             <div class="m-3">
-                <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password">
+                <input type="password" class="form-control" placeholder="Confirm Password" name="password_confirmation">
                 @error('confirm_password')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

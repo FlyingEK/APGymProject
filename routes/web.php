@@ -25,13 +25,14 @@ Route::get('/home', function () {
     return view('userHome');
 });
 
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::get('/gym', [GymController::class, 'gymUser'])->name('gym-user');
+Route::get('/gym', [GymController::class, 'gymIndex'])->name('gym-index');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
+    Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/edit', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::group(['prefix' => 'workout'],function(){
     Route::get('/index', [WorkoutController::class, 'index'])->name('workout-index');

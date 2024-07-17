@@ -12,14 +12,21 @@
         <p class="text-muted mb-2">Sweat now, shine later.</p>
         <form id="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
+            @method('post')
             <div class="mb-3">
                 <input type="email" class="form-control" placeholder="Email" name="email" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control"  placeholder="Password"  name="password" >
             </div>
-            <div class="d-flex justify-content-end mb-3">
-                <a class="text-muted " href="{{ route('password.request') }}">Forgot Password?</a>
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <label for="remember_me">
+                        <input type="checkbox" id="remember_me" name="remember">
+                        Remember Me
+                    </label>
+                </div>
+                <a class="redLink " href="{{ route('password.request') }}">Forgot Password?</a>
             </div>
             <button type="submit" class="btn redBtn btn-block w-100">LOGIN</button>
         </form>

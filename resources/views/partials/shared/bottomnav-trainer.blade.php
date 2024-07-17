@@ -10,6 +10,6 @@
         <a href="{{route('issue-trainer-index')}}"><span class="whiteIcon material-symbols-outlined">construction</span><br>Issues</a>        
     </div>
     <div class = "navtab col col-sm">
-        <a href="#"><span class="whiteIcon material-symbols-outlined">person</span><br>Profile</a>        
+        <a href="{{route('profile.view')}}"><span class="whiteIcon material-symbols-outlined">person</span><br>Profile</a>        
     </div>
 </div>

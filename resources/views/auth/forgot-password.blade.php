@@ -12,10 +12,10 @@
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
-
+        @method('post')
         <!-- Email Address -->
         <div>
-            <input class="form-control" type="email" placeholder="Email" :value="old('email')" required>
+            <input class="form-control" name="email" type="email" placeholder="Email" :value="old('email')">
             @error('email')
                 <div class="text-danger">{{ $message }}</div>
             @enderror

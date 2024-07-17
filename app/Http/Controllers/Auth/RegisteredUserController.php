@@ -54,8 +54,6 @@ class RegisteredUserController extends Controller
 
     // If user creation is successful
     if ($user) {
-       
-
             // Trigger the Registered event
             event(new Registered($user));
 

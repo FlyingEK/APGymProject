@@ -2,7 +2,7 @@
 @section('content')
 <div class="content container p-1">
     <div class="page-title">Check In to Gym</div>
-    <div class="card workout-card" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
+    <div class="card workout-card mb-4" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
         <div class="card-body">
             <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
             <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div>
@@ -13,7 +13,7 @@
             </button>
         </div>
     </div>
-    <div class="input-group searchBox mb-2">
+    <div class="input-group mt-2 searchBox mb-2">
         <input type="search" class="form-control rounded border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
       </div>
     <div class="page-title">Available Equipment</div>
@@ -51,21 +51,21 @@
             </div>
             <div class="col no-padding">
                 <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
+                    <img src="{{ asset('/img/dumbbell.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap w-80">Free Weights</span>
                     <a href="#" class="stretched-link"></a>
                 </div>
             </div>
             <div class="col no-padding">
                 <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
+                    <img src="{{ asset('/img/legpress.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap">Leg Machines</span>
                     <a href="#" class="stretched-link"></a>
                 </div>
             </div>
             <div class="col no-padding">
                 <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
+                    <img src="{{ asset('/img/backmachine.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap">Upper Body Machines</span>
                     <a href="#" class="stretched-link"></a>
                 </div>

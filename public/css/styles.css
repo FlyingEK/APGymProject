@@ -130,7 +130,7 @@
 
 body,p,a,ul,li{
     margin: 0;
-    padding: 0;
+    padding: 0px;
     text-decoration: none;
 }
 
@@ -915,4 +915,8 @@ padding: 6px;
 
 .authContainer{
     margin-top: 120px !important;
+}
+
+.profileCard i, .profileCard .pagetitle{
+    font-size: 21px;
 }

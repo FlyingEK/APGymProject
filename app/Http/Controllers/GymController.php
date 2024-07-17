@@ -9,6 +9,10 @@ class GymController extends Controller
     {
         return view('gym.gym-users');
     }
+    public function gymIndex()
+    {
+        return view('gym.index');
+    }
 
 
 }
