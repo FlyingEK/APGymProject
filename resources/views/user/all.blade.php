@@ -34,13 +34,18 @@
                 </tr>
             </thead>
             <tbody>
-                @for ($i = 0; $i < 5; $i++)
+                @foreach ($users as $index => $user)
                     <tr>
-                        <td>{{$i}}</td>
-                        <td>User Name</td>
-                        <td>User Name</td>
-                        <td>User Name</td>
-                        <td>Description</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $user->username }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td> <span style="font-size:11px;" class="p-1 rounded-pill text-white {{ $user->role == 'admin' ? 'bg-danger' : ($user->role == 'trainer' ? 'bg-warning' : 'bg-info') }}">
+                            {{ ucfirst($user->role) }}
+                        </span>
+                        </td>
+                        <td><span style="font-size:11px;" class="rounded-pill text-white p-1 {{ $user->status == 'active' ? 'bg-success' : ($user->status == 'inactive' ? 'bg-danger' : 'bg-warning') }}">
+                            {{ ucfirst($user->status) }}
+                        </span></td>
                         <td>
                             <div class="dropdown">
                                 <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -55,11 +60,21 @@
                             </div>
                         </td>
                     </tr>
-                @endfor
+                @endforeach
             </tbody>
         </table>
         <!-- End Table with stripped rows -->
     </div>
 </section>
 
+@endsection
+
+@section('javascript')
+<script>
+    function confirmDelete(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            // Add delete logic here
+        }
+    }
+</script>
 @endsection
