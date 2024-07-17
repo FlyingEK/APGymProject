@@ -128,7 +128,7 @@
             <div class="col-lg-12">
                 <div class="form-group local-forms m-3">
                     <input type="text" class="form-control" name="urlAddress" value="{{ old('tutorial_youtube') }}">
-                    <input type="hidden" name="tutorial_youtube" id="tutorial_youtube">
+                    <input type="hidden" name="tutorial_youtube" id="tutorial_youtube" value="{{ old('tutorial_youtube') }}">
                     <label for="tutorial_youtube">Tutorial Video Youtube Url</label>
                     @error('tutorial_youtube')
                         <div class="text-danger">{{ $message }}</div>
@@ -181,7 +181,7 @@
             var labelInputs = '';
             for(var i = 0; i < quantity; i++) {
                     var oldValue = oldLabels[i] ? oldLabels[i] : '';
-                labelInputs += '<div class="mb-3"><label for="label'+i+'" class="form-label">Equipment Machine ' + (i + 1) + '  <span class="text-danger">*</span>Label</label><input type="text" class="form-control" id="label'+i+'" name="labels[]" value="'+oldValue+'"" required></div>';
+                labelInputs += '<div class="mb-3"><label for="label'+i+'" class="form-label">Equipment Machine ' + (i + 1) + ' Label <span class="text-danger">*</span></label><input type="text" class="form-control" id="label'+i+'" name="labels[]" value="'+oldValue+'"" required></div>';
             }
             $("#labelInputs").html(labelInputs);
             $('#equipmentLabelModal').modal('show');

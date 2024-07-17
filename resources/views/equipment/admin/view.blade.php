@@ -67,7 +67,7 @@
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Tutorial Video:</div>
                 <div class="col-lg-9 col-md-8">
-                    <iframe id="video-preview" width="380" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src="{{ $equipment->tutorial_youtube }}"></iframe>
+                    <iframe id="video-preview" width="380" height="260" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src="{{ $equipment->tutorial_youtube }}"></iframe>
                 </div>
             </div>
 
