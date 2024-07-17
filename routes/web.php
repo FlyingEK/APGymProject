@@ -56,15 +56,19 @@ Route::group(['prefix' => 'issue'],function(){
 Route::group(['prefix' => 'constraint'],function(){
     Route::get('/all', [ConstraintController::class, 'allConstraint'])->name('constraint-all');
     Route::get('/create', [ConstraintController::class, 'addConstraint'])->name('constraint-create');
-    Route::get('/edit', [ConstraintController::class, 'editConstraint'])->name('constraint-edit');
-    Route::get('/view', [ConstraintController::class, 'viewConstraint'])->name('constraint-view');
+    Route::post('/store', [EquipmentController::class, 'store'])->name('constraint-store');
+    Route::get('/edit/{id}', [ConstraintController::class, 'editConstraint'])->name('constraint-edit');
+    Route::put('/update/{id}', [ConstraintController::class, 'updateConstraint'])->name('constraint-update');
+    Route::get('/view/{id}', [ConstraintController::class, 'viewConstraint'])->name('constraint-view');
+    
 });
 
 Route::group(['prefix' => 'user'],function(){
     Route::get('/all', [UserController::class, 'allUser'])->name('user-all');
     Route::get('/create', [UserController::class, 'addUser'])->name('user-create');
-    Route::get('/edit', [UserController::class, 'editUser'])->name('user-edit');
-    Route::get('/view', [UserController::class, 'viewUser'])->name('user-view');
+    Route::post('/store', [EquipmentController::class, 'store'])->name('user-store');
+    Route::put('/edit/{id}', [UserController::class, 'editUser'])->name('user-edit');
+    Route::get('/view/{id}', [UserController::class, 'viewUser'])->name('user-view');
 });
 
 Route::group(['prefix' => 'equipment'], function(){

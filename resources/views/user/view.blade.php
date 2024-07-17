@@ -19,38 +19,53 @@
             </div>
         </div>
         @php
-        $status = 'active'; // TEMP DATA
-            $statusColor = $status == 'active' ? 'bg-success' : 'bg-secondary';
+            $statusColor = $user->status == 'active' ? 'bg-success' : 'bg-secondary';
         @endphp
         <div class="col-lg-6 col-md-6 d-flex justify-content-end align-items-center">
-            <span class="badge {{$statusColor}} rounded-pill mx-3" style="font-size:15px;">Status</span>
+            <span class="badge {{ $statusColor }} rounded-pill mx-3" style="font-size:15px;">{{ ucfirst($user->status) }}</span>
         </div>
     </div>
     <div class="row m-3">
         <div class="col-lg-12">
+            <form method="POST" action="{{ route('user-edit', $user->user_id)}}">
+                @csrf
+                @method('PUT')
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-4 label">Full Name:</div>
+                <div class="col-lg-9 col-md-8">{{ $user->first_name." ".$user->last_name}}</div>
+            </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Username:</div>
-                <div class="col-lg-9 col-md-8"></div>
+                <div class="col-lg-9 col-md-8">{{ $user->username }}</div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-4 label">Username:</div>
+                <div class="col-lg-9 col-md-8">{{ $user->username }}</div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Email:</div>
-                <div class="col-lg-9 col-md-8"></div>
+                <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
             </div>
             <div class="row mb-4">
-                <div class="col-lg-3 col-md-4 label">Role:</div>
-                <div class="col-lg-9 col-md-8"></div>
+                    <div class="col-lg-3 col-md-4 label">Role:</div>
+                    <div class=custom-select>
+                        <select class="form-control form-select select" name="role">
+                            <option >Choose...</option>
+                            <option value="trainer" {{ $user->role == 'trainer' ? 'selected' : '' }}>Gym Trainer</option>
+                            <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>Gym User</option>
+                        </select>
+                    </div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">
-                    <a href="{{route('user-edit')}}" class="btn blueBtn">Edit</a>
-                    <a onclick="confirmDelete()" class="btn redBtn">Deactive User</a>
+                    <button type="submit" class="btn blueBtn">Save Change</a>
+                    <a onclick="confirmDelete()" class="btn redBtn">Deactivate User</a>
                 </div>
             </div>
+        </form>
+
         </div>
     </div>
 </div>
 
 @endsection
-
-
-

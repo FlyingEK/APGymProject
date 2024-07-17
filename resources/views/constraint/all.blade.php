@@ -32,26 +32,25 @@
                 </tr>
             </thead>
             <tbody>
-                @for ($i = 0; $i < 5; $i++)
-                    <tr>
-                        <td>{{$i}}</td>
-                        <td>Constraint Name</td>
-                        <td>Description</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis-v"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-view')}}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-edit')}}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" onclick=""><span class="material-symbols-outlined">delete</span> &nbsp Delete</a></li>
-    
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                @endfor
+                @foreach ($constraints as $constraint)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $constraint->constraint_name }}</td>
+                    <td>{{ $constraint->constraint_value }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-v"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-view', $constraint->constraint_id)}}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-edit', $constraint->constraint_id)}}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center" href="#" onclick="return confirm('Are you sure you want to delete this constraint?');"><span class="material-symbols-outlined">delete</span> &nbsp Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
         <!-- End Table with stripped rows -->

@@ -15,11 +15,12 @@
     <div class="pagetitle p-3">
         <h1>Constraint Details</h1>
     </div>
-    <form>
+    <form action="{{route('constraint-store')}}" method="POST">
+        @csrf
         <div class="row">
             <div class="col-lg-12">
                 <div class="form-group local-forms m-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="" required>
+                    <input type="text" name="constraint_name" class="form-control" id="floatingInput" placeholder="">
                     <label for="floatingInput">Constraint Name <span class="text-danger">*</span></label>
                 </div>
             </div>
@@ -28,8 +29,8 @@
          <div class="row">
             <div class="col-lg-12">
                 <div class="form-group local-forms m-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="" >
-                    <label for="floatingInput">Constraint Value</label>
+                    <input type="text" name="constraint_value"  class="form-control" id="floatingInput" placeholder="" >
+                    <label for="floatingInput">Constraint Value <span class="text-danger">*</span></label>
                 </div>
             </div>
          </div>
