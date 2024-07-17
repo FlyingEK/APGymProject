@@ -67,20 +67,18 @@ Route::group(['prefix' => 'user'],function(){
     Route::get('/view', [UserController::class, 'viewUser'])->name('user-view');
 });
 
-Route::group(['prefix' => 'equipment'],function(){
+Route::group(['prefix' => 'equipment'], function(){
     Route::get('/', [EquipmentController::class, 'index'])->name('equipment-index');
     Route::get('/equipments', [EquipmentController::class, 'allEquipment'])->name('equipments');
     Route::get('/view', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
     Route::get('/add', [EquipmentController::class, 'addEquipment'])->name('equipment-add');
+    Route::post('/store', [EquipmentController::class, 'store'])->name('equipment.store');
     Route::get('/all', [EquipmentController::class, 'viewAllEquipment'])->name('equipment-all');
-    Route::get('/edit', [EquipmentController::class, 'editEquipment'])->name('equipment-edit');
-    Route::get('/adminView', [EquipmentController::class, 'adminViewEquipment'])->name('equipment-admin-view');
+    Route::get('/edit/{id}', [EquipmentController::class, 'editEquipment'])->name('equipment-edit');
+    Route::get('/adminView/{id}', [EquipmentController::class, 'adminViewEquipment'])->name('equipment-admin-view');
     Route::get('/exceeded', [EquipmentController::class, 'timeExceededEquipment'])->name('equipment-time-exceeded');
-
-
-
-    
 });
+
 
 // Route::group(['prefix' => 'equipment'],function(){
 //     Route::get('/report', [WorkoutAnalyticController::class, 'report'])->name('analytic-report');

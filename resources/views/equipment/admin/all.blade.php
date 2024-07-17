@@ -11,7 +11,7 @@
 
 <section class="tableContainer">
     <div class="row">
-        <div class="col-lg-12 col-lg-12 col-sm-12 d-flex">
+        <div class="col-lg-12 col-sm-12 d-flex">
             <div class="pagetitle align-content-center justify-content-center me-4">
                 <h1>All Equipments</h1>
             </div>
@@ -33,27 +33,34 @@
                 </tr>
             </thead>
             <tbody>
-                @for ($i = 0; $i < 5; $i++)
+                @foreach ($equipment as $index => $equip)
                     <tr>
-                        <td>{{$i}}</td>
-                        <td>Equipment Name</td>
-                        <td>Description</td>
-                        <td>Has Weight</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $equip->name }}</td>
+                        <td>{{ $equip->description??"N/A" }}</td>
+                        <td>{{ $equip->has_weight ? 'Weight Machine' : 'Cardio' }}</td>
                         <td>
                             <div class="dropdown">
                                 <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-ellipsis-v"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('equipment-admin-view')}}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('equipment-edit')}}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" onclick=""><span class="material-symbols-outlined">delete</span> &nbsp Delete</a></li>
-    
+                                    <li><a class="dropdown-item d-flex align-items-center" href="{{ route('equipment-admin-view', $equip->equipment_id) }}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center" href="{{ route('equipment-edit', $equip->equipment_id) }}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
+                                    <li>
+                                        <form action="{{ route('equipment-edit', $equip->equipment_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this equipment?');">
+                                            @csrf
+                                           {{-- quantity 0 --}}
+                                            <button type="submit" class="dropdown-item d-flex align-items-center">
+                                                <span class="material-symbols-outlined">delete</span> &nbsp Delete
+                                            </button>
+                                        </form>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
                     </tr>
-                @endfor
+                @endforeach
             </tbody>
         </table>
         <!-- End Table with stripped rows -->

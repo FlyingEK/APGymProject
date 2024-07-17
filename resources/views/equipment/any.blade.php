@@ -35,11 +35,9 @@
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Equipment Machines:</div>
-                <div class="col-lg-9 col-md-8"> 
-                    @foreach ($equipment->equipmentMachines as $machine)
-                    <span class="redLink">{{ $machine->label }}</span>&nbsp;&nbsp;
-                @endforeach
-                </div>
+                <div class="col-lg-9 col-md-8"> @foreach ($equipment->equipmentMachines as $machine)
+                   <span class="redLink">{{ $machine->label }}</span>&nbsp;&nbsp;
+                @endforeach</div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Equipment Image:</div>
@@ -47,13 +45,9 @@
                     <img src="{{ asset('storage/'.$equipment->image) }}" alt="Equipment Image" class="adminImg img-fluid">
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="pagetitle p-3">
-        <h1>Equipment Tutorial</h1>
-    </div>
-    <div class="row m-3">
-        <div class="col-lg-12">
+            <div class="pagetitle p-3">
+                <h1>Equipment Tutorial</h1>
+            </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Tutorial Instructions:</div>
                 <div class="col-lg-9 col-md-8">
@@ -73,14 +67,13 @@
 
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">
-                    <a href="{{ route('equipment-edit', $equipment->equipment_id) }}" class="btn blueBtn">Edit</a>
+                    <a href="{{ route('equipment->equipment_idit', ['id' => $equipment->id]) }}" class="btn blueBtn">Edit</a>
                     <a onclick="confirmDelete()" class="btn redBtn">Delete</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 @endsection
 

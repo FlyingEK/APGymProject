@@ -10,6 +10,7 @@ $(document).ready(function() {
             } else {
                 $('.videoPreviewContainer').html($('<iframe id="video-preview" width="400" height="200" class="mt-3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src="' + embedUrl + '"></iframe>'));
             }
+            $('#tutorial_youtube').val(embedUrl);  
         } else {
             alert('Invalid YouTube URL');
         }
