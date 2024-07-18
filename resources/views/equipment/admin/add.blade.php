@@ -99,21 +99,21 @@
                 </div>
                 <div class="mt-1 mx-3">
                     <table class="w-100 mb-3" style="border:none;" id="dynamic_field">
-                        @if(old('instruction'))
-                        @foreach(old('instruction') as $index => $instruction)
+                        @if(old('instructions'))
+                        @foreach(old('instructions') as $index => $instruction)
                             <tr id="row{{ $index + 1 }}" class="my-2">
-                                <td style="width:80%;"><input type="text" name="instruction[]" placeholder="Instruction {{ $index + 1 }}" class="form-control" value="{{ $instruction }}" /></td>
+                                <td style="width:80%;"><input type="text" name="instructions[]" placeholder="Instruction {{ $index + 1 }}" class="form-control" value="{{ $instruction }}" /></td>
                                 <td><button type="button" class="btn btn-danger btn_remove" id="{{ $index + 1 }}">X</button></td>
                             </tr>
                         @endforeach
                         @else
                             <tr id="row1" class="my-2">
-                                <td style="width:80%;"><input type="text" name="instruction[]" placeholder="Instruction 1" class="form-control" /></td>
+                                <td style="width:80%;"><input type="text" name="instructions[]" placeholder="Instruction 1" class="form-control" /></td>
                                 <td><button type="button" class="btn blueBtn" name="add" id="add">Add</button></td>
                             </tr>
                         @endif
-                        @if ($errors->has('instruction'))
-                            @foreach ($errors->get('instruction') as $error)
+                        @if ($errors->has('instructions'))
+                            @foreach ($errors->get('instructions') as $error)
                                 <tr>
                                     <td colspan="2" class="text-danger">{{ $error }}</td>
                                 </tr>
@@ -159,12 +159,12 @@
     $(document).ready(function() {
         var oldLabels = {!! json_encode(old('labels', [])) !!};
 
-        var i = {{ old('instruction') ? count(old('instruction')) : 1 }};
-        var no = {{ old('instruction') ? count(old('instruction')) : 1 }};
+        var i = {{ old('instructions') ? count(old('instructions')) : 1 }};
+        var no = {{ old('instructions') ? count(old('instructions')) : 1 }};
         $("#add").click(function() {
             i++;
             no++;
-            $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="instruction[]" placeholder="Instruction ' + no + '" class="form-control" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
+            $('#dynamic_field').append('<tr id="row' + i + '"><td><input type="text" name="instructions[]" placeholder="Instruction ' + no + '" class="form-control" /></td><td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
         });
 
         $(document).on('click', '.btn_remove', function() {
@@ -193,20 +193,31 @@
 
         $("#saveEquipmentLabels").click(function(){
             var allLabelsFilled = true;
+            var labelsInput = [];
             $("input[name='labels[]']").each(function() {
                 if($(this).val().trim() === "") {
                     allLabelsFilled = false;
                     return false;
+                }else{
+                    labelsInput.push($(this).val());
                 }
             });
 
             if(!allLabelsFilled) {
                 alert("Please fill all label fields");
                 return;
+            }else{
+                // Remove any existing hidden inputs for labels
+                $("input[name='machineLabels[]']").remove();
+
+                // Add hidden inputs for each label
+                labelsInput.forEach(function(label) {
+                    $("#addEquipment").append('<input type="hidden" name="machineLabels[]" value="' + label + '">');
+                });
             }
 
             // Now submit the form
-            $("form")[0].submit();
+            $("#addEquipment")[0].submit();
         });
 
     });

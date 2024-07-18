@@ -53,4 +53,9 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    public function gymUser()
+    {
+        return $this->hasOne(GymUser::class, 'user_id', 'user_id');
+    }
 }

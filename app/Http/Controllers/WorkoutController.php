@@ -10,5 +10,10 @@ class WorkoutController extends Controller
         return view('workout.index');
     }
 
+    public function workoutHabit()
+    {
+        return view('workout.workoutHabit');
+    }
+
 }
 ?>

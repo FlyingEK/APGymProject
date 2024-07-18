@@ -58,7 +58,6 @@ class UserController extends Controller
 
         // Redirect back with a success message
         return redirect()->route('user-view', ['id' => $id])->with('success', 'User role updated successfully.');
-        return view('user.edit');
     }
 
 

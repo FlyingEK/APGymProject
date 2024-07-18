@@ -20,7 +20,7 @@
                                 <input type="number" class="form-control p-2" id="weights" placeholder="Weights (kg)" aria-label="Request Name">
                             </div>
                             <div class="modal-footer">
-                                    <button type="submit" class="btn midBtn redBtn">Use</button>
+                                    <button type="submit" class="btn midBtn redBtn">Save</button>
                             </div>                        
                         </form>
                     </div>

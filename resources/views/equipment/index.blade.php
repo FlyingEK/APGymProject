@@ -4,12 +4,17 @@
     <div class="page-title">Check In to Gym</div>
     <div class="card workout-card mb-4" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
         <div class="card-body">
-            <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
-            <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div>
+            {{-- <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
+            <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div> --}}
+            <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Check in to the gym.</div>
         </div>
         <div class="m-3 d-flex justify-content-end">
-            <button type="button" class="myBtn btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
+            {{-- if got queue --}}
+            {{-- <button type="button" class="myBtn btn btn-primary redBtn shadow-none">
                 Queue
+            </button> --}}
+            <button type="button" class="myBtn btn btn-primary redBtn shadow-none">
+                Check In
             </button>
         </div>
     </div>
