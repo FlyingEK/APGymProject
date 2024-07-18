@@ -9,20 +9,23 @@ class EquipmentController extends Controller
 {
     public function index()
     {
+
         return view('equipment.index');
     }
 
     public function allEquipment()
     {
         // Fetch all equipment data
-        $equipment = Equipment::all();
+        $equipment = Equipment::where('is_deleted', false)->get();
         // Pass the data to the view
         return view('equipment.all', compact('equipment'));
     }
 
     public function viewEquipment($id)
     {
-        $equipment = Equipment::with(['tutorials', 'equipmentMachines'])->findOrFail($id);
+        $equipment = Equipment::with(['tutorials', 'equipmentMachines'])
+        ::where('is_deleted', false)
+        ->findOrFail($id);
         return view('equipment.view', compact('equipment'));
     }
 
@@ -36,14 +39,14 @@ class EquipmentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'has_weight' => 'required|boolean',
+            'category' => 'required|in:upper body machines,leg machines,cardio machines,free weightss',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'quantity' => 'nullable|integer',
             'tutorial_youtube' => 'nullable|url|max:2083',
             'instructions' => 'sometimes|array',
             'instructions.*' => 'nullable|string|max:500',
-            'labels' => 'sometimes|array',
-            'labels.*' => 'nullable|string|max:255',
+            'machineLabels' => 'sometimes|array',
+            'machineLabels.*' => 'nullable|string|max:255',
         ]);
         $directory = '/img/equipment';
         if (!Storage::exists($directory)) {
@@ -54,7 +57,8 @@ class EquipmentController extends Controller
         $equipment = Equipment::create([
             'name' => $request->name,
             'description' => $request->description,
-            'has_weight' => $request->has_weight,
+            'category'=> $request->category,
+            'has_weight' => $request->category === 'cardio machines'? false : true,
             'image' => $imagePath,
             'quantity' => $request->quantity,
             'tutorial_youtube' => $request->tutorial_youtube,
@@ -69,8 +73,8 @@ class EquipmentController extends Controller
         }
 
          // Save the equipment labels
-         if ($request->has('labels')) {
-            foreach ($request->labels as $label) {
+         if ($request->has('machineLabels')) {
+            foreach ($request->machineLabels as $label) {
                 $equipment->equipmentMachines()->create(['label' => $label]);
             }
         }
@@ -80,7 +84,7 @@ class EquipmentController extends Controller
 
     public function viewAllEquipment()
     {
-        $equipment = Equipment::all();
+        $equipment = Equipment::where('is_deleted', false)->get();
         return view('equipment.admin.all', compact('equipment'));
     }
 
@@ -94,6 +98,68 @@ class EquipmentController extends Controller
     {
         $equipment = Equipment::with(['tutorials', 'equipmentMachines'])->findOrFail($id);
         return view('equipment.admin.edit', compact('equipment'));
+    }
+
+    public function updateEquipment(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
+            'category' => 'required|in:upper body machines,leg machines,free weights,cardio machines',
+            'quantity' => 'required|integer|min:1|max:10',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'tutorial_youtube' => 'nullable|url|max:2083',
+            'instructions' => 'sometimes|array',
+            'instructions.*' => 'nullable|string|max:500',
+            'machineLabels' => 'sometimes|array',
+            'machineLabels.*' => 'nullable|string|max:255',
+        ]);
+
+        $equipment = Equipment::findOrFail($id);
+
+        // Check if the image is updated
+        if ($request->hasFile('image')) {
+            $directory = '/img/equipment';
+            if (!Storage::exists($directory)) {
+                Storage::makeDirectory($directory);
+            }
+
+            // Delete the old image
+            if ($equipment->image && Storage::exists($equipment->image)) {
+                Storage::delete($equipment->image);
+            }
+
+            $imagePath = $request->file('image')->store($directory, 'public');
+        } else {
+            $imagePath = $equipment->image;
+        }
+
+        $equipment->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'category' => $request->category,
+            'quantity' => $request->quantity,
+            'image' => $imagePath,
+            'tutorial_youtube' => $request->tutorial_youtube,
+        ]);
+
+        // Update instructions
+        $equipment->tutorials()->delete();
+        if ($request->has('instructions')) {
+            foreach ($request->instructions as $instruction) {
+                $equipment->tutorials()->create(['instruction' => $instruction]);
+            }
+        }
+
+        // Update equipment machines
+        $equipment->equipmentMachines()->delete();
+        if ($request->has('machineLabels')) {
+            foreach ($request->machineLabels as $label) {
+                $equipment->equipmentMachines()->create(['label' => $label]);
+            }
+        }
+
+        return redirect()->route('equipment-admin-view',$equipment->equipment_id)->with('success', 'Equipment updated successfully.');
     }
 
     public function timeExceededEquipment()

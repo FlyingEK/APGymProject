@@ -44,15 +44,17 @@
          <div class="row">
             <div class="col-lg-6">
                 <div class="form-group local-forms m-3">
-                    <label for="has_weight">Has weight <span class="text-danger">*</span></label>
+                    <label for="has_weight">Category <span class="text-danger">*</span></label>
                     <div class="custom-select">
-                        <select class="form-control form-select select" name="has_weight" >
+                        <select class="form-control form-select select" name="category" >
                             <option selected>Choose...</option>
-                            <option value="1" {{ old('has_weight') == 1 ? 'selected' : '' }}>Yes</option>
-                            <option value="0" {{ old('has_weight') == 0 ? 'selected' : '' }}>No</option>
+                            <option value="upper body machines" {{ old('category') == "upper body machines" ? 'selected' : '' }}>Upper body machines</option>
+                            <option value="leg machines" {{ old('has_weight') == "leg machines" ? 'selected' : '' }}>Leg machines</option>
+                            <option value="free weights" {{ old('category') == "free weights"? 'selected' : '' }}>Free weights</option>
+                            <option value="cardio machines" {{ old('category') == "cardio machines"  ? 'selected' : '' }}>Cardio machines</option>
                         </select>
                     </div>
-                    @error('has_weight')
+                    @error('category')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
@@ -67,7 +69,6 @@
                 </div>
             </div>
          </div>
-
          <div class="row">
             <div class="col-lg-12">
                 <div class="defect-upload m-3">
@@ -101,9 +102,13 @@
                     <table class="w-100 mb-3" style="border:none;" id="dynamic_field">
                         @if(old('instructions'))
                         @foreach(old('instructions') as $index => $instruction)
-                            <tr id="row{{ $index + 1 }}" class="my-2">
-                                <td style="width:80%;"><input type="text" name="instructions[]" placeholder="Instruction {{ $index + 1 }}" class="form-control" value="{{ $instruction }}" /></td>
+                        <tr id="row{{ $index + 1 }}" class="my-2">
+                            <td style="width:80%;"><input type="text" name="instructions[]" placeholder="Instruction {{ $index + 1 }}" class="form-control" value="{{ $instruction }}" /></td>
+                            @if($index==0)
+                                <td><button type="button" class="btn blueBtn" name="add" id="add">Add</button></td>
+                            @else
                                 <td><button type="button" class="btn btn-danger btn_remove" id="{{ $index + 1 }}">X</button></td>
+                            @endif
                             </tr>
                         @endforeach
                         @else

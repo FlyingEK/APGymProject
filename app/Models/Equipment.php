@@ -23,6 +23,7 @@ class Equipment extends Model
         'image',
         'tutorial_youtube',
         'quantity',
+        'category',
     ];
 
     // If there are any relationships, define them here

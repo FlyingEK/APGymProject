@@ -28,7 +28,7 @@
                     <th>No</th>
                     <th>Equipment Name</th>
                     <th>Description</th>
-                    <th>Type</th>
+                    <th>Category</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -38,7 +38,7 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $equip->name }}</td>
                         <td>{{ $equip->description??"N/A" }}</td>
-                        <td>{{ $equip->has_weight ? 'Weight Machine' : 'Cardio' }}</td>
+                        <td>{{ $equip->category}}</td>
                         <td>
                             <div class="dropdown">
                                 <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">

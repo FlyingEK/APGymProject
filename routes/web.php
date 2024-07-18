@@ -79,8 +79,10 @@ Route::group(['prefix' => 'equipment'], function(){
     Route::post('/store', [EquipmentController::class, 'store'])->name('equipment.store');
     Route::get('/all', [EquipmentController::class, 'viewAllEquipment'])->name('equipment-all');
     Route::get('/edit/{id}', [EquipmentController::class, 'editEquipment'])->name('equipment-edit');
+    Route::put('/update/{id}', [EquipmentController::class, 'updateEquipment'])->name('equipment-update');
     Route::get('/adminView/{id}', [EquipmentController::class, 'adminViewEquipment'])->name('equipment-admin-view');
     Route::get('/exceeded', [EquipmentController::class, 'timeExceededEquipment'])->name('equipment-time-exceeded');
+
 });
 
 

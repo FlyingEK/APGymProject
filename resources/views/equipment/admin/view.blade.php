@@ -11,7 +11,7 @@
     </nav>
 </div>
 
-<div class="container rounded-2 shadow" style="background-color:white;position: relative;">
+<div class="container rounded-2 shadow" style="background-color:white;position: relative;font-size:14px;">
     <div class="pagetitle p-3">
         <h1>Equipment Details</h1>
     </div>
@@ -23,11 +23,11 @@
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Description:</div>
-                <div class="col-lg-9 col-md-8">{{ $equipment->description }}</div>
+                <div class="col-lg-9 col-md-8">{{ $equipment->description ?? 'N/A'  }}</div>
             </div>
             <div class="row mb-4">
-                <div class="col-lg-3 col-md-4 label">Type:</div>
-                <div class="col-lg-9 col-md-8">{{ $equipment->has_weight ? 'Yes' : 'No' }}</div>
+                <div class="col-lg-3 col-md-4 label">Category:</div>
+                <div class="col-lg-9 col-md-8">{{ $equipment->category}}</div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Quantity:</div>
@@ -37,7 +37,7 @@
                 <div class="col-lg-3 col-md-4 label">Equipment Machines:</div>
                 <div class="col-lg-9 col-md-8"> 
                     @foreach ($equipment->equipmentMachines as $machine)
-                    <span class="redLink">{{ $machine->label }}</span>&nbsp;&nbsp;
+                    <span class="redLink">#{{ $machine->label }}</span>&nbsp;&nbsp;
                 @endforeach
                 </div>
             </div>
@@ -58,8 +58,11 @@
                 <div class="col-lg-3 col-md-4 label">Tutorial Instructions:</div>
                 <div class="col-lg-9 col-md-8">
                     <ul>
+                        @if ($equipment->tutorials->isEmpty())
+                            <li>No tutorial available</li>
+                        @endif
                         @foreach ($equipment->tutorials as $tutorial)
-                            <li>{{ $loop->iteration }}. {{ $tutorial->instruction }}</li>
+                            <li class="mb-3">{{ $loop->iteration }}. {{ $tutorial->instruction }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -67,7 +70,11 @@
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Tutorial Video:</div>
                 <div class="col-lg-9 col-md-8">
-                    <iframe id="video-preview" width="380" height="260" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src="{{ $equipment->tutorial_youtube }}"></iframe>
+                    @if($equipment->tutorial_youtube )
+                        <iframe id="video-preview" width="380" height="260" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src="{{ $equipment->tutorial_youtube }}"></iframe>
+                    @else
+                        <p>No tutorial video available</p>
+                    @endif
                 </div>
             </div>
 
