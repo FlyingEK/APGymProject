@@ -18,14 +18,19 @@
                 </div>
             </div>
             <div class="mb-4 timer d-flex justify-content-center align-items-center flex-column">
-                <h1>15:03:00</h1>
+                <h1 id="timer">00:00:00</h1>
                 <p>Working out/Resting</p>
                 <h2>Set 2</h2>
             </div>
 
             <div class="my-4 d-flex justify-content-center align-items-center text-center" style="gap: 15px;">
                 <div>
-                    <button class="btn btn-circle btn-green">
+                    <button id="start" class="btn btn-circle btn-green">
+                        <span class="material-symbols-outlined">
+                            play
+                            </span>
+                    </button>
+                    <button id="pause" class="btn btn-circle btn-green">
                         <span class="material-symbols-outlined">
                             pause
                             </span>                    
@@ -34,7 +39,7 @@
                 </div>
                     
                 <div>
-                    <button class="btn btn-circle btn-red">
+                    <button id="holdToEnd" class="btn btn-circle btn-red">
                         <span class="material-symbols-outlined">
                             stop
                             </span>
@@ -68,6 +73,7 @@
 @endsection
 
 @section('javascript')
+<script src="{{ asset('js/timer.js') }}"></script>
 @stop
 
 
