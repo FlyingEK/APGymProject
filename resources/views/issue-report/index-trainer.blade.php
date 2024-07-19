@@ -16,7 +16,7 @@
                         <td class="w-30">$issueType</td>
                         <td class="w-10">$status</td>
                         <td>
-                            <a href="{{route('issue-user-view')}}" class="stretched-link"></a>
+                            <a href="{{route('issue-trainer-view')}}" class="stretched-link"></a>
                         </td>
                     </tr>
                 @endfor
@@ -42,7 +42,7 @@
                 @for($i = 0; $i < 4; $i++)
                     <tr class="position-relative">
                         <td class="w-60">$issueTitle
-                            <a href="{{route('issue-user-view')}}" class="stretched-link"></a>
+                            <a href="{{route('issue-trainer-view')}}" class="stretched-link"></a>
                         </td>
                         <td class="w-30">$issueType</td>
                         <td class="w-10">$status</td>

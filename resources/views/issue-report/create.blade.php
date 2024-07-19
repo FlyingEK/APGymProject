@@ -13,12 +13,18 @@
                             <div class="custom-select">
                                 <select class="form-select p-2" id="issueType" aria-label="Issue Type">
                                     <option selected>Select Type</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="gym">Gym Issue</option>
+                                    <option value="equipment">Equipment Issue</option>
+                                    <option value="other">Other</option>
                                 </select>
                             </div>
                         </div>
+                        <select class="form-control form-select mb-3" name="equipment_id" id="equipment-name" required>
+                            <option value="" data-has-weight="0" selected>Choose an equipment...</option>
+                            @foreach($allEquipment as $equip)
+                                <option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}">{{ $equip->name }}</option>
+                            @endforeach
+                        </select>
                         <div class="mb-3">
                             <textarea class="form-control p-2" id="requestDescription" placeholder="Request Description" style="height: 100px;" aria-label="Request Description"></textarea>
                         </div>
@@ -55,4 +61,11 @@
 @section('javascript')
     <script src="{{ asset('/js/img-preview.js') }}"></script>
     <script src="{{ asset('js/custom-select-box.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#equipment-name').select2({
+                placeholder: 'Select an equipment',
+            });
+        });
+    </script>
 @stop
