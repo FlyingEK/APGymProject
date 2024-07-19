@@ -36,4 +36,19 @@ class Equipment extends Model
     {
         return $this->hasMany(Tutorial::class, 'equipment_id', 'equipment_id');
     }
+
+    public function workoutHabits()
+    {
+        return $this->hasMany(WorkoutHabit::class, 'equipment_id', 'equipment_id');
+    }
+
+    public function strengthWorkoutHabits()
+    {
+        return $this->hasManyThrough(StrengthWorkoutHabit::class, WorkoutHabit::class, 'equipment_id', 'workout_habit_id', 'equipment_id', 'id');
+    }
+
+    public function cardioWorkoutHabits()
+    {
+        return $this->hasManyThrough(CardioWorkoutHabit::class, WorkoutHabit::class, 'equipment_id', 'workout_habit_id', 'equipment_id', 'id');
+    }
 }

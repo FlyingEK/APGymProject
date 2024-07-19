@@ -1,5 +1,10 @@
 @extends('layouts.trainerLayout')
 @section('content')
+<div class="backLink mb-2">
+  <a href="{{route('gym-index')}}">
+      <i class="fas fa-chevron-left"></i><span>  Back</span>
+  </a>
+</div>
 <div class="page-title">
     Current Gym Users Count: <span class="redIcon">10</span>
 </div>

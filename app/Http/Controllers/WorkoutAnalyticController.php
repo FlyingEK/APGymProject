@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Models\Equipment;
 use Illuminate\Http\Request;
 
 class WorkoutAnalyticController extends Controller
@@ -12,7 +12,8 @@ class WorkoutAnalyticController extends Controller
 
     public function setGoal()
     {
-        return view('workout-analytic.set-goal');
+        $allEquipment = Equipment::where('is_deleted', false)->get();
+        return view('workout-analytic.set-goal', compact('allEquipment'));
     }
 
     // public function recordDetails()

@@ -21,12 +21,12 @@ class EquipmentController extends Controller
         return view('equipment.all', compact('equipment'));
     }
 
-    public function viewEquipment($id)
+    public function viewEquipment()
     {
-        $equipment = Equipment::with(['tutorials', 'equipmentMachines'])
-        ::where('is_deleted', false)
-        ->findOrFail($id);
-        return view('equipment.view', compact('equipment'));
+        // $equipment = Equipment::with(['tutorials', 'equipmentMachines'])
+        // ::where('is_deleted', false)
+        // ->findOrFail($id);
+        return view('equipment.view');
     }
 
     public function addEquipment()
@@ -162,9 +162,9 @@ class EquipmentController extends Controller
         return redirect()->route('equipment-admin-view',$equipment->equipment_id)->with('success', 'Equipment updated successfully.');
     }
 
-    public function timeExceededEquipment()
+    public function trainerEquipments()
     {
-        return view('equipment.trainer.time-exceeded');
+        return view('equipment.trainer.all');
     }
 }
 ?>
