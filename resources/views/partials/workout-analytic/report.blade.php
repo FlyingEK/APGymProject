@@ -1,8 +1,8 @@
-<div class="inter mt-3">
+<div class="inter mt-1">
     <div class="pgtabs pgtab2 btn-group btn-group-sm" id="report-tab">
-        <a href="#" class="btn " aria-current="page">Daily</a>
-        <a href="#" class="btn activeTab">Monthly</a>
-        <a href="#" class="btn  ">Annually</a>
+        <a href="#" class="btn text-white" aria-current="page">Daily</a>
+        <a href="#" class="btn text-white activeTab">Monthly</a>
+        <a href="#" class="btn text-white ">Annually</a>
     </div>
 </div>
 
@@ -10,7 +10,7 @@
     <div class="col-6">
         <div class="page-title" style="padding-right: 0px;">Workout Report</div>
     </div>
-    <div class="col-6 d-flex justify-content-end">
+    <div class="col-6 d-flex  justify-content-end">
         <div class="report-filter">
             <a href="#">
                 <i class="material-symbols-outlined redIcon no-wrap">tune</i><span>  This Month</span>

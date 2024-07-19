@@ -4,10 +4,10 @@
   </a>
 </div>
 <div class=" my-3">
-  <div class="pgtabs pgtab2 btn-group btn-group-sm" id="report-tab">
-      <a href="#" class="btn " aria-current="page">Daily</a>
-      <a href="#" class="btn activeTab">Monthly</a>
-      <a href="#" class="btn  ">Annually</a>
+  <div class="pgtabs pgtab2 btn-group btn-group-sm " id="report-tab">
+      <a href="#" class="btn text-white" aria-current="page">Daily</a>
+      <a href="#" class="btn text-white activeTab">Monthly</a>
+      <a href="#" class="btn text-white ">Annually</a>
   </div>
 </div>
 <div class="leaderboardcontainer inter mt-4">
