@@ -99,6 +99,3 @@
     </form>
 </section>
 
-@section('javascript')
-<script src={{asset('/js/img-preview')}}></script>  
-@endsection
