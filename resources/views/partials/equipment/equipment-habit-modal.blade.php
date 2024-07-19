@@ -19,6 +19,12 @@
                             <div class="mb-3">
                                 <input type="number" class="form-control p-2" id="weights" placeholder="Weights (kg)" aria-label="Request Name">
                             </div>
+                            <div class="mb-3 d-flex align-items-center">
+                                <label for="allowSharing" style="   font-size: 15px;">Allow Sharing &nbsp;
+                                    <input type="checkbox" id="allowSharing" name="allowSharing" />
+                                </label>
+                            </div>
+
                             <div class="modal-footer">
                                     <button type="submit" class="btn midBtn redBtn">Save</button>
                             </div>                        
