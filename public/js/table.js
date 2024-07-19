@@ -26,9 +26,6 @@ $(document).ready(function () {
         allowInput: true,
     })
     
-    $('.select').select2({
-        width: '100%',
-    });
     
 });
 
