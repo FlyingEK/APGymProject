@@ -68,7 +68,6 @@ Route::group(['prefix' => 'constraint'],function(){
 
 Route::group(['prefix' => 'user'],function(){
     Route::get('/all', [UserController::class, 'allUser'])->name('user-all');
-    Route::get('/create', [UserController::class, 'addUser'])->name('user-create');
     Route::post('/store', [EquipmentController::class, 'store'])->name('user-store');
     Route::put('/edit/{id}', [UserController::class, 'editUser'])->name('user-edit');
     Route::get('/view/{id}', [UserController::class, 'viewUser'])->name('user-view');

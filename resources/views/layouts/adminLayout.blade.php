@@ -50,11 +50,6 @@
                         <i class="bi bi-circle"></i><span>All Users</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('user-create') }}">
-                        <i class="bi bi-circle"></i><span>Add user</span>
-                    </a>
-                </li>
             </ul>
         </li>
         <li class="nav-item">
@@ -131,6 +126,9 @@
             icon: 'success',
             title: 'Success',
             text: '{{ session('success') }}',
+            customClass : {
+                confirmButton: 'btn redBtn'
+            }
         });
     @endif
     @if(session('error'))
@@ -138,6 +136,9 @@
             icon: 'error',
             title: 'Error',
             text: '{{ session('error') }}',
+            customClass : {
+                confirmButton: 'btn redBtn'
+            }
         });
     @endif
 
@@ -146,6 +147,9 @@
             icon: 'error',
             title: 'Error',
             html: '{!! implode('<br>', $errors->all()) !!}',
+            customClass : {
+                confirmButton: 'btn redBtn'
+            }
         });
     @endif
     document.addEventListener("DOMContentLoaded", function() {

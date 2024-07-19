@@ -15,10 +15,6 @@
             <div class="pagetitle align-content-center justify-content-center me-4">
                 <h1>All Users</h1>
             </div>
-            <a href="{{ route('user-create') }}" class="btn rounded-pill ms-2 submit-button ps-3 pe-3 pt-2 pb-2">
-                <i class="fa fa-plus me-2"></i>
-                Add User
-            </a>
         </div>
         <!-- Table with stripped rows -->
 
@@ -58,7 +54,7 @@
                                 </ul>
                             </div>
                         </td>
-                    </tr>
+                    </tr> 
                 @endforeach
             </tbody>
         </table>
