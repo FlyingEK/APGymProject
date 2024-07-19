@@ -920,3 +920,37 @@ padding: 6px;
 .profileCard i, .profileCard .pagetitle{
     font-size: 21px;
 }
+.select2-dropdown {
+    z-index: 1251 !important; /* Ensure this is higher than the modal's z-index */
+}
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #c123234e;
+    color: black;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #c123234e;
+    color: #000;
+}
+.select2-selection__rendered {
+    line-height: 40px !important;
+}
+.select2-container .select2-selection--single {
+    height: 40px !important;
+}
+.select2-selection__arrow {
+    height: 34px !important;
+}
+
+.badge img{
+    height: 80px;
+    object-fit: contain;
+}
+
+.badgeModal img{
+    height: 100px;
+    object-fit: contain;
+}
+
+.fadeBadge{
+    opacity:0.35;
+}
