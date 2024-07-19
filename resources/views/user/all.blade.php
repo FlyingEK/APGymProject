@@ -52,9 +52,8 @@
                                     <i class="fa-solid fa-ellipsis-v"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('user-view')}}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('user-edit')}}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" onclick=""><span class="material-symbols-outlined">delete</span> &nbsp Delete</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('user-view',$user->user_id)}}"><span class="material-symbols-outlined">edit</span>&nbsp View/Edit</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center" onclick=""><span class="material-symbols-outlined">Deactivate</span> &nbsp Delete</a></li>
     
                                 </ul>
                             </div>

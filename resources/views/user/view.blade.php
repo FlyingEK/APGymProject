@@ -39,8 +39,8 @@
                 <div class="col-lg-9 col-md-8">{{ $user->username }}</div>
             </div>
             <div class="row mb-4">
-                <div class="col-lg-3 col-md-4 label">Username:</div>
-                <div class="col-lg-9 col-md-8">{{ $user->username }}</div>
+                <div class="col-lg-3 col-md-4 label">Gender:</div>
+                <div class="col-lg-9 col-md-8">{{ $user->gender }}</div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-3 col-md-4 label">Email:</div>
@@ -58,7 +58,7 @@
             </div>
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn blueBtn">Save Change</a>
+                    <button type="submit" class="btn blueBtn">Save Change</button>
                     <a onclick="confirmDelete()" class="btn redBtn">Deactivate User</a>
                 </div>
             </div>
