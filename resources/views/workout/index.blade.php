@@ -10,7 +10,7 @@
             <div class="card-body">
                 <div class="row mb-4">
                     <div class="col-5">
-                        <h2>Treadmill</h2>
+                        <h4>Lat pull down machine </h4>
                     </div>
 
                     <div class="col-7 sharing">
@@ -53,11 +53,11 @@
         <div class="card equipment shadow-sm mt-2 p-2" >
             <div class="row">
                 <div class="col-5 ">
-                        <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                        <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/backmachine.jpg') }}" alt="Work Order Image" ><br/>
                 </div>
                 <div class="col-7" style="padding-left: 5px">
                     <div class=" mt-md-3 no-wrap">
-                        <p class="equipmentTitle">Threadmill &nbsp;<span class="text-danger ">#TR01</span></p>
+                        <p class="equipmentTitle">Lat pull down machine &nbsp;<span class="text-danger ">#TR01</span></p>
                         <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-success shadow-none">
                             <i class="fa-solid fa-helmet-safety"></i> Available
                         </div><br>
@@ -96,7 +96,7 @@
     </div>
 </div>
 <div class="d-flex justify-content-center mt-5">
-    <a href="" class="p-2 redBtn btn">
+    <a href="{{route('workout-habit',1)}}" class="p-2 redBtn btn">
         Manage Workout Habit
     </a>
 </div>

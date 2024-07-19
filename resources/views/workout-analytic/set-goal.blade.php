@@ -3,7 +3,7 @@
 <div class="content goalContainer container inter p-1">
     <div class="backLink mb-2">
         <a href="{{route('analytic-report')}}">
-            <i class="material-symbols-outlined redIcon no-wrap">arrow_back_ios</i><span>  Back</span>
+            <i class="fas fa-chevron-left"></i><span>  Back</span>
         </a>
     </div>
     <div class="card mb-4">
@@ -46,19 +46,17 @@
                 <div>
                     <table class="w-100 goalInput mb-3" style="border:none;" id="dynamic_field_goal">
                         <tr>
-                            <th style="width:45%;">Equipment</th>
+                            <th style="width:35%;">Equipment</th>
                             <th style="width:45%;">Targeted Goal</th>
                             <th></th>
                         <tr class="my-2">
                             <td >
-                                <div class="custom-select">
-                                    <select class="form-select p-2" name="equipment[]" id="equipmentType" aria-label="Equipment Type">
-                                        <option selected>Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                </div>
+                                <select class="select2 form-control form-select mb-3" name="equipment_ids[]" id="equipment-name" required>
+                                    <option value="" data-has-weight="0" selected>Choose an equipment...</option>
+                                    @foreach($allEquipment as $equip)
+                                        <option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}">{{ $equip->name }}</option>
+                                    @endforeach
+                                </select>
                             </td>
                             <td style="width:15%;"><input type="number" name="goalValue[]" placeholder="Duration/Weight" class="form-control" /></td>
                             <td><button type="button" class="btn blueBtn" name="add" id="addGoal" style="padding: 6px 8px;">Add</button></td>  
@@ -81,6 +79,52 @@
 @section('javascript')
 <script src="{{ asset('/js/custom-select-box.js') }}"></script>
 <script src="{{ asset('/js/dynamic-input-field.js') }}"></script>
+
+<script>
+$(document).ready(function() {
+    $('#equipment-name').select2({
+        placeholder: 'Equipment',
+    });
+     $('#equipment-name').on('change', function() {
+        //  var hasWeight = $(this).find(':selected').data('has-weight');
+        //  if (hasWeight == 1) {
+        //    $('#goalvalue').attr('placeholder', 'Number of Repetitions for ' + selectedOption.text());
+
+        //  } else {
+        //      $('#weight-fields').addClass('d-none');
+        //      $('#duration-field').removeClass('d-none');
+        //  }
+     });
+   
+   var i = 1;
+   var no =1;
+   $("#addGoal").click(function(){
+     i++;
+     no++;
+     var newRow = '<tr id="row' + i + '">';
+     newRow += '<td ><select class="form-control form-select select2 mb-3" name="equipment_ids[]" id="equipment-name' + i + '" required>';
+     newRow += '<option value="" data-has-weight="0" selected>Choose an equipment...</option>';
+     @foreach($allEquipment as $equip)
+         newRow += '<option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}">{{ $equip->name }}</option>';
+     @endforeach
+     newRow += '</select></td>';
+     newRow += '<td><input type="number" name="goalValue[]" placeholder="Duration/Weight" class="form-control" /></td>';
+     newRow += '<td><button type="button" name="remove" id="' + i + '" class="btn btn-danger btn_remove">X</button></td>';
+     newRow += '</tr>';
+     $('#dynamic_field_goal').append(newRow);
+     $('.select2').select2({
+        placeholder: 'Equipment',
+    });
+     });
+ 
+   $(document).on('click', '.btn_remove', function(){  
+       var button_id = $(this).attr("id");     
+       no--;
+       $('#row'+button_id+'').remove();  
+     });
+ });
+ 
+ </script>
 
 @stop
 

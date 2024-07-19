@@ -25,7 +25,7 @@ Route::get('/home', function () {
     return view('userHome');
 });
 
-Route::get('/gym', [GymController::class, 'gymUser'])->name('gym-user');
+Route::get('/gymUser', [GymController::class, 'gymUser'])->name('gym-user');
 Route::get('/gym', [GymController::class, 'gymIndex'])->name('gym-index');
 
 Route::middleware('auth')->group(function () {
@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::group(['prefix' => 'workout'],function(){
     Route::get('/index', [WorkoutController::class, 'index'])->name('workout-index');
+    Route::get('/habit/{userId}', [WorkoutController::class, 'workoutHabit'])->name('workout-habit');
+    Route::get('/addHabit', [WorkoutController::class, 'addWorkoutHabit'])->name('workout-habit-add');
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
 Route::group(['prefix' => 'analytic'],function(){
@@ -49,6 +51,7 @@ Route::group(['prefix' => 'issue'],function(){
     Route::get('/create', [IssueReportController::class, 'create'])->name('issue-create');
     Route::get('/edit', [IssueReportController::class, 'edit'])->name('issue-edit');
     Route::get('/view', [IssueReportController::class, 'viewUser'])->name('issue-user-view');
+    Route::get('/viewTrainer', [IssueReportController::class, 'viewTrainer'])->name('issue-trainer-view');
     Route::get('/index', [IssueReportController::class, 'indexTrainer'])->name('issue-trainer-index');
 
 });
@@ -81,7 +84,7 @@ Route::group(['prefix' => 'equipment'], function(){
     Route::get('/edit/{id}', [EquipmentController::class, 'editEquipment'])->name('equipment-edit');
     Route::put('/update/{id}', [EquipmentController::class, 'updateEquipment'])->name('equipment-update');
     Route::get('/adminView/{id}', [EquipmentController::class, 'adminViewEquipment'])->name('equipment-admin-view');
-    Route::get('/exceeded', [EquipmentController::class, 'timeExceededEquipment'])->name('equipment-time-exceeded');
+    Route::get('/equipmentsTrainer', [EquipmentController::class, 'trainerEquipments'])->name('equipments-trainer');
 
 });
 
