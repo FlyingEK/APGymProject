@@ -12,8 +12,7 @@
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
-        @method('post')
-        <!-- Email Address -->
+                <!-- Email Address -->
         <div>
             <input class="form-control" name="email" type="email" placeholder="Email" :value="old('email')">
             @error('email')

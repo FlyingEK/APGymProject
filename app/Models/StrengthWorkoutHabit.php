@@ -16,7 +16,7 @@ class StrengthWorkoutHabit extends Model
         'set',
         'repetition',
         'weight',
-        'allowSharing'
+        'allow_sharing'
     ];
 
     public function workoutHabit()

@@ -15,6 +15,7 @@ class WorkoutHabit extends Model
         'gym_user_id',
         'equipment_id',
     ];
+    public $timestamps = false;
 
     public function gymUser()
     {

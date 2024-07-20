@@ -96,7 +96,7 @@
     </div>
 </div>
 <div class="d-flex justify-content-center mt-5">
-    <a href="{{route('workout-habit',1)}}" class="p-2 redBtn btn">
+    <a href="{{route('workout-habit')}}" class="p-2 redBtn btn">
         Manage Workout Habit
     </a>
 </div>

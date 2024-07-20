@@ -12,8 +12,7 @@
         <p class="text-muted mb-2">Sweat now, shine later.</p>
         <form id="loginForm" method="POST" action="{{ route('login') }}">
             @csrf
-            @method('post')
-            <div class="mb-3">
+                        <div class="mb-3">
                 <input type="email" class="form-control" placeholder="Email" name="email" aria-describedby="emailHelp">
             </div>
             <div class="mb-3">

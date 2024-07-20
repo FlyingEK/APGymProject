@@ -36,8 +36,13 @@ Route::middleware('auth')->group(function () {
 });
 Route::group(['prefix' => 'workout'],function(){
     Route::get('/index', [WorkoutController::class, 'index'])->name('workout-index');
-    Route::get('/habit/{userId}', [WorkoutController::class, 'workoutHabit'])->name('workout-habit');
+    Route::get('/habit', [WorkoutController::class, 'workoutHabit'])->name('workout-habit');
     Route::get('/addHabit', [WorkoutController::class, 'addWorkoutHabit'])->name('workout-habit-add');
+    Route::post('/storeHabit', [WorkoutController::class, 'store'])->name('workout-habit-store');
+    Route::put('/updateHabit/{id}', [WorkoutController::class, 'updateWorkoutHabit'])->name('workout-habit-update');
+    Route::delete('/deleteHabit/{id}', [WorkoutController::class, 'deleteWorkoutHabit'])->name('workout-habit-delete');
+
+
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
 Route::group(['prefix' => 'analytic'],function(){
