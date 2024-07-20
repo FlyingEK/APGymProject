@@ -52,8 +52,15 @@
         </div>
         <div class="row mt-4 mb-3">
             <div class="  col-12 d-flex justify-content-end" style="gap:10px;">
-                <a href="{{ route('issue-edit') }}" class="btn formBtn myBtn blueBtn">Edit</a>
-                <button type="submit" class=" btn formBtn myBtn redBtn">Delete</button>
+                @if ($issue->status == 'pending')
+                    <a href="{{ route('issue-edit', $issue->issue_id) }}" class="btn formBtn myBtn blueBtn">Edit</a>
+                    <form action="{{ route('issue-cancel', $issue->issue_id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class=" btn formBtn myBtn redBtn">Cancel</button>
+                    </form>
+                @endif
+
             </div>
         </div>
     </div>

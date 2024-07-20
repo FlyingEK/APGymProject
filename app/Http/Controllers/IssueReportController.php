@@ -67,9 +67,51 @@ class IssueReportController extends Controller
         return redirect()->route('issue-user-index')->with('success', 'Issue reported successfully.');
     }
 
-    public function edit()
+    public function edit($id)
     {
-        return view('issue-report.edit');
+        $issue = Issue::with('equipmentMachine.equipment')->findOrFail($id);
+        $allEquipment = Equipment::where('is_deleted', false)->get();
+        return view('issue-report.edit', compact('issue', 'allEquipment'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $issue = Issue::findOrFail($id);
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'required|in:equipment,gym,other',
+            'equipment_machine_id' => 'required_if:type,equipment|exists:equipment_machine,equipment_machine_id',
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+        // Check if the image is updated
+        if ($request->hasFile('image')) {
+            $directory = '/img/equipment';
+            if (!Storage::exists($directory)) {
+                Storage::makeDirectory($directory);
+            }
+
+            // Delete the old image
+            if ($issue->image && Storage::exists($issue->image)) {
+                Storage::delete($issue->image);
+            }
+
+            $imagePath = $request->file('image')->store($directory, 'public');
+        } else {
+            $imagePath = $issue->image;
+        }
+
+        $data['image'] = $imagePath;
+        $issue->update($data);
+
+        return redirect()->route('issue-user-view', $issue->issue_id )->with('success', 'Issue updated successfully.');
+    }
+
+    public function cancelIssue($id)
+    {
+        $issue = Issue::findOrFail($id);
+        $issue->update(['status' => 'cancelled']);
+        return redirect()->route('issue-user-index')->with('success', 'Issue cancelled successfully.');
     }
 
     public function viewUser($id)

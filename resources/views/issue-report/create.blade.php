@@ -15,7 +15,6 @@
                         </div>
                         <div class="mb-3">
                             <select class="form-select select2 p-2" id="issueType" name="type" aria-label="Issue Type">
-                                <option>Select Type</option>
                                 <option value="gym" {{ old('type') == "gym"? 'selected' : '' }}>Gym Issue</option>
                                 <option value="equipment" {{ old('type') == "equipment"? 'selected' : '' }}>Equipment Issue</option>
                                 <option value="other" {{ old('type') == "other" ? 'selected' : '' }}>Other</option>
