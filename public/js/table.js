@@ -15,16 +15,34 @@ $(document).ready(function () {
         "responsive": true
     });
 
+    $('.mobileTable').DataTable({
+        "paging": false,
+        "lengthChange": false,
+        "info": false,
+        "autoWidth": true,
+        "searching": true,
+        "responsive": true
+    });
+
+    $('.pureDatatable').DataTable({
+        "paging": false,
+        "lengthChange": false,
+        "info": false,
+        "autoWidth": true,
+        "searching": false,
+        "responsive": true
+    });
+
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
     
-    $('.datepicker').flatpickr({
-        altInput: true,
-        dateFormat: "dd/mm/yyyy",
-        allowInput: true,
-    })
+    // $('.datepicker').flatpickr({
+    //     altInput: true,
+    //     dateFormat: "dd/mm/yyyy",
+    //     allowInput: true,
+    // })
     
     
 });

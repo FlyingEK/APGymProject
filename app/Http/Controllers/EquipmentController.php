@@ -166,5 +166,14 @@ class EquipmentController extends Controller
     {
         return view('equipment.trainer.all');
     }
+
+    public function getEquipmentMachines(Request $request)
+    {
+        $equipmentId = $request->get('equipment_id');
+        $machines = EquipmentMachine::where('equipment_id', $equipmentId)
+        ->where('status', '!=', 'maintenance')
+        ->get();
+        return response()->json($machines);
+    }
 }
 ?>

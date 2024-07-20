@@ -954,3 +954,33 @@ padding: 6px;
 .fadeBadge{
     opacity:0.35;
 }
+
+/* /datatable */
+@media screen and (max-width: 767px) {
+    div.dt-container div.dt-search {
+        text-align: left !important; 
+    }
+
+    div.dt-container div.dt-length{
+        display:none;
+    }
+}
+
+.active>.page-link, .page-link.active {
+    background-color: var(--secondColor) !important;
+    border-color: var(--secondColor) !important;
+  }
+
+  @media screen and (max-width: 767px) {
+    div.dt-container .row {
+        --bs-gutter-y: 0 !important;
+    }
+}
+
+#myIssues td, #myIssues th {
+    font-size: 13px !important;
+}
+#myIssues tr {
+    border:none !important;
+    border-bottom: 0.6px solid #b4b4b4 !important;
+}

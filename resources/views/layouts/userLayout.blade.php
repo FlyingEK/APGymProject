@@ -17,6 +17,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.js"></script>
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.css" rel="stylesheet" />
 {{-- @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) && !Route::is(['browse-index','reward-recognition-redemption','home','profile','edit-profile','volunteer-dashboard','chat')) --}}
     @if (!Route::is(['login','register']) )
         @include('partials.shared.header')
@@ -88,4 +90,6 @@
     });
 </script>
 @yield('javascript')
+<script src="{{ asset('/js/table.js') }}"></script>
+
 </html>
