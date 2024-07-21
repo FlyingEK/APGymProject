@@ -209,6 +209,7 @@ body {
     color:white !important;
 }
 
+
 .myBtn{
     border-radius: 12px ;
     border-width: 1.7px;
@@ -977,10 +978,10 @@ padding: 6px;
     }
 }
 
-#myIssues td, #myIssues th {
-    font-size: 13px !important;
+.myIssues td, .myIssues th {
+    font-size: 14px !important;
 }
-#myIssues tr {
+.myIssues tr {
     border:none !important;
     border-bottom: 0.6px solid #b4b4b4 !important;
 }

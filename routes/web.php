@@ -57,8 +57,9 @@ Route::group(['prefix' => 'issue'],function(){
     Route::post('/store', [IssueReportController::class, 'store'])->name('issue-store');
     Route::get('/edit/{id}', [IssueReportController::class, 'edit'])->name('issue-edit');
     Route::put('/update/{id}', [IssueReportController::class, 'update'])->name('issue-update');
+    Route::put('/updateStatus/{id}', [IssueReportController::class, 'updateStatus'])->name('issue-status-update');
     Route::get('/view/{id}', [IssueReportController::class, 'viewUser'])->name('issue-user-view');
-    Route::get('/viewTrainer', [IssueReportController::class, 'viewTrainer'])->name('issue-trainer-view');
+    Route::get('/viewTrainer/{id}', [IssueReportController::class, 'viewTrainer'])->name('issue-trainer-view');
     Route::get('/index', [IssueReportController::class, 'indexTrainer'])->name('issue-trainer-index');
     Route::put('/cancel/{id}', [IssueReportController::class, 'cancelIssue'])->name('issue-cancel');
 

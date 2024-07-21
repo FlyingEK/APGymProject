@@ -58,4 +58,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(GymUser::class, 'user_id', 'user_id');
     }
+
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'created_by', 'user_id');
+    }
 }

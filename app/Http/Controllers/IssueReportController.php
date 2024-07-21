@@ -5,8 +5,10 @@ use Illuminate\Http\Request;
 use App\Models\Equipment;
 use App\Models\Issue;
 use App\Models\GymUser;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class IssueReportController extends Controller
 {
@@ -27,7 +29,12 @@ class IssueReportController extends Controller
 
     public function indexTrainer()
     {
-        return view('issue-report.index-trainer');
+        $openIssues = Issue::where('status', "pending")
+        ->orWhere('status', 'reported')
+        ->get();
+        $closedIssues = Issue::where('status', "resolved")->get();
+        $rejectedIssues = Issue::where('status', "rejected")->get();
+        return view('issue-report.index-trainer', compact('openIssues', 'closedIssues', 'rejectedIssues'));
     }
 
 
@@ -116,13 +123,51 @@ class IssueReportController extends Controller
 
     public function viewUser($id)
     {
-        $issue = Issue::with('equipmentMachine.equipment')->findOrFail($id);
+        $issue = Issue::with('equipmentMachine.equipment')->with('comment')->findOrFail($id);
         return view('issue-report.view-user', compact('issue'));
     }
 
-    public function viewTrainer()
+    public function viewTrainer($id)
     {
-        return view('issue-report.view-trainer');
+        $issue = Issue::with('equipmentMachine.equipment')
+        ->with('comment.user')             
+        ->findOrFail($id);  
+        $user = GymUser::with('user')->findOrFail($issue->created_by);
+        return view('issue-report.view-trainer', compact('issue','user'));
+    }
+
+    
+    public function updateStatus(Request $request, $id)
+    {
+        $issue = Issue::with('comment','equipmentMachine')->findOrFail($id);
+        $data = $request->validate([
+            'status' => 'required|in:reported,resolved,rejected',
+        ]);
+        $issue->update($data);
+        if($data['status'] == 'resolved'){
+            $issue->equipmentMachine()->update([
+                'status' => 'available'
+            ]);
+        }else if($data['status'] == 'reported'){
+            $issue->equipmentMachine()->update([
+                'status' => 'maintenance'
+            ]);
+        }
+        if($request->has('comment')){
+            if($issue->comment()){
+                $issue->comment()->update([
+                    'comment' => $request->comment,
+                    'created_by' => Auth::user()->user_id,
+                ]);
+            }else{
+                $issue->comment()->create([
+                    'comment' => $request->comment,
+                    'created_by' => Auth::user()->user_id,
+                ]);
+            }
+
+        }
+        return redirect()->route('issue-trainer-view', $issue->issue_id)->with('success', 'Issue status updated successfully.');
     }
 
 }

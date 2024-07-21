@@ -8,13 +8,13 @@
                     <form id="issueAddForm" action={{route('issue-store')}} class="issueForm" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <input type="text" class="form-control p-2" id="requestName" name="title" placeholder="Issue Title" aria-label="Request Name" value={{old('title')}} >
+                            <input type="text" class="form-control p-2" id="requestName" name="title" placeholder="Issue Title" aria-label="Request Name" value="{{old('title')}}" >
                             @error('title')
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <select class="form-select select2 p-2" id="issueType" name="type" aria-label="Issue Type">
+                            <select class="form-select p-2" id="issueType" name="type" aria-label="Issue Type">
                                 <option value="gym" {{ old('type') == "gym"? 'selected' : '' }}>Gym Issue</option>
                                 <option value="equipment" {{ old('type') == "equipment"? 'selected' : '' }}>Equipment Issue</option>
                                 <option value="other" {{ old('type') == "other" ? 'selected' : '' }}>Other</option>
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <textarea class="form-control p-2" id="requestDescription" name="description" placeholder="Request Description" style="height: 100px;">{{old('description')}}??</textarea>
+                            <textarea class="form-control p-2" id="requestDescription" name="description" placeholder="Request Description" style="height: 100px;">{{old('description')}}</textarea>
                         </div>
                         @error('description')
                         <div class="text-danger">{{ $message }}</div>
@@ -87,6 +87,8 @@
         var oldEquipmentMachineId = '{{ old("equipment_machine_id") }}';
 
     function populateField() {
+        console.log('getting name');
+
             var type = $('#issueType').val();
             var $equipmentSelect = $('#equipment-name');
             var $machineSelect = $('#equipment_machine');
@@ -100,6 +102,8 @@
             }
         }
         function populateMachines() {
+            console.log('getting machines');
+
             var equipmentId = $('#equipment-name').val();
             var $machineSelect = $('#equipment_machine');
             $machineSelect.empty();
@@ -124,9 +128,10 @@
                 });
             }
         }
-        populateField()
+        populateField();
         if(oldEquipmentMachineId){
-            populateMachines()
+            clearTimeout(this.populateTimeout);
+            this.populateTimeout = setTimeout(populateMachines, 300);
         }
         $('#equipment-name').select2({
             placeholder: 'Select the equipment',
@@ -142,7 +147,10 @@
 
         $('#issueType').on('change',populateField);
 
-        $('#equipment-name').on('change', populateMachines);
+        $('#equipment-name').on('change', function(){
+            clearTimeout(this.populateTimeout);
+            this.populateTimeout = setTimeout(populateMachines, 300);
+        });
     });
 </script>
-@stop
+@endsection

@@ -35,4 +35,9 @@ class Issue extends Model
     {
         return $this->belongsTo(GymUser::class, 'gym_user_id', 'gym_user_id');
     }
+
+    public function comment()
+    {
+        return $this->hasOne(Comment::class, 'issue_id', 'issue_id');
+    }
 }

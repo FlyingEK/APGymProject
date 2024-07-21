@@ -13,7 +13,7 @@
             </div> 
         </div>
         <div class="mt-1">
-            <table class="bg-white mobileTable table borderless w-100 p-2 rounded" id="myIssues">
+            <table class="bg-white mobileTable table borderless w-100 p-2 rounded myIssues" >
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <table class="table bg-white pureDatatable borderless w-100" id="myIssues">
+        <table class="table bg-white pureDatatable borderless w-100 myIssues" >
             <thead>
                 <tr>
                     <th>Date</th>
@@ -83,8 +83,8 @@
                     <td>{{ $issue->created_at->format('d M y')}}<a href="{{route('issue-user-view')}}" class="stretched-link"></a>
                     </td>
                     <td>{{ $issue->title }}</td>
-                    <td><span class="rounded-pill text-white p-1 {{$color}}">{{ ucfirst($issue->status) }}</td></td>
-                    <td>
+                    <td><span class="rounded-pill text-white {{$color}} px-1" style=" font-size: 12px !important;">{{ ucfirst($issue->status) }}</td></td>
+                        <td>
                         <a href="{{route('issue-user-view',$issue->issue_id)}}" class="stretched-link"></a>
                     </td>
                 </tr>

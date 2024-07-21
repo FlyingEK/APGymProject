@@ -24,6 +24,7 @@
                             <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        @if( $issue->equipment_machine_id )
                         <div class="mb-3">
                             <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name">
                                 <option value="" data-equip="" selected>Choose an equipment...</option>
@@ -32,6 +33,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        @else
+                        <div class="mb-3">
+                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name">
+                                <option value="" data-equip="" selected>Choose an equipment...</option>
+                                @foreach($allEquipment as $equip)
+                                    <option value="{{ $equip->equipment_id }}" data-equip="{{ $equip->equipment_id }}">{{ $equip->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
                         <div class="mb-3">
                             <select class="form-control form-select mb-3 w-100" name="equipment_machine_id" id="equipment_machine">
                             </select>
@@ -58,7 +69,7 @@
                                             <label for="imageUpload"></label>
                                         </div>
                                         <div class="avatar-preview">
-                                            <div id="imagePreview" style="background-image: url({{asset("storage/".$issue->image)}}');">
+                                            <div id="imagePreview" style="background-image: url('/storage/{{$issue->image}}');">
                                             </div>
                                         </div>
                                         @error('image')
@@ -84,7 +95,7 @@
     <script src="{{ asset('js/custom-select-box.js') }}"></script>
     <script>
         
-    $(document).ready(function() {
+
         var oldEquipmentMachineId = '{{ $issue->equipment_machine_id }}';
 
     function populateField() {
@@ -112,8 +123,6 @@
                     type: 'GET',
                     data: { equipment_id: equipmentId },
                     success: function(data) {
-                        console.log(data);
-
                         $.each(data, function(index, machine) {
                             $machineSelect.append('<option value="'+ machine.equipment_machine_id +'" '+ (oldEquipmentMachineId == machine.equipment_machine_id ? 'selected' : '') +'>'+ machine.label +'</option>');
                         });
@@ -125,9 +134,10 @@
                 });
             }
         }
-        populateField()
+        populateField();
         if(oldEquipmentMachineId){
-            populateMachines()
+            clearTimeout(this.populateTimeout);
+            this.populateTimeout = setTimeout(populateMachines, 300);
         }
         $('#equipment-name').select2({
             placeholder: 'Select the equipment',
@@ -143,7 +153,10 @@
 
         $('#issueType').on('change',populateField);
 
-        $('#equipment-name').on('change', populateMachines);
-    });
+        $('#equipment-name').on('change', function(){
+            clearTimeout(this.populateTimeout);
+            this.populateTimeout = setTimeout(populateMachines, 300);
+        });
+
 </script>
 @stop
