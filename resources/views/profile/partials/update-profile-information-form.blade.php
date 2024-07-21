@@ -9,7 +9,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-4">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-4" enctype="multipart/form-data">
         @csrf
         @method('patch')
         <div class="row mb-1">
@@ -20,7 +20,7 @@
                         <label for="imageUpload"></label>
                     </div>
                     <div class="avatar-preview rounded-circle" style="width:140px;height:140px;">
-                        <div id="imagePreview" style="background-image: url();">
+                        <div id="imagePreview" class="rounded-circle" style="background-image: url('/storage/{{$user->image}}');">
                         </div>
                     </div>
                 </div>

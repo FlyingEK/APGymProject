@@ -21,6 +21,7 @@ class ProfileUpdateRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'gender' => ['nullable', 'string', 'in:male,female'],
+            'image' =>['nullable'],
         ];
     }
 }
