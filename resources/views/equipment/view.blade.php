@@ -8,13 +8,16 @@
 <div class="container px-3 py-2 bg-white myShadow equipmentDetail">
     <div class="row">
         <div class="col-5 ">
-                <img class="img-fluid equipmentImg" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+            <img class="img-fluid equipmentImg" src="{{ asset('storage/'.$equipment->image) }}" alt="Work Order Image" ><br/>
         </div>
         <div class="col-7" style="padding-left: 5px">
             <div class=" mt-md-3 no-wrap">
-                <h4>Equipment name</h4>
-                <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none" style="font-size: 13px;">
-                    <i class="fa-solid fa-helmet-safety"></i> Available
+                <h4>{{$equipment->name}}</h4>
+                @php
+                $color = $equipment->status == 'Available'? 'success' : 'danger';
+                @endphp
+                <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none" style="font-size: 13px;">
+                    {{$equipment->status}}
                 </div><br>
             </div>
         </div>
@@ -23,16 +26,22 @@
     <div class="row">
         <div class="row mb-3">
             <div class="label mb-3">Instructions:</div>
-            @for ($i = 0; $i < 3; $i++)
-                <div class="value mb-1">1 Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum </div>
-            
-            @endfor
+            <ul>
+                @if ($equipment->tutorials->isEmpty())
+                <li>No tutorial available</li>
+                @endif
+                @foreach ($equipment->tutorials as $tutorial)
+                    <li class="mb-3">{{ $loop->iteration }}. {{ $tutorial->instruction }}</li>
+                @endforeach
+            </ul>
         </div>
         <div class="row mb-4">
             <div class="label mb-3">Tutorial video:</div>
+            @if ($equipment->tutorial_youtube)
             <iframe class="instructionVideo"
-            src="https://www.youtube.com/embed/tgbNymZ7vqY">
+            src="{{$equipment->tutorial_youtube}}">
             </iframe>
+            @endif
         </div>
     </div>
     <div class="row mb-4">

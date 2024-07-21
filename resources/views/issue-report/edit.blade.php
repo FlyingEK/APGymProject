@@ -26,7 +26,7 @@
                         </div>
                         @if( $issue->equipment_machine_id )
                         <div class="mb-3">
-                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name">
+                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name3">
                                 <option value="" data-equip="" selected>Choose an equipment...</option>
                                 @foreach($allEquipment as $equip)
                                     <option value="{{ $equip->equipment_id }}" data-equip="{{ $equip->equipment_id }}" {{ $issue->equipmentMachine->equipment->equipment_id  == $equip->equipment_id ? 'selected' : '' }}>{{ $equip->name }}</option>
@@ -35,7 +35,7 @@
                         </div>
                         @else
                         <div class="mb-3">
-                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name">
+                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name3">
                                 <option value="" data-equip="" selected>Choose an equipment...</option>
                                 @foreach($allEquipment as $equip)
                                     <option value="{{ $equip->equipment_id }}" data-equip="{{ $equip->equipment_id }}">{{ $equip->name }}</option>

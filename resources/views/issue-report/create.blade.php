@@ -24,7 +24,7 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name">
+                            <select class="form-control form-select  w-100" name="equipment_id" id="equipment-name4">
                                 <option value="" data-equip="" selected>Choose an equipment...</option>
                                 @foreach($allEquipment as $equip)
                                     <option value="{{ $equip->equipment_id }}" data-equip="{{ $equip->equipment_id }}" {{ old('equipment_id') == $equip->equipment_id ? 'selected' : '' }}>{{ $equip->name }}</option>
@@ -90,7 +90,7 @@
         console.log('getting name');
 
             var type = $('#issueType').val();
-            var $equipmentSelect = $('#equipment-name');
+            var $equipmentSelect = $('#equipment-name4');
             var $machineSelect = $('#equipment_machine');
 
             if (type == 'equipment') {
@@ -104,7 +104,7 @@
         function populateMachines() {
             console.log('getting machines');
 
-            var equipmentId = $('#equipment-name').val();
+            var equipmentId = $('#equipment-name4').val();
             var $machineSelect = $('#equipment_machine');
             $machineSelect.empty();
             $machineSelect.append('<option value="" selected>Choose an equipment label...</option>');
@@ -133,7 +133,7 @@
             clearTimeout(this.populateTimeout);
             this.populateTimeout = setTimeout(populateMachines, 300);
         }
-        $('#equipment-name').select2({
+        $('#equipment-name4').select2({
             placeholder: 'Select the equipment',
         });
 
@@ -147,7 +147,7 @@
 
         $('#issueType').on('change',populateField);
 
-        $('#equipment-name').on('change', function(){
+        $('#equipment-name4').on('change', function(){
             clearTimeout(this.populateTimeout);
             this.populateTimeout = setTimeout(populateMachines, 300);
         });

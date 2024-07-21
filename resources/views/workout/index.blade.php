@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="turnEquipment mb-4">
+    {{-- <div class="turnEquipment mb-4">
         <div class="row mt-3">
             <div class="page-title" style="padding-right: 0px;color:">It's your turn!</div>
         </div>
@@ -73,9 +73,9 @@
         </div>
         <p style="color: #C12323; font-weight: bold;">* Hurry up ! This equipment is reserved for you for only 2 minutes.</p>
 
-    </div>
+    </div> --}}
     {{-- if got quueued --}}
-    <div class="row mt-3">
+    {{-- <div class="row mt-3">
         <div class="page-title" style="padding-right: 0px;">Queued Equipment</div>
     </div>
     <div class="card equipment shadow-sm mt-2 p-2">
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 <div class="d-flex justify-content-center mt-5">
     <a href="{{route('workout-habit')}}" class="p-2 redBtn btn">

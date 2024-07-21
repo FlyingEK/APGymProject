@@ -41,7 +41,7 @@ Route::group(['prefix' => 'workout'],function(){
     Route::post('/storeHabit', [WorkoutController::class, 'store'])->name('workout-habit-store');
     Route::put('/updateHabit/{id}', [WorkoutController::class, 'updateWorkoutHabit'])->name('workout-habit-update');
     Route::delete('/deleteHabit/{id}', [WorkoutController::class, 'deleteWorkoutHabit'])->name('workout-habit-delete');
-
+    Route::get('/getHabit', [WorkoutController::class, 'getWorkoutHabit'])->name('workout-habit-details');
 
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
@@ -84,11 +84,11 @@ Route::group(['prefix' => 'user'],function(){
 
 Route::group(['prefix' => 'equipment'], function(){
     Route::get('/', [EquipmentController::class, 'index'])->name('equipment-index');
-    Route::get('/equipments', [EquipmentController::class, 'allEquipment'])->name('equipments');
-    Route::get('/view', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
+    Route::get('/view/{id}', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
     Route::get('/add', [EquipmentController::class, 'addEquipment'])->name('equipment-add');
     Route::post('/store', [EquipmentController::class, 'store'])->name('equipment.store');
     Route::get('/all', [EquipmentController::class, 'viewAllEquipment'])->name('equipment-all');
+    Route::get('/category/{id}', [EquipmentController::class, 'categoryEquipment'])->name('equipment-category');
     Route::get('/edit/{id}', [EquipmentController::class, 'editEquipment'])->name('equipment-edit');
     Route::put('/update/{id}', [EquipmentController::class, 'updateEquipment'])->name('equipment-update');
     Route::get('/adminView/{id}', [EquipmentController::class, 'adminViewEquipment'])->name('equipment-admin-view');

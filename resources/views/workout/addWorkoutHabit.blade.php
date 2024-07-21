@@ -26,20 +26,20 @@
                         <input type="hidden" name="has_weight" id="has_weight" value="{{ old('has_weight') }}">
                         <div id="weight-fields" class="mt-3 mb-3 {{ old('has_weight') == 1 ? '' : 'd-none' }}">
                             <div class="mb-3">
-                                <input type="number" class="form-control p-2" id="sets" name="set" placeholder="Number of Sets" aria-label="Number of Sets" value="{{ old('sets') }}">
-                                @error('sets')
+                                <input type="number" class="form-control p-2" id="sets" name="set" placeholder="Number of Sets" aria-label="Number of Sets" value="{{ old('set') }}">
+                                @error('set')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <input type="number" class="form-control p-2" id="reps" name="rep" placeholder="Number of Repititions" aria-label="Number of Repetitions" value="{{ old('reps') }}">
-                                @error('reps')
+                                <input type="number" class="form-control p-2" id="reps" name="rep" placeholder="Number of Repititions" aria-label="Number of Repetitions" value="{{ old('rep') }}">
+                                @error('rep')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <input type="number" class="form-control p-2" id="weights" name="weight" placeholder="Weights (kg)" aria-label="Weights (kg)" value="{{ old('weights') }}">
-                                @error('weights')
+                                <input type="number" class="form-control p-2" id="weights" name="weight" placeholder="Weights (kg)" aria-label="Weights (kg)" value="{{ old('weight') }}">
+                                @error('weight')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>

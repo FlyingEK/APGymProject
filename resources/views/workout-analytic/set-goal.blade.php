@@ -51,7 +51,7 @@
                             <th></th>
                         <tr class="my-2">
                             <td >
-                                <select class="select2 form-control form-select mb-3" name="equipment_ids[]" id="equipment-name" required>
+                                <select class="select2 form-control form-select mb-3" name="equipment_ids[]" id="equipment-name2" required>
                                     <option value="" data-has-weight="0" selected>Choose an equipment...</option>
                                     @foreach($allEquipment as $equip)
                                         <option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}">{{ $equip->name }}</option>
@@ -82,10 +82,10 @@
 
 <script>
 $(document).ready(function() {
-    $('#equipment-name').select2({
+    $('#equipment-name2').select2({
         placeholder: 'Equipment',
     });
-     $('#equipment-name').on('change', function() {
+     $('#equipment-name2').on('change', function() {
         //  var hasWeight = $(this).find(':selected').data('has-weight');
         //  if (hasWeight == 1) {
         //    $('#goalvalue').attr('placeholder', 'Number of Repetitions for ' + selectedOption.text());
@@ -102,7 +102,7 @@ $(document).ready(function() {
      i++;
      no++;
      var newRow = '<tr id="row' + i + '">';
-     newRow += '<td ><select class="form-control form-select select2 mb-3" name="equipment_ids[]" id="equipment-name' + i + '" required>';
+     newRow += '<td ><select class="form-control form-select select2 mb-3" name="equipment_ids[]" id="equipment-name2' + i + '" required>';
      newRow += '<option value="" data-has-weight="0" selected>Choose an equipment...</option>';
      @foreach($allEquipment as $equip)
          newRow += '<option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}">{{ $equip->name }}</option>';

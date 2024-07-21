@@ -25,26 +25,24 @@ class WorkoutController extends Controller
 
     public function store(Request $request){
         $durationConstraint = GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
-
         $userId = Auth::user()->user_id;
         $gymUser = GymUser::where('user_id', $userId)->first();
         if (!$gymUser) {
             return redirect()->back()->with('error', 'Gym user not found.');
         }
-        dd($request->all());    
         $gymUserId = $gymUser->gym_user_id;
         $data = $request->validate([
             'has_weight' => 'required|boolean',
             'equipment_id' => 'required',
-            'set' => 'required_if:has_weight,1|integer|min:1|max:5', 
-            'rep' => 'required_if:has_weight,1|integer|min:1|max:40', 
-            'weight' => 'required_if:has_weight,1|integer|min:5|max:500',
-            'duration' => 'required_if:has_weight,0|integer|min:10|max:'.$durationConstraint->constraint_value??60,
-            'allow_sharing' => 'boolean',
+            'set' => 'nullable|required_if:has_weight,1|integer|min:1|max:5', 
+            'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
+            'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
+            'duration' => 'nullable|required_if:has_weight,0|integer|min:10|max:'.$durationConstraint->constraint_value??60,
+            'allow_sharing' => 'nullable|boolean',
         ], [
-            'set.required_if' => 'The set field is required.',
-            'rep.required_if' => 'The repetition field is required.',
-            'weight.required_if' => 'The weight field is required.',
+            'set.required_if' => 'The sets field is required.',
+            'rep.required_if' => 'The reps field is required.',
+            'weight.required_if' => 'The weights field is required.',
             'duration.required_if' => 'The duration field is required.',
             'duration.min' => 'The duration must be at least 10 minutes.',
             'duration.max' => 'The duration may not be greater than ' .$durationConstraint->constraint_value??60 .' minutes.',
@@ -64,9 +62,9 @@ class WorkoutController extends Controller
         ]);
         if($data['has_weight'] == 1){
             $workoutHabit->strengthWorkoutHabits()->create([
-                'set' => $data['sets'],
-                'repetition' => $data['reps'],
-                'weight' => $data['weights'],
+                'set' => $data['set'],
+                'repetition' => $data['rep'],
+                'weight' => $data['weight'],
                 'allow_sharing' => $data['allow_sharing'],
             ]);
         } else {
@@ -75,7 +73,7 @@ class WorkoutController extends Controller
             ]);
         }
         DB::commit();
-        return redirect()->route('workout-habit')->with('success', 'Workout habit created successfully!');
+        return redirect()->back()->with('success', 'Workout habit created successfully!');
     }
 
     public function workoutHabit()
@@ -106,6 +104,44 @@ class WorkoutController extends Controller
         return view('workout.workoutHabit', compact('equipmentsWithHabit'));
     }
 
+    public function getWorkoutHabit(Request $request)
+    {
+        $equipmentId = $request->get('id');
+
+        $userId = Auth::user()->user_id;
+        $gymUser = GymUser::where('user_id', $userId)->first();
+
+        if (!$gymUser) {
+            return redirect()->back()->with('error', 'Gym user not found.');
+        }
+
+        $equipmentWithHabit = DB::table('equipment')
+        ->leftJoin('workout_habit', 'equipment.equipment_id', '=', 'workout_habit.equipment_id')
+        ->leftJoin('strength_workout_habit', 'workout_habit.workout_habit_id', '=', 'strength_workout_habit.workout_habit_id')
+        ->leftJoin('cardio_workout_habit', 'workout_habit.workout_habit_id', '=', 'cardio_workout_habit.workout_habit_id')
+        ->where('equipment.is_deleted', false)
+        ->where('equipment.equipment_id', $equipmentId)
+        ->where(function ($query) use ($gymUser) {
+            $query->where('workout_habit.gym_user_id', $gymUser->gym_user_id)
+                  ->orWhereNull('workout_habit.gym_user_id');
+        })
+        ->select(
+            'equipment.*',
+            'workout_habit.*',
+            'strength_workout_habit.set as set',
+            'strength_workout_habit.repetition as repetition',
+            'strength_workout_habit.weight as weight',
+            'strength_workout_habit.allow_sharing as allowSharing',
+            'cardio_workout_habit.duration as duration'
+        )
+        ->first();
+        $equipmentWithHabit->equipment_id=  $equipmentId;
+        if (!$equipmentWithHabit) {
+            return response()->json(['success' => false, 'error' => 'Equipment with workout habit not found.'], 404);
+        }
+        return response()->json(['success' => true, 'equipment' => $equipmentWithHabit]);
+    }       
+
     public function updateWorkoutHabit(Request $request, $id)
     {
         // Find the workout habit by ID
@@ -115,11 +151,11 @@ class WorkoutController extends Controller
         // Validate the request data
         $data = $request->validate([
             'has_weight' => 'required|boolean',
-            'set' => 'required_if:has_weight,1|integer|min:1|max:5', 
-            'rep' => 'required_if:has_weight,1|integer|min:1|max:40', 
-            'weight' => 'required_if:has_weight,1|integer|min:5|max:500',
-            'duration' => 'required_if:has_weight,0|integer|min:10|max:'.$durationConstraint->constraint_value??60,
-            'allow_sharing' => 'boolean',
+            'set' => 'nullable|required_if:has_weight,1|integer|min:1|max:5', 
+            'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
+            'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
+            'duration' => 'nullable|required_if:has_weight,0|integer|min:10|max:'.$durationConstraint->constraint_value??60,
+            'allow_sharing' => 'nullable|boolean',
         ], [
             'set.required_if' => 'The sets field is required.',
             'rep.required_if' => 'The reps field is required.',
@@ -142,7 +178,7 @@ class WorkoutController extends Controller
             ]);
         }
 
-        return redirect()->route('workout-habit', ['userId' => $workoutHabit->gym_user_id])->with('success', 'Workout habit updated successfully!');
+        return redirect()->back()->with('success', 'Workout habit updated successfully!');
     }
 
     public function deleteWorkoutHabit($id){

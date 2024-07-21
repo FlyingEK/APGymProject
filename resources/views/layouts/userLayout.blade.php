@@ -23,12 +23,15 @@
     @if (!Route::is(['login','register']) )
         @include('partials.shared.header')
     @endif
+    @livewireStyles
 
 </head>
 <body>
     <div class="content-wrapper mx-2">
         @yield('content')
     </div>
+    @livewireScripts
+
 </body>
 
 @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) )
