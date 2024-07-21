@@ -9,24 +9,60 @@ class EquipmentController extends Controller
 {
     public function index()
     {
+        $availableEquipment = Equipment::where('is_deleted', false)
+        ->whereHas('equipmentMachines', function ($query) {
+            $query->where('status', 'available');
+        })
+        ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
+            $query->where('status', 'available');
+        }])
+        ->having('available_machines_count', '>', 1)
+        ->get();
 
-        return view('equipment.index');
+        $maintenanceEquipment = Equipment::with('equipmentMachines')
+        ->where('is_deleted', false)
+        ->whereHas('equipmentMachines', function ($query) {
+            $query->where('status', 'maintenance');
+        })
+        ->get();
+        return view('equipment.index', compact('availableEquipment', 'maintenanceEquipment'));
+
     }
 
-    public function allEquipment()
-    {
-        // Fetch all equipment data
-        $equipment = Equipment::where('is_deleted', false)->get();
-        // Pass the data to the view
-        return view('equipment.all', compact('equipment'));
+    public function categoryEquipment($category){
+        $equipment = Equipment::where('is_deleted', false)
+        ->where('category', $category)
+        ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
+            $query->where('status', 'available');
+        }])
+        ->get();
+
+        // Adding status to each equipment
+        $equipment->each(function ($item) {
+            $item->status = $item->available_machines_count > 1 ? 'Available' : 'In use';
+        });
+        return view('equipment.category', compact('equipment', 'category'));
     }
 
-    public function viewEquipment()
+    // public function allEquipment()
+    // {
+    //     // Fetch all equipment data
+    //     $equipment = Equipment::where('is_deleted', false)->get();
+    //     // Pass the data to the view
+    //     return view('equipment.all', compact('equipment'));
+    // }
+
+    public function viewEquipment($id)
     {
-        // $equipment = Equipment::with(['tutorials', 'equipmentMachines'])
-        // ::where('is_deleted', false)
-        // ->findOrFail($id);
-        return view('equipment.view');
+        $equipment = Equipment::with(['tutorials', 'equipmentMachines'])
+        ->where('is_deleted', false)
+        ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
+            $query->where('status', 'available');
+        }])
+        ->findOrFail($id);
+        $equipment->status = $equipment->available_machines_count > 1 ? 'Available' : 'In use';
+
+        return view('equipment.view', compact('equipment'));
     }
 
     public function addEquipment()
@@ -45,7 +81,16 @@ class EquipmentController extends Controller
             'tutorial_youtube' => 'nullable|url|max:2083',
             'instructions' => 'sometimes|array',
             'instructions.*' => 'nullable|string|max:500',
-            'machineLabels' => 'sometimes|array',
+            'machineLabels' => [
+            'sometimes',
+            'array',
+            function ($attribute, $value, $fail) {
+                $uniqueLabels = array_unique($value);
+                if (count($uniqueLabels) < count($value)) {
+                    $fail('Each machine label must be unique.');
+                }
+            }
+        ],
             'machineLabels.*' => 'nullable|string|max:255',
         ]);
         $directory = '/img/equipment';
@@ -58,17 +103,24 @@ class EquipmentController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'category'=> $request->category,
-            'has_weight' => $request->category === 'cardio machines'? false : true,
+            'has_weight' => $request->category == 'cardio machines'? false : true,
             'image' => $imagePath,
             'quantity' => $request->quantity,
             'tutorial_youtube' => $request->tutorial_youtube,
         ]);
 
-        //instruction
-        // Create tutorials
+        // Check if instructions are provided
         if ($request->has('instructions')) {
-            foreach ($request->instructions as $instruction) {
-                $equipment->tutorials()->create(['instruction' => $instruction]);
+            $instructions = $request->instructions;
+
+            // Check if all items in the instructions array are not null or empty
+            $instructions = array_filter($instructions, fn($value) => !empty(trim($value)));
+
+            // Insert instructions if any valid instructions are present
+            if (!empty($instructions)) {
+                foreach ($instructions as $instruction) {
+                    $equipment->tutorials()->create(['instruction' => trim($instruction)]);
+                }
             }
         }
 
@@ -111,7 +163,16 @@ class EquipmentController extends Controller
             'tutorial_youtube' => 'nullable|url|max:2083',
             'instructions' => 'sometimes|array',
             'instructions.*' => 'nullable|string|max:500',
-            'machineLabels' => 'sometimes|array',
+            'machineLabels' => [
+            'sometimes',
+            'array',
+            function ($attribute, $value, $fail) {
+                $uniqueLabels = array_unique($value);
+                if (count($uniqueLabels) < count($value)) {
+                    $fail('Each machine label must be unique.');
+                }
+            }
+        ],
             'machineLabels.*' => 'nullable|string|max:255',
         ]);
 
@@ -140,16 +201,27 @@ class EquipmentController extends Controller
             'category' => $request->category,
             'quantity' => $request->quantity,
             'image' => $imagePath,
+            'has_weight' => $request->category == 'cardio machines'? false : true,
             'tutorial_youtube' => $request->tutorial_youtube,
         ]);
-
         // Update instructions
         $equipment->tutorials()->delete();
+
+        // Check if instructions are provided
         if ($request->has('instructions')) {
-            foreach ($request->instructions as $instruction) {
-                $equipment->tutorials()->create(['instruction' => $instruction]);
+            $instructions = $request->instructions;
+
+            // Check if all items in the instructions array are not null or empty
+            $instructions = array_filter($instructions, fn($value) => !empty(trim($value)));
+
+            // Insert instructions if any valid instructions are present
+            if (!empty($instructions)) {
+                foreach ($instructions as $instruction) {
+                    $equipment->tutorials()->create(['instruction' => trim($instruction)]);
+                }
             }
         }
+
 
         // Update equipment machines
         $equipment->equipmentMachines()->delete();
@@ -173,6 +245,7 @@ class EquipmentController extends Controller
         $machines = EquipmentMachine::where('equipment_id', $equipmentId)
         ->where('status', '!=', 'maintenance')
         ->get();
+
         return response()->json($machines);
     }
 }
