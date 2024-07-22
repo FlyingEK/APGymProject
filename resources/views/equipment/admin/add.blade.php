@@ -159,7 +159,9 @@
     <script src="{{ asset('/js/video-preview.js') }}"></script>
     <script src="{{ asset('/js/img-preview.js') }}"></script>
     <script src="{{ asset('/js/dynamic-input-field.js') }}"></script>
-    <script>
+
+@endsection
+<script>
     // Add more instruction fields dynamically
     $(document).ready(function() {
         var oldLabels = {!! json_encode(old('labels', [])) !!};
@@ -229,4 +231,3 @@
 
     
     </script>
-@endsection

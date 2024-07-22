@@ -87,9 +87,9 @@
 @include('partials.equipment.equipment-habit-modal')
 
 @endsection
-@section('javascript')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    
     document.getElementById('checkInBtn').addEventListener('click', function(event) {
         fetch('{{ route("enter-gym") }}', {
             method: 'POST',
@@ -190,4 +190,3 @@ $(document).ready(function () {
     }
 });
 </script>
-@endsection
