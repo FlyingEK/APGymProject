@@ -93,71 +93,70 @@
 @section('javascript')
     <script src="{{ asset('/js/img-preview.js') }}"></script>
     <script src="{{ asset('js/custom-select-box.js') }}"></script>
-    
-@stop
-<script>
+    <script>
         
 
-    var oldEquipmentMachineId = '{{ $issue->equipment_machine_id }}';
+        var oldEquipmentMachineId = '{{ $issue->equipment_machine_id }}';
 
-function populateField() {
-        var type = $('#issueType').val();
-        var $equipmentSelect = $('#equipment-name');
-        var $machineSelect = $('#equipment_machine');
+    function populateField() {
+            var type = $('#issueType').val();
+            var $equipmentSelect = $('#equipment-name');
+            var $machineSelect = $('#equipment_machine');
 
-        if (type == 'equipment') {
-            $equipmentSelect.prop("disabled", false);
-            $machineSelect.prop("disabled", false);
-        } else {
-            $equipmentSelect.prop("disabled", true);
-            $machineSelect.prop("disabled", true);
+            if (type == 'equipment') {
+                $equipmentSelect.prop("disabled", false);
+                $machineSelect.prop("disabled", false);
+            } else {
+                $equipmentSelect.prop("disabled", true);
+                $machineSelect.prop("disabled", true);
+            }
         }
-    }
-    function populateMachines() {
-        var equipmentId = $('#equipment-name').val();
-        var $machineSelect = $('#equipment_machine');
-        $machineSelect.empty();
-        $machineSelect.append('<option value="" selected>Choose an equipment label...</option>');
-        console.log(equipmentId);
-        if (equipmentId) {
-            $.ajax({
-                url: '{{ route("get-equipment-machines") }}',
-                type: 'GET',
-                data: { equipment_id: equipmentId },
-                success: function(data) {
-                    $.each(data, function(index, machine) {
-                        $machineSelect.append('<option value="'+ machine.equipment_machine_id +'" '+ (oldEquipmentMachineId == machine.equipment_machine_id ? 'selected' : '') +'>'+ machine.label +'</option>');
-                    });
-                    $machineSelect.trigger('change');
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
+        function populateMachines() {
+            var equipmentId = $('#equipment-name').val();
+            var $machineSelect = $('#equipment_machine');
+            $machineSelect.empty();
+            $machineSelect.append('<option value="" selected>Choose an equipment label...</option>');
+            console.log(equipmentId);
+            if (equipmentId) {
+                $.ajax({
+                    url: '{{ route("get-equipment-machines") }}',
+                    type: 'GET',
+                    data: { equipment_id: equipmentId },
+                    success: function(data) {
+                        $.each(data, function(index, machine) {
+                            $machineSelect.append('<option value="'+ machine.equipment_machine_id +'" '+ (oldEquipmentMachineId == machine.equipment_machine_id ? 'selected' : '') +'>'+ machine.label +'</option>');
+                        });
+                        $machineSelect.trigger('change');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
         }
-    }
-    populateField();
-    if(oldEquipmentMachineId){
-        clearTimeout(this.populateTimeout);
-        this.populateTimeout = setTimeout(populateMachines, 300);
-    }
-    $('#equipment-name').select2({
-        placeholder: 'Select the equipment',
-    });
+        populateField();
+        if(oldEquipmentMachineId){
+            clearTimeout(this.populateTimeout);
+            this.populateTimeout = setTimeout(populateMachines, 300);
+        }
+        $('#equipment-name').select2({
+            placeholder: 'Select the equipment',
+        });
 
-    $('#equipment_machine').select2({
-        placeholder: 'Select the equipment label',
-    });
+        $('#equipment_machine').select2({
+            placeholder: 'Select the equipment label',
+        });
 
-    $('#issueType').select2({
-        placeholder: 'Select the issue type',
-    });
+        $('#issueType').select2({
+            placeholder: 'Select the issue type',
+        });
 
-    $('#issueType').on('change',populateField);
+        $('#issueType').on('change',populateField);
 
-    $('#equipment-name').on('change', function(){
-        clearTimeout(this.populateTimeout);
-        this.populateTimeout = setTimeout(populateMachines, 300);
-    });
+        $('#equipment-name').on('change', function(){
+            clearTimeout(this.populateTimeout);
+            this.populateTimeout = setTimeout(populateMachines, 300);
+        });
 
 </script>
+@stop

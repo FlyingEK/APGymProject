@@ -74,6 +74,7 @@
     </div>
 </div>
 @endsection
+@section('javascript')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cancelIssue').addEventListener('click', function(e) {
@@ -99,3 +100,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 </script>
+@endsection

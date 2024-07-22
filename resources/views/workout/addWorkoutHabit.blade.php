@@ -69,6 +69,7 @@
 </div>
 
 @endsection
+@section('javascript')
 <script>
 $(document).ready(function() {
     $('#equipment-name').select2({
@@ -89,3 +90,4 @@ $(document).ready(function() {
  });
  
  </script>
+ @endsection

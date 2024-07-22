@@ -114,6 +114,7 @@
     </div>
 </div>
 @endsection
+@section('javascript')
 <script>
     function submitForm(formId) {
         swal.fire(
