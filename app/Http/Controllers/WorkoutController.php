@@ -5,6 +5,8 @@ use App\Models\WorkoutHabit;
 use App\Models\GymUser;
 use App\Models\Equipment;
 use App\Models\GymConstraint;
+use App\Models\Workout;
+use App\Models\EquipmentMachine;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -177,6 +179,80 @@ class WorkoutController extends Controller
                 'duration' => $data['duration'],
             ]);
         }
+
+        return redirect()->back()->with('success', 'Workout habit updated successfully!');
+    }
+
+    public function updateHabitAndGetEquipment(Request $request, $id)
+    {
+        $userId = Auth::user()->user_id;
+        $gymUser = GymUser::where('user_id', $userId)->first();
+    
+        if (!$gymUser) {
+            return response()->json(['success' => false, 'message' => 'Gym user not found.'], 404);
+        }
+        // Find the workout habit by ID
+        $workoutHabit = WorkoutHabit::findOrFail($id);
+
+        $durationConstraint = GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
+        // Validate the request data
+        $data = $request->validate([
+            'has_weight' => 'required|boolean',
+            'set' => 'nullable|required_if:has_weight,1|integer|min:1|max:5', 
+            'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
+            'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
+            'duration' => 'nullable|required_if:has_weight,0|integer|min:10|max:'.$durationConstraint->constraint_value??60,
+            'allow_sharing' => 'nullable|boolean',
+        ], [
+            'set.required_if' => 'The sets field is required.',
+            'rep.required_if' => 'The reps field is required.',
+            'weight.required_if' => 'The weights field is required.',
+            'duration.required_if' => 'The duration field is required.',
+            'duration.min' => 'The duration must be at least 10 minutes.',
+            'duration.max' => 'The duration may not be greater than ' .$durationConstraint->constraint_value??60 .' minutes.',
+        ]);
+        $startTime = now();
+        // Update related strength or cardio workout habits
+        if ($data['has_weight']  && $data['has_weight'] == 1) {
+            $workoutHabit->strengthWorkoutHabits()->update([
+                'set' => $data['set'],
+                'repetition' => $data['rep'],
+                'weight' => $data['weight'],
+                'allow_sharing' =>$data['allow_sharing'],
+            ]);
+            $estimatedEndTime = now()->addMinutes($data['set'] * $data['rep'] * 10/60 * (5*($data['set']-1)));
+        } else {
+            $workoutHabit->cardioWorkoutHabits()->update([
+                'duration' => $data['duration'],
+            ]);
+            $estimatedEndTime = now()->addMinutes($data['duration']);
+        }
+        // Add the equipment machine to the user if available
+        $equipmentMachine = EquipmentMachine::where('equipment_id', $data['equipment_id'])
+        ->where('status', 'available')
+        ->first();
+
+        if ($equipmentMachine && $equipmentMachine->status == 'available') {
+            $equipmentMachine->status = 'in use';
+            $equipmentMachine->save();
+    
+
+            // Record the equipment assignment for the user
+            Workout::create(
+                ['gym_user_id' => $gymUser->gym_user_id, 
+                'equipment_machine_id' => $equipmentMachine->equipment_machine_id,
+                'start_time' => $startTime,
+                'estimated_end_time' => $estimatedEndTime,
+                'status' => 'in_progress',
+                'date' => now()->toDateString(),
+                ],
+            );
+
+            return route('workout-index');
+        }
+
+
+
 
         return redirect()->back()->with('success', 'Workout habit updated successfully!');
     }
