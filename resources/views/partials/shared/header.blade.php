@@ -28,9 +28,9 @@
                 <li class="notification-item">
                   <i class="bi bi-exclamation-circle text-warning"></i>
                   <div>
-                    <h6>{{ $notification->data['title'] }}</h6>
+                    <h6></strong>{{ $notification->data['title'] }}</strong></h6>
                     <p>{{ $notification->data['message'] }}</p>
-                    <p>{{ $notification->data['datetime'] }}</p>
+                    <p style="font-size: 12.5px;">{{ $notification->data['datetime'] }}</p>
                   </div>
                 </li>
                 <li>
@@ -41,7 +41,7 @@
                 </div>
                 
                 <li class="dropdown-footer">
-                  <a class="redLink" href="#">Show all notifications</a>
+                  <a class="redLink" href="{{route('notification-index')}}">Show all notifications</a>
                 </li>
               </ul><!-- End Notification Dropdown Items -->
             </li><!-- End Notification Nav -->

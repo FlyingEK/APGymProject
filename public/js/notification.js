@@ -8,17 +8,16 @@ document.addEventListener('DOMContentLoaded', function() {
         Notification.requestPermission();
     }
 
-    if (typeof userId !== 'undefined') {
-        console.log(userId);
+
         Echo.private(`App.Models.User.${userId}`)
             .notification((notification) => {
                 console.log("HI");
                 console.log(notification.message);
 
-                showWebNotification(notification.title , notification.message);
+               // showWebNotification(notification.title , notification.message);
                 addNotificationToDropdown(notification.title, notification.message, notification.check_in_code, notification.datetime);
             });
-    }
+    
 });
            
 function showWebNotification(title,message) {

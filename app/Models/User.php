@@ -64,4 +64,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Comment::class, 'created_by', 'user_id');
     }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+        return 'App.Models.User.'.$this->user_id;
+    }
 }

@@ -87,44 +87,74 @@
 @include('partials.equipment.equipment-habit-modal')
 
 @endsection
-@section('javascript')
+@push('script')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('checkInBtn').addEventListener('click', function(event) {
-        fetch('{{ route("enter-gym") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.gymsuccess) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: data.message,
-                    customClass: {
-                        confirmButton: 'btn redBtn'
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message,
-                    customClass: {
-                        confirmButton: 'btn redBtn'
-                    }
-                });
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     document.getElementById('checkInBtn').addEventListener('click', function(event) {
+//         console.log("HI");
+//         fetch('{{ route("enter-gym") }}', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//             }
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.gymsuccess) {
+//                 console.log("S");
+//                 Swal.fire({
+//                     icon: 'success',
+//                     title: 'Success',
+//                     text: data.message,
+//                     customClass: {
+//                         confirmButton: 'btn redBtn'
+//                     }
+//                 });
+//             } else {
+//                 console.log("Y");
+
+//                 Swal.fire({
+//                     icon: 'error',
+//                     title: 'Error',
+//                     text: data.message,
+//                     customClass: {
+//                         confirmButton: 'btn redBtn'
+//                     }
+//                 });
+//             }
+//         })
+//         .catch(error => console.error('Error:', error));
+//     });
+// });
 
 $(document).ready(function () {
+    console.log("S");
+
+    $('#checkOutBtn').on('click', function(e){
+        console.log("S");
+        e.preventDefault();
+        swal.fire({
+            title: 'Are you sure you want to check out?',
+            icon: 'warning',
+            showCancelButton: true,
+            customClass: {
+                confirmButton: 'btn redBtn',
+                cancelButton: 'btn blueBtn'
+            },
+            confirmButtonText: 'Yes, check out!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const checkOutForm = document.getElementById('checkOutForm');
+                    if (checkOutForm) {
+                        checkOutForm.submit();
+                    } else {
+                        console.error('CheckOutForm not found');
+                    }
+            }
+        });
+    });
+
     $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var equipment_id = button.data('id');
@@ -190,4 +220,4 @@ $(document).ready(function () {
     }
 });
 </script>
-@endsection
+@endpush

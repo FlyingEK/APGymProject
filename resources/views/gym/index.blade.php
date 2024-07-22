@@ -9,13 +9,13 @@
                 <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div> --}}
                 <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Current gym user: 10</div>
             </div>
-            <div class="m-3 d-flex justify-content-end">
+            <div class="m-3 d-flex justify-content-end" style="gap:8px;">
                 {{-- if got queue --}}
-                {{-- <button type="button" class="myBtn btn btn-primary redBtn shadow-none">
-                    Queue
-                </button> --}}
-                <a class="btn redBtn" href={{route('gym-user')}}>
-                    View gym user
+                <button type="button" data-bs-toggle="modal" data-bs-target="#checkInModal" class="btn redBtn">
+                    User Check In
+                </button>
+                <a class="btn blueBtn" href={{route('gym-user')}}>
+                    View Gym User
                 </a>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
                     <i class="fa-solid fa-helmet-safety"></i> 30 minutes
                 </div><br>
-                <a href="{{route('equipment-view')}}" class="stretched-link"></a>
+                <a href="{{route('equipment-view',1)}}" class="stretched-link"></a>
             </div>
         </div>
     </div>
@@ -75,5 +75,5 @@
             </div>
         </div>
 </div>
-
+@include('gym.checkin')
 @endsection

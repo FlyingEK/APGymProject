@@ -32,7 +32,7 @@ class TurnNotification extends Notification implements ShouldBroadcast
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        return ['database', 'mail','broadcast'];
     }
 
     /**
@@ -40,9 +40,15 @@ class TurnNotification extends Notification implements ShouldBroadcast
      */
     public function toMail(object $notifiable): MailMessage
     {
+        if($this->directCheckIn){
+            $msg = 'Please enter the gym within the next 2 minutes.';
+        }else{
+            $msg = 'It is your turn now. Please enter the gym within the next 2 minutes.';
+        }
+
         return (new MailMessage)
-        ->line('It is your turn now. Please enter the gym within the next 2 minutes.')
         ->line('Your check-in code is: ' . $this->checkInCode)
+        ->line($msg)
         ->line('Thank you for using our application!');
 
     }
@@ -57,14 +63,14 @@ class TurnNotification extends Notification implements ShouldBroadcast
         if($this->directCheckIn){
             return [
                 'title'=>'Check In Verification Code',
-                'message' => 'Your check-in code is: <span style="color: #C12323;">' . $this->checkInCode . '</span><br>Please enter the gym within the next 2 minutes.',
+                'message' => 'Your check-in code is:  ' . $this->checkInCode . '.  Please enter the gym within the next 2 minutes.',
                 'check_in_code' => $this->checkInCode,
                 'datetime' => now()->toDateTimeString()
             ];
         }
         return [
             'title'=>'Gym Queue Notification',
-            'message' => 'It is your turn now. Your check-in code is: <span style="color: #C12323;">' . $this->checkInCode . '</span><br>Please enter the gym within the next 2 minutes.',
+            'message' => 'It is your turn now. Your check-in code is:  ' . $this->checkInCode . '.  Please enter the gym within the next 2 minutes.',
             'check_in_code' => $this->checkInCode,
             'datetime' => now()->toDateTimeString()
 

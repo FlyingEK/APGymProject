@@ -9,7 +9,7 @@ use App\Http\Controllers\ConstraintController;
 use App\Http\Controllers\IssueReportController;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\GymQueueController;
-
+use App\Http\Controllers\NotificationController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -30,16 +30,18 @@ Route::put('/notifications/read-all', function () {
     Auth::user()->unreadNotifications->markAsRead();
     return response()->json(['notisuccess' => 'success']);
 })->name('notifications.readAll');
+Route::get('/notifications', [NotificationController::class, 'index'])->name('notification-index');
 
 
 Route::group(['prefix' => 'gym'],function(){
     Route::get('/gymUser', [GymController::class, 'gymUser'])->name('gym-user');
-    Route::get('/gym', [GymController::class, 'gymIndex'])->name('gym-index');
+    Route::get('/index', [GymController::class, 'gymIndex'])->name('gym-index');
     Route::get('/checkin', [GymQueueController::class, 'showCheckInForm'])->name('gym-checkin');
     Route::post('/checkin-post', [GymQueueController::class, 'checkIn'])->name('gym-checkin-post');
     Route::post('/enter-gym', [GymQueueController::class, 'userEntersGym'])->name('enter-gym');
-
+    Route::post('/leave-gym', [GymQueueController::class, 'userLeavesGym'])->name('leave-gym');
 });
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');

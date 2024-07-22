@@ -6,11 +6,15 @@ use App\Models\GymConstraint;
 use App\Models\GymQueue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class EquipmentController extends Controller
 {
     public function isUserCheckedIn(){
-        return GymQueue::where('gym_user_id', auth()->user()->gym_user_id)
+        $user = Auth::user();
+        $gymUserId = $user->gymUser->gym_user_id;
+        return GymQueue::where('gym_user_id', $gymUserId)
         ->where('status', 'entered')
         ->exists();
     }

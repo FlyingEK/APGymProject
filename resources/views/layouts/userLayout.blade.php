@@ -113,7 +113,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.notistatus === 'success') {
+                if (data.notisuccess === 'success') {
                     document.querySelector('.dropdown-header').innerHTML = 'You have 0 new notifications';
                     const pulseElement = document.querySelector('.pulse');
                     if (pulseElement) {
@@ -125,7 +125,6 @@
         });
     });
 </script>
-@yield('javascript')
+@stack("script")
 <script src="{{ asset('/js/table.js') }}"></script>
-
 </html>

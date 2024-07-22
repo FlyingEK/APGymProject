@@ -50,19 +50,18 @@ class GymQueueController extends Controller
     public function userEntersGym()
     {
         $gymUserId = $this->getGymUserId();
-
         $gymIsFull = $this->gymIsFull();
         $isUserInQueue = GymQueue::where('gym_user_id', $gymUserId)
         ->where('status', '!=', 'left')
         ->exists();
-        
+       
         if(!$isUserInQueue){
             if ($gymIsFull) {
                 GymQueue::create([
                     'gym_user_id' => $gymUserId,
                     'status' => 'queueing',
                 ]);
-                return response()->json(['gymsuccess'=>true,'message' => 'You have been added to the queue.']);
+                return redirect()->back()->with('success', 'You have been added to the queue.');
             }else{
                 $code = $this->generateUniqueCheckInCode();
                 GymQueue::create([
@@ -72,20 +71,11 @@ class GymQueueController extends Controller
                     'reserved_until' => now()->addMinutes(2),
                 ]);
                 $user = Auth::user();
-                Notification::send($user, new TurnNotification(true, $code));
-
-                return response()->json(['gymsuccess'=>true,'message' => 'Check the verification code sent to your notification and enter it on trainer device.']);
-
-            // if ($user instanceof \Illuminate\Notifications\Notifiable) {
-            //     $user->notify(new TurnNotification(true, $code));
-            // } else {
-            //     // Handle the case when $user is not an instance of Notifiable
-            //     // For example, you can log an error or throw an exception
-            // }
-
+                Notification::sendNow($user, new TurnNotification(true, $code)); // Queue the notification
+                return redirect()->back()->with('success', 'Check the verification code sent to your notification and enter it on trainer device.');
             }
         }else{
-            return response()->json(['gymsuccess'=>false, 'message' => 'Already in queue.']);
+            return redirect()->back()->with('error', 'Already in queue.');
 
         }
     }
@@ -109,7 +99,10 @@ class GymQueueController extends Controller
     public function userLeavesGym()
     {
         $gymUserId = $this->getGymUserId();
-        $user = GymQueue::where('gym_user_id', $gymUserId)->first();
+        $gymIsFull = $this->gymIsFull();
+        $user = GymQueue::where('gym_user_id', $gymUserId)
+        ->where('status', 'entered')
+        ->first();
 
         if ($user) {
 
@@ -118,8 +111,12 @@ class GymQueueController extends Controller
             ]);
 
             // Reserve the next user in the queue
-            $this->reserveNextUser();
+            if($gymIsFull){
+                $this->reserveNextUser();
+
+            }
         }
+        return redirect()->back()->with('success', 'You have left the gym.');
     }
 
     public function showCheckInForm()
@@ -144,10 +141,10 @@ class GymQueueController extends Controller
             $user->reserved_until = null;
             $user->save();
             //send notification
-            return redirect()->route('gym.checkin')->with('status', 'You have successfully checked in.');
+            return redirect()->back()->with('success', 'User successfully checked in.');
         }
 
-        return redirect()->route('gym.checkin')->with('status', 'Invalid check-in code or your reservation has expired.');
+        return redirect()->back()->with('error', 'Invalid check-in code or the reservation has expired.');
     }
 
 
