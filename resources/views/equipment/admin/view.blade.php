@@ -91,7 +91,6 @@
 
 @endsection
 
-@section('javascript')
 <script>
     function confirmDelete() {
         if (confirm('Are you sure you want to delete this equipment?')) {
@@ -99,4 +98,3 @@
         }
     }
 </script>
-@endsection

@@ -35,7 +35,9 @@
 @section('javascript')
     <script src="{{ asset('/js/set-progress.js') }}"></script>
     <script src="{{ asset('/js/set-active-class.js') }}"></script>
-    <script>
+
+@stop
+<script>
     window.addEventListener('load', function() {
         const container = document.querySelector('.leaderboard-container');
         const highlightedPlayer = document.querySelector('.highlighted-player');
@@ -49,7 +51,6 @@
         window.addEventListener('resize', setHighlightedPlayerWidth);
     });
     </script>
-@stop
 
 
 

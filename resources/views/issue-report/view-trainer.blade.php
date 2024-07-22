@@ -78,10 +78,8 @@
 @include('issue-report.reject-issue-modal')
 
 @endsection
-@section('javascript')
 <script>
     $('.select2').select2({
         minimumResultsForSearch: -1
     });
 </script>
-@endsection

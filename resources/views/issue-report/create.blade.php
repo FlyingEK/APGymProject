@@ -81,7 +81,9 @@
 @section('javascript')
     <script src="{{ asset('/js/img-preview.js') }}"></script>
     <script src="{{ asset('js/custom-select-box.js') }}"></script>
-    <script>
+
+@endsection
+<script>
         
     $(document).ready(function() {
         var oldEquipmentMachineId = '{{ old("equipment_machine_id") }}';
@@ -153,4 +155,3 @@
         });
     });
 </script>
-@endsection
