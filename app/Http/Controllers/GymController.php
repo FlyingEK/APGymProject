@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\GymQueue;
+use App\Models\GymConstraint;
 
 class GymController extends Controller
 {

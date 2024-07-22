@@ -8,10 +8,12 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ConstraintController;
 use App\Http\Controllers\IssueReportController;
 use App\Http\Controllers\GymController;
+use App\Http\Controllers\GymQueueController;
 
 
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,10 +26,20 @@ Route::get('/dashboard', function () {
 Route::get('/home', function () {
     return view('userHome');
 });
+Route::put('/notifications/read-all', function () {
+    Auth::user()->unreadNotifications->markAsRead();
+    return response()->json(['notisuccess' => 'success']);
+})->name('notifications.readAll');
 
-Route::get('/gymUser', [GymController::class, 'gymUser'])->name('gym-user');
-Route::get('/gym', [GymController::class, 'gymIndex'])->name('gym-index');
 
+Route::group(['prefix' => 'gym'],function(){
+    Route::get('/gymUser', [GymController::class, 'gymUser'])->name('gym-user');
+    Route::get('/gym', [GymController::class, 'gymIndex'])->name('gym-index');
+    Route::get('/checkin', [GymQueueController::class, 'showCheckInForm'])->name('gym-checkin');
+    Route::post('/checkin-post', [GymQueueController::class, 'checkIn'])->name('gym-checkin-post');
+    Route::post('/enter-gym', [GymQueueController::class, 'userEntersGym'])->name('enter-gym');
+
+});
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');

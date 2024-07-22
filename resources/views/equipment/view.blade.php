@@ -28,7 +28,7 @@
             <div class="label mb-3">Instructions:</div>
             <ul>
                 @if ($equipment->tutorials->isEmpty())
-                <li>No tutorial available</li>
+                <li>No instruction available</li>
                 @endif
                 @foreach ($equipment->tutorials as $tutorial)
                     <li class="mb-3">{{ $loop->iteration }}. {{ $tutorial->instruction }}</li>
@@ -44,6 +44,7 @@
             @endif
         </div>
     </div>
+    @if($isCheckIn)
     <div class="row mb-4">
         <div class="  col-12 d-flex justify-content-end" style="gap:10px;">
             <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
@@ -51,6 +52,6 @@
             </button>
         </div>
     </div>
-
+    @endif
 </div>
 @endsection

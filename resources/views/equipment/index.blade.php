@@ -1,26 +1,8 @@
 @extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    <div class="gymCheckIn">
-        <div class="page-title">Check In to Gym</div>
-        <div class="card workout-card mb-4" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
-            <div class="card-body">
-                {{-- <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
-                <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div> --}}
-                <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Check in to the gym.</div>
-            </div>
-            <div class="m-3 d-flex justify-content-end">
-                {{-- if got queue --}}
-                {{-- <button type="button" class="myBtn btn btn-primary redBtn shadow-none">
-                    Queue
-                </button> --}}
-                <button type="button" class="myBtn btn btn-primary redBtn shadow-none" onclick="$('.gymCheckIn').addClass('d-none')">
-                    Check In
-                </button>
-            </div>
-        </div>
-    </div>
-    @livewire('equipment-search')
+    @include('gym.user-checkIn')
+    @livewire('equipment-search',['isCheckIn' => $isCheckIn])
     @if ($maintenanceEquipment && $maintenanceEquipment->count() > 0)
     <div class="page-title">Equipment Under Maintenance <span class="text-danger">(DO NOT USE)</span></div>
     @foreach($maintenanceEquipment as $equipment)
@@ -55,11 +37,14 @@
                         Available: {{$equipment->available_machines_count}}
                     </div><br>
                     <a href="{{route('equipment-view',$equipment->equipment_id)}}" class="stretched-link"></a>
+                    @if($isCheckIn)
+
                     <div class="d-flex justify-content-end">
                         <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-id="{{$equipment->equipment_id}}" data-bs-target="#viewEquipmentHabit">
                             Use
                         </button>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -104,70 +89,105 @@
 @endsection
 @section('javascript')
 <script>
-    $(document).ready(function () {
-        $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var equipment_id = button.data('id');
-            $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
-
-
-            $.ajax({
-                url: '{{ route("workout-habit-details") }}',
-                type: 'GET',
-                data: { id: equipment_id },
-                success: function (response) {
-                    if (response.success){
-                        var equipment = response.equipment;
-                        console.log(equipment);
-                        const modal = $('#viewEquipmentHabit');
-                        // Use a slight delay to ensure data is fully populated before showing the modal
-                        setTimeout(function() {
-                            var form = $('#habitModal');
-                            var formAction = equipment.workout_habit_id
-                        ? '{{ route("workout-habit-update", ":id") }}'.replace(':id', equipment.workout_habit_id)
-                        : '{{ route("workout-habit-store") }}';
-                            var method = equipment.workout_habit_id ? 'PUT' : 'POST';
-                            form.attr('action', formAction); 
-                            $('#formMethod').val(method); 
-                        
-                            displayDetails(equipment, modal);
-                            modal.modal('show'); // Ensure the modal is shown after data is set
-                            modal.find('.loading').html(''); // Clear loading message or replace with actual content
-
-                        }, 200); 
-
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('checkInBtn').addEventListener('click', function(event) {
+        fetch('{{ route("enter-gym") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.gymsuccess) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: data.message,
+                    customClass: {
+                        confirmButton: 'btn redBtn'
                     }
-                },
-            });
-        });
-
-        function displayDetails(equipment, modal) {
-            modal.find('#reps').val("");
-            modal.find('#sets').val("");
-            modal.find('#weights').val("");
-            modal.find('#allowSharing').val("");
-            modal.find('#equipment_id').val("");
-            modal.find('#has_weight').val("");
-            modal.find(".hasWeightInput").addClass('d-none');
-            modal.find(".noWeightInput").addClass('d-none');
-            if(equipment.has_weight == 1){
-                modal.find(".hasWeightInput").removeClass('d-none');
-                if(equipment.set){
-                    modal.find('#reps').val(equipment.repetition);
-                    modal.find('#sets').val(equipment.set);
-                    modal.find('#weights').val(equipment.weight);
-                    modal.find('#allowSharing').val(equipment.allowSharing);
-                }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                    customClass: {
+                        confirmButton: 'btn redBtn'
+                    }
+                });
             }
-            else{
-                modal.find(".noWeightInput").removeClass('d-none');
-                if(equipment.duration){
-                    modal.find('#duration').val(equipment.duration);
-                }
-            }
-            modal.find('#equipment_id').val(equipment.equipment_id );
-            modal.find('#has_weight').val(equipment.has_weight);
-        }
+        })
+        .catch(error => console.error('Error:', error));
     });
+});
+
+$(document).ready(function () {
+    $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var equipment_id = button.data('id');
+        $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
+
+
+        $.ajax({
+            url: '{{ route("workout-habit-details") }}',
+            type: 'GET',
+            data: { id: equipment_id },
+            success: function (response) {
+                if (response.success){
+                    var equipment = response.equipment;
+                    console.log(equipment);
+                    const modal = $('#viewEquipmentHabit');
+                    // Use a slight delay to ensure data is fully populated before showing the modal
+                    setTimeout(function() {
+                        var form = $('#habitModal');
+                        var formAction = equipment.workout_habit_id
+                    ? '{{ route("workout-habit-update", ":id") }}'.replace(':id', equipment.workout_habit_id)
+                    : '{{ route("workout-habit-store") }}';
+                        var method = equipment.workout_habit_id ? 'PUT' : 'POST';
+                        form.attr('action', formAction); 
+                        $('#formMethod').val(method); 
+                    
+                        displayDetails(equipment, modal);
+                        modal.modal('show'); // Ensure the modal is shown after data is set
+                        modal.find('.loading').html(''); // Clear loading message or replace with actual content
+
+                    }, 200); 
+
+                }
+            },
+        });
+    });
+
+    function displayDetails(equipment, modal) {
+        modal.find('#reps').val("");
+        modal.find('#sets').val("");
+        modal.find('#weights').val("");
+        modal.find('#allowSharing').val("");
+        modal.find('#equipment_id').val("");
+        modal.find('#has_weight').val("");
+        modal.find(".hasWeightInput").addClass('d-none');
+        modal.find(".noWeightInput").addClass('d-none');
+        if(equipment.has_weight == 1){
+            modal.find(".hasWeightInput").removeClass('d-none');
+            if(equipment.set){
+                modal.find('#reps').val(equipment.repetition);
+                modal.find('#sets').val(equipment.set);
+                modal.find('#weights').val(equipment.weight);
+                modal.find('#allowSharing').val(equipment.allowSharing);
+            }
+        }
+        else{
+            modal.find(".noWeightInput").removeClass('d-none');
+            if(equipment.duration){
+                modal.find('#duration').val(equipment.duration);
+            }
+        }
+        modal.find('#equipment_id').val(equipment.equipment_id );
+        modal.find('#has_weight').val(equipment.has_weight);
+    }
+});
 </script>
 @endsection

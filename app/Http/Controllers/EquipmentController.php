@@ -2,13 +2,27 @@
 namespace App\Http\Controllers;
 use App\Models\Equipment;
 use App\Models\EquipmentMachine;
+use App\Models\GymConstraint;
+use App\Models\GymQueue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class EquipmentController extends Controller
 {
+    public function isUserCheckedIn(){
+        return GymQueue::where('gym_user_id', auth()->user()->gym_user_id)
+        ->where('status', 'entered')
+        ->exists();
+    }
     public function index()
     {
+        $isCheckIn = $this->isUserCheckedIn();
+        $userLimit = GymConstraint::where('constraint_name','max_in_gym_users')->first();
+        $userLimit = (int) $userLimit->constraint_value;
+    
+        $currentQueueCount = GymQueue::where('status', 'entered')->count();
+        $gymIsFull = $currentQueueCount >= $userLimit;
+
         $availableEquipment = Equipment::where('is_deleted', false)
         ->whereHas('equipmentMachines', function ($query) {
             $query->where('status', 'available');
@@ -25,11 +39,12 @@ class EquipmentController extends Controller
             $query->where('status', 'maintenance');
         })
         ->get();
-        return view('equipment.index', compact('availableEquipment', 'maintenanceEquipment'));
+        return view('equipment.index', compact('currentQueueCount','isCheckIn','gymIsFull','availableEquipment', 'maintenanceEquipment'));
 
     }
 
     public function categoryEquipment($category){
+        $isCheckIn = $this->isUserCheckedIn();
         $equipment = Equipment::where('is_deleted', false)
         ->where('category', $category)
         ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
@@ -41,7 +56,7 @@ class EquipmentController extends Controller
         $equipment->each(function ($item) {
             $item->status = $item->available_machines_count > 1 ? 'Available' : 'In use';
         });
-        return view('equipment.category', compact('equipment', 'category'));
+        return view('equipment.category', compact('isCheckIn','equipment', 'category'));
     }
 
     // public function allEquipment()
@@ -54,6 +69,7 @@ class EquipmentController extends Controller
 
     public function viewEquipment($id)
     {
+        $isCheckIn = $this->isUserCheckedIn();
         $equipment = Equipment::with(['tutorials', 'equipmentMachines'])
         ->where('is_deleted', false)
         ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
@@ -62,7 +78,7 @@ class EquipmentController extends Controller
         ->findOrFail($id);
         $equipment->status = $equipment->available_machines_count > 1 ? 'Available' : 'In use';
 
-        return view('equipment.view', compact('equipment'));
+        return view('equipment.view', compact('isCheckIn','equipment'));
     }
 
     public function addEquipment()

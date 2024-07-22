@@ -1,6 +1,6 @@
 <div>
     <div class="input-group mt-2 searchBox mb-2">
-        <input type="text"  wire:model="searchTerm" class="form-control rounded border-0" placeholder="Search" />
+        <input type="text"  wire:model="searchTerm" wire:keyup="updateSearch" class="form-control rounded border-0" placeholder="Search" />
     </div>
     @if ($searchTerm)
     @forelse ($equipments as $equipment)
@@ -17,11 +17,13 @@
                         <i class="fa-solid fa-helmet-safety"></i> Available
                     </div><br>
                     <a href="{{route('equipment-view',$equipment->equipment_id)}}" class="stretched-link"></a>
+                    @if ($isCheckIn)
                     <div class="d-flex justify-content-end">
                         <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
                             Use
                         </button>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -19,7 +19,10 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.js"></script>
     <link href="https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.css" rel="stylesheet" />
-{{-- @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) && !Route::is(['browse-index','reward-recognition-redemption','home','profile','edit-profile','volunteer-dashboard','chat')) --}}
+    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{asset('/js/notification.js')}}" defer></script>
+
+    {{-- @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) && !Route::is(['browse-index','reward-recognition-redemption','home','profile','edit-profile','volunteer-dashboard','chat')) --}}
     @if (!Route::is(['login','register']) )
         @include('partials.shared.header')
     @endif
@@ -31,7 +34,11 @@
         @yield('content')
     </div>
     @livewireScripts
-
+    <script>
+        @if(Auth::check())
+            window.userId = {{ Auth::id() }};
+        @endif
+    </script>
 </body>
 
 @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) )
@@ -89,6 +96,32 @@
                 $('.navtab').removeClass('activeTab'); 
                     $this.closest('.navtab').addClass('activeTab');          
              }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var notificationsDropdown = document.getElementById('notificationsDropdown');
+
+        notificationsDropdown.addEventListener('click', function () {
+            // Make an AJAX request to mark notifications as read
+            fetch('{{ route('notifications.readAll') }}', {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.notistatus === 'success') {
+                    document.querySelector('.dropdown-header').innerHTML = 'You have 0 new notifications';
+                    const pulseElement = document.querySelector('.pulse');
+                    if (pulseElement) {
+                        pulseElement.remove();
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     });
 </script>

@@ -24,4 +24,9 @@ class GymUser extends Model
     {
         return $this->hasMany(Issue::class, 'gym_user_id', 'gym_user_id');
     }
+
+    public function queue()
+    {
+        return $this->hasMany(GymQueue::class, 'gym_user_id', 'gym_user_id');
+    }
 }

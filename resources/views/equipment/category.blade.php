@@ -21,11 +21,13 @@
                         {{$item->status}}
                     </div><br>
                     <a href="{{route('equipment-view', $item->equipment_id)}}" class="stretched-link"></a>
+                    @if($isCheckIn)
                     <div class="d-flex justify-content-end">
                         <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
                             Use
                         </button>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

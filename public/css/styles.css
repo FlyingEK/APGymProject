@@ -991,3 +991,33 @@ padding: 6px;
     border:none !important;
     border-bottom: 0.6px solid #b4b4b4 !important;
 }
+
+.pulse {
+    display: block;
+    position: absolute;
+    top: 24px;
+    right: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00d3c7;
+}
+.pulse:before {
+    content: "";
+    top: 0px;
+    right: 0px;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border-radius: 50%;
+    background: rgb(0 211 199 / 50%);
+    cursor: pointer;
+    box-shadow: 0 0 0 rgb(0 211 199);
+    animation: pulse 1s linear infinite;
+    z-index: 1;
+}
+@keyframes pulse {
+    100% {
+        transform: scale(2.5);
+    }
+}
