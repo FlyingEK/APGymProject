@@ -2,7 +2,8 @@
 @section('content')
 <div class="content container p-1">
     @include('gym.user-checkIn')
-    @livewire('equipment-search',['isCheckIn' => $isCheckIn])
+    {{-- search box --}}
+    @livewire('equipment-search',['isCheckIn' => $isCheckIn, 'category' => ''])
     @if ($maintenanceEquipment && $maintenanceEquipment->count() > 0)
     <div class="page-title">Equipment Under Maintenance <span class="text-danger">(DO NOT USE)</span></div>
     @foreach($maintenanceEquipment as $equipment)

@@ -1,4 +1,4 @@
-<div>
+<div class="mb-3">
     <div class="input-group mt-2 searchBox mb-2">
         <input type="text"  wire:model="searchTerm" wire:keyup="updateSearch" class="form-control rounded border-0" placeholder="Search" />
     </div>

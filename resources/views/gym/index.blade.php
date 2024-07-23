@@ -14,15 +14,14 @@
                 <button type="button" data-bs-toggle="modal" data-bs-target="#checkInModal" class="btn redBtn">
                     User Check In
                 </button>
-                <a class="btn blueBtn" href={{route('gym-user')}}>
+                <a class="btn " style="background-color: #68b1de; color:white" href={{route('gym-user')}}>
                     View Gym User
                 </a>
             </div>
         </div>
     </div>
-    <div class="input-group mt-2 searchBox mb-2">
-        <input type="search" class="form-control rounded border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-    </div>
+    @livewire('equipment-search',['isCheckIn' => false, 'category' => ''])
+
     <div class="page-title">Equipment that are used longer</div>
 
 @for($i=0;$i<3;$i++)

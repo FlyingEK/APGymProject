@@ -1,9 +1,8 @@
 @extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    <div class="input-group searchBox mb-2">
-        <input type="search" class="form-control rounded border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-      </div>
+    @livewire('equipment-search',['isCheckIn' => $isCheckIn, 'category' => $category])
+
     <div class="page-title">{{ucfirst($category)}}</div>
     @forelse($equipment as $item)
     <div class="card equipment shadow-sm mt-2 p-2">

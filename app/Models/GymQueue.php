@@ -19,6 +19,6 @@ class GymQueue extends Model
 
     public function gymUser()
     {
-        return $this->belongsTo(GymUser::class);
+        return $this->belongsTo(GymUser::class, 'gym_user_id', 'gym_user_id');
     }
 }

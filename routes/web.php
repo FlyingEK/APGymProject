@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
     Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/edit', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profileDetails', [ProfileController::class, 'profileDetails'])->name('profile-details');
 });
 Route::group(['prefix' => 'workout'],function(){
     Route::get('/index', [WorkoutController::class, 'index'])->name('workout-index');

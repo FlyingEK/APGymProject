@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Notifications</div>
+                <div class="page-title p-3">Notifications</div>
 
                 <div class="card-body">
                     @forelse (Auth::user()->unreadNotifications as $notification)

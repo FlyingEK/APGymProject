@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -32,7 +33,24 @@ class ProfileController extends Controller
              'user' => $request->user(),
          ]);
      }
+
+     public function profileDetails(Request $request)
+     {
+         $user = User::find($request->id);
      
+         if ($user) {
+             return response()->json([
+                 'success' => true,
+                 'user' => $user,
+             ]);
+         } else {
+             return response()->json([
+                 'success' => false,
+                 'message' => 'User not found',
+             ]);
+         }
+     }
+
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());

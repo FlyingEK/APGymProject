@@ -118,6 +118,7 @@
 </main>
 
 @yield('javascript')
+@stack('script')
 <script src="{{ asset('/js/custom-select-box.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
