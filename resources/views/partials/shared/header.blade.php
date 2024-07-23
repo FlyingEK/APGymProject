@@ -41,7 +41,7 @@
                 </div>
                 
                 <li class="dropdown-footer">
-                  <a class="redLink" href="{{route('notification-index')}}">Show all notifications</a>
+                  <a class="redLink" href="{{route('notification-index')}}">Show more notifications</a>
                 </li>
               </ul><!-- End Notification Dropdown Items -->
             </li><!-- End Notification Nav -->
