@@ -38,7 +38,7 @@ class EquipmentSearch extends Component
         }
 
         $equipments->each(function ($item) {
-            $item->status = $item->available_machines_count > 1 ? 'Available' : 'In use';
+            $item->status = $item->available_machines_count > 1 ? 'Available' : 'Not available';
         });
 
     return view('livewire.equipment-search', [

@@ -57,7 +57,7 @@ Route::group(['prefix' => 'workout'],function(){
     Route::put('/updateHabit/{id}', [WorkoutController::class, 'updateWorkoutHabit'])->name('workout-habit-update');
     Route::delete('/deleteHabit/{id}', [WorkoutController::class, 'deleteWorkoutHabit'])->name('workout-habit-delete');
     Route::get('/getHabit', [WorkoutController::class, 'getWorkoutHabit'])->name('workout-habit-details');
-
+    Route::get('/addWorkout', [WorkoutController::class, 'setPlanAndGetEquipment'])->name('workout-add');
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
 Route::group(['prefix' => 'analytic'],function(){

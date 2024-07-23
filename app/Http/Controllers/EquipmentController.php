@@ -58,7 +58,7 @@ class EquipmentController extends Controller
 
         // Adding status to each equipment
         $equipment->each(function ($item) {
-            $item->status = $item->available_machines_count > 1 ? 'Available' : 'In use';
+            $item->status = $item->available_machines_count > 1 ? 'Available' : 'Not available';
         });
         return view('equipment.category', compact('isCheckIn','equipment', 'category'));
     }
@@ -80,7 +80,7 @@ class EquipmentController extends Controller
             $query->where('status', 'available');
         }])
         ->findOrFail($id);
-        $equipment->status = $equipment->available_machines_count > 1 ? 'Available' : 'In use';
+        $equipment->status = $equipment->available_machines_count > 1 ? 'Available' : 'Not available';
 
         return view('equipment.view', compact('isCheckIn','equipment'));
     }

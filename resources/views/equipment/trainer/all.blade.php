@@ -38,7 +38,7 @@
                 <div class=" mt-md-3 no-wrap">
                     <p class="equipmentTitle">Equipment name</p>
                     <div  class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none" >
-                        In use
+                        Not available
                     </div>
                     <div class="myBtn btn m-2 equipmentSmTag btn-sm btn-outline-dark shadow-none">
                         Queue: 1 person

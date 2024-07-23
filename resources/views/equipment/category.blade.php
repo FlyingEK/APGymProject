@@ -17,13 +17,17 @@
                         $color = $item->status == 'Available'? 'success' : 'danger';
                     @endphp
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
-                        {{$item->status}}
+                        @if($equipment->status == 'Available')
+                        Available: {{ $equipment->available_machines_count }}
+                        @else
+                            {{$equipment->status}}
+                        @endif
                     </div><br>
                     <a href="{{route('equipment-view', $item->equipment_id)}}" class="stretched-link"></a>
                     @if($isCheckIn)
                     <div class="d-flex justify-content-end">
                         <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
-                            Use
+                            {{$item->status == 'Available'? 'Use' : 'Queue'}}
                         </button>
                     </div>
                     @endif

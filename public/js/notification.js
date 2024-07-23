@@ -58,7 +58,7 @@ function addNotificationToDropdown(title, message, checkInCode, datetime) {
 
     // Create and set the message element
     const messageElement = document.createElement('p');
-    messageElement.textContent = message ;
+    messageElement.html = message ;
 
     // Create and set the datetime element
     const datetimeElement = document.createElement('p');
