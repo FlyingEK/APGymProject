@@ -51,4 +51,9 @@ class Equipment extends Model
     {
         return $this->hasManyThrough(CardioWorkoutHabit::class, WorkoutHabit::class, 'equipment_id', 'workout_habit_id', 'equipment_id', 'id');
     }
+
+    public function workoutQueue()
+    {
+        return $this->hasMany(WorkoutQueue::class, 'equipment_id', 'equipment_id');
+    }
 }

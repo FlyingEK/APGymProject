@@ -13,7 +13,15 @@ document.addEventListener('DOMContentLoaded', function() {
             .notification((notification) => {
                 console.log("HI");
                 console.log(notification.message);
-
+                swal.fire({
+                    title: notification.title,
+                    text: notification.message,
+                    icon: 'info',
+                    confirmButtonText: 'Ok',
+                    customClass: {
+                        confirmButton: 'btn redBtn',
+                    },
+                })
                // showWebNotification(notification.title , notification.message);
                 addNotificationToDropdown(notification.title, notification.message, notification.check_in_code, notification.datetime);
             });
@@ -79,4 +87,5 @@ function addNotificationToDropdown(title, message, checkInCode, datetime) {
     // Update notification count
     const notificationsCount = document.getElementById('notificationsCount');
     notificationsCount.textContent = parseInt(notificationsCount.textContent) + 1;
+
 }

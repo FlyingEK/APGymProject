@@ -16,7 +16,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('welcome');
+    // Redirect based on user role
+    $user = Auth::user();
+    if ($user->role == 'user') {
+        return redirect()->intended(route('equipment-index'));
+    } elseif ($user->role == 'trainer') {
+        return redirect()->intended(route('gym-index'));
+    } elseif ($user->role == 'admin') {
+        return redirect()->intended(route('equipment-all'));
+    }
 });
 
 Route::get('/dashboard', function () {
@@ -57,7 +65,9 @@ Route::group(['prefix' => 'workout'],function(){
     Route::put('/updateHabit/{id}', [WorkoutController::class, 'updateWorkoutHabit'])->name('workout-habit-update');
     Route::delete('/deleteHabit/{id}', [WorkoutController::class, 'deleteWorkoutHabit'])->name('workout-habit-delete');
     Route::get('/getHabit', [WorkoutController::class, 'getWorkoutHabit'])->name('workout-habit-details');
-    Route::get('/addWorkout', [WorkoutController::class, 'setPlanAndGetEquipment'])->name('workout-add');
+    Route::post('/addWorkout/{save}', [WorkoutController::class, 'setPlanAndGetEquipment'])->name('workout-add');
+    Route::post('/startWorkout', [WorkoutController::class, 'startWorkout'])->name('workout-start');
+    Route::put('/endWorkout', [WorkoutController::class, 'endWorkout'])->name('workout-end');
     // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 });
 Route::group(['prefix' => 'analytic'],function(){

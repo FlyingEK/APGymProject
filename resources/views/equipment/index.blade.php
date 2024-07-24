@@ -173,14 +173,6 @@ $(document).ready(function () {
                     const modal = $('#viewEquipmentHabit');
                     // Use a slight delay to ensure data is fully populated before showing the modal
                     setTimeout(function() {
-                        var form = $('#habitModal');
-                        var formAction = equipment.workout_habit_id
-                    ? '{{ route("workout-habit-update", ":id") }}'.replace(':id', equipment.workout_habit_id)
-                    : '{{ route("workout-habit-store") }}';
-                        var method = equipment.workout_habit_id ? 'PUT' : 'POST';
-                        form.attr('action', formAction); 
-                        $('#formMethod').val(method); 
-                    
                         displayDetails(equipment, modal);
                         modal.modal('show'); // Ensure the modal is shown after data is set
                         modal.find('.loading').html(''); // Clear loading message or replace with actual content
@@ -198,6 +190,7 @@ $(document).ready(function () {
         modal.find('#weights').val("");
         modal.find('#allowSharing').val("");
         modal.find('#equipment_id').val("");
+        modal.find('#workout_habit_id').val("");
         modal.find('#has_weight').val("");
         modal.find(".hasWeightInput").addClass('d-none');
         modal.find(".noWeightInput").addClass('d-none');
@@ -218,6 +211,8 @@ $(document).ready(function () {
         }
         modal.find('#equipment_id').val(equipment.equipment_id );
         modal.find('#has_weight').val(equipment.has_weight);
+        modal.find('#workout_habit_id').val(equipment.workout_habit_id);
+
     }
 });
 </script>

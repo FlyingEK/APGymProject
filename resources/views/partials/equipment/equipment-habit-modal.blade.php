@@ -12,13 +12,13 @@
                        {{-- if habit exist -> update, else create: action --}}
                     <form id="habitModal" action="" class="issueForm" method="POST">
                         @csrf
-                        {{-- @method('POST') --}}
                         <div class="d-flex align-items-center loading">
                             <strong>Loading...</strong>
                             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
                           </div>
                           <input type="hidden" id="formMethod" name="_method" value="">
                         <input type="hidden" name="equipment_id" id="equipment_id" >
+                        <input type="hidden" name="workout_habit_id" id="workout_habit_id" >
                         <input type="hidden" name="has_weight" id="has_weight" >
                         <div class="hasWeightInput d-none">
                             <div class="mb-3">
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                                <button type="submit" class="btn midBtn redBtn">Save</button>
+                                <button type="submit" id="habitbtn" class="btn midBtn redBtn">Use</button>
                         </div>                        
                     </form>
                 </div>
@@ -70,5 +70,37 @@
 </div>
 
 <script>
+    $('#habitModal').on('submit',function(e){
+        console.log("HI");
+        e.preventDefault();
+        swal.fire({
+            text: "Do you want to save this workout plan to your workout habit?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonText: "Not for this time",
+            confirmButtonText: "Save",
+            customClass: {
+                confirmButton: 'btn redBtn',
+                cancelButton: 'btn blueBtn'
+            },
+        }).then((result)=>{
+            const form = document.getElementById('habitModal');
 
+            if(result.isConfirmed){
+                if(form){
+                    form.setAttribute('action', '{{ route("workout-add", 1) }}');
+                    form.submit();
+                }else{
+                    console.error('habitModal not found');
+                }
+            }else{
+                if(form){
+                    form.setAttribute('action', '{{ route("workout-add", 0) }}');
+                    form.submit();
+                }else{
+                    console.error('habitModal not found');
+                }
+            }
+        });
+    })
 </script>

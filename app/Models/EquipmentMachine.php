@@ -22,4 +22,14 @@ class EquipmentMachine extends Model
     {
         return $this->belongsTo(Equipment::class, 'equipment_id', 'equipment_id');
     }
+
+    public function workout()
+    {
+        return $this->hasMany(Workout::class, 'equipment_machine_id', 'equipment_machine_id');
+    }
+
+    public function workoutQueues()
+    {
+        return $this->hasMany(WorkoutQueue::class, 'equipment_machine_id', 'equipment_machine_id');
+    }
 }

@@ -17,8 +17,8 @@
               </a><!-- End Notification Icon -->
     
               <ul class="p-3 dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                <li class="dropdown-header">
-                  You have {{ Auth::user()->unreadNotifications->count() }} new notifications
+                <li class="noti-header dropdown-header">
+                  You have <span id="notificationsCount">{{ Auth::user()->unreadNotifications->count() }}</span> new notifications
                 </li>
                 <li>
                   <hr class="dropdown-divider">

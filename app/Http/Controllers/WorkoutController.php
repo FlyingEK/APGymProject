@@ -7,17 +7,155 @@ use App\Models\Equipment;
 use App\Models\GymConstraint;
 use App\Models\Workout;
 use App\Models\EquipmentMachine;
+use App\Models\WorkoutQueue;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\EquipmentReserved;
 use Exception;
 
 
 class WorkoutController extends Controller
 {
+    public function getGymUserId(){
+        $userId = Auth::user()->user_id;
+        $gymUser = GymUser::where('user_id', $userId)->first();
+        if (!$gymUser) {
+            return redirect()->back()->with('error', 'Gym user not found.');
+        }
+        $gymUserId = $gymUser->gym_user_id;
+        return $gymUserId;
+    }
+
+    public function callNextInQueue($equipmentId){
+        //call next in queue
+        $nextInQueue = WorkoutQueue::with(['gymUser.user', 'workout'])
+        ->where('status', 'queueing')
+        ->where('equipment_id', $equipmentId)
+        ->whereDoesntHave('gymUser.queue', function ($query) {
+            $query->where('status', 'reserved');
+        })
+        ->whereDoesntHave('gymUser.workout', function ($query) {
+            $query->where('status', 'in_progress');
+        })
+        ->orderBy('created_at', 'asc')
+        ->first();
+
+        if($nextInQueue){
+    
+            //assign equipment to user
+            $equipmentMachine = EquipmentMachine::with('equipment')
+            ->where('equipment_id', $equipmentId)
+            ->where('status', 'available')
+            ->first();
+    
+            if ($equipmentMachine && $equipmentMachine->status == 'available') {
+                $equipmentMachine->status = 'reserved';
+                $equipmentMachine->save();
+                //send notification
+                $nextInQueue->status = 'reserved';
+                $nextInQueue->equipment_machine_id = $equipmentMachine->equipment_machine_id;
+                $nextInQueue->save();
+                Notification::send($nextInQueue->gymUser->user, new EquipmentReserved($equipmentMachine->label, $equipmentMachine->equipment->name));
+                $this->setReservationTimer($equipmentMachine, $nextInQueue);
+    
+            }
+        }
+       
+    }
+
+    protected function setReservationTimer(EquipmentMachine $equipmentMachine, WorkoutQueue $nextInQueue)
+    {
+        // Use a delayed job to change the status back after 2 minutes
+        $job = (new \App\Jobs\ReleaseEquipmentReservation($equipmentMachine,$nextInQueue))
+            ->delay(now()->addMinutes(2));
+
+        dispatch($job);
+    }
+
+    public function startWorkout(Request $request)
+    {
+        try {
+            $gymUserId = $this->getGymUserId();
+            $workoutId = $request->input('workoutId');
+            
+            // Find the workout queue entry
+            $workoutQueue = WorkoutQueue::with('equipmentMachine.equipment')
+                ->findOrFail($workoutId);
+    
+            if ($workoutQueue->status === 'reserved') {
+                $workoutQueue->status = 'inuse';
+                $workoutQueue->save();
+    
+                $equipmentMachine = $workoutQueue->equipmentMachine;
+                if ($equipmentMachine) {
+                    $equipmentMachine->status = 'in use';
+                    $equipmentMachine->save();
+    
+                    $timeLimitConstraint = $equipmentMachine->equipment->has_weight == 1 ?
+                        GymConstraint::where('constraint_name', 'max_weight_equipment_usage_time')->first() :
+                        GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
+    
+                    if ($timeLimitConstraint) {
+                        $workout = Workout::create([
+                            'gym_user_id' => $gymUserId,
+                            'equipment_machine_id' => $equipmentMachine->equipment_machine_id,
+                            'start_time' => now(),
+                            'estimated_end_time' => now()->addMinutes(intval($workoutQueue->duration)),
+                            'status' => 'in_progress',
+                            'date' => now()->toDateString(),
+                            'exceeded_time' => now()->addMinutes(intval($timeLimitConstraint->constraint_value)),
+                            'workout_queue_id' => $workoutQueue->workout_queue_id,
+                        ]);
+    
+                        return response()->json(['success' => true, 'message' => 'Workout started successfully!']);
+                    } else {
+                        return response()->json(['success' => false, 'message' => 'Time limit constraint not found!']);
+                    }
+                } else {
+                    return response()->json(['success' => false, 'message' => 'Equipment machine not found!']);
+                }
+            } else {
+                return response()->json(['success' => false, 'message' => 'Invalid workout queue status!']);
+            }
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error($e->getMessage());
+    
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+    
     public function index()
     {
-        return view('workout.index');
+        $gymUserId = $this->getGymUserId();
+        //workout
+        $workout = Workout::where('gym_user_id', $gymUserId)->with(['workoutQueue','equipmentMachine.equipment'])
+        ->where('status', 'in_progress')
+        ->first();
+        //get equipment to populate in workout index
+        // $queuedEquipments = WorkoutQueue::where('gym_user_id', $gymUserId)->with('equipment')
+        // ->where('status', 'queueing')
+        // ->get();
+        $queuedEquipments = WorkoutQueue::where('gym_user_id', $gymUserId)
+        ->with(['equipment' => function($query) {
+            $query->withCount(['equipmentMachines as available_machines_count' => function ($query) {
+                $query->where('status', 'available');
+            }]);
+        }])
+        ->where('status', 'queueing')
+        ->get();
+        // Apply status logic to queueEquipments
+        $queuedEquipments->each(function ($queue) {
+            $queue->status = $queue->equipment->available_machines_count > 1 ? 'Available' : 'Not available';
+        });
+
+        $reservedEquipments = WorkoutQueue::where('gym_user_id', $gymUserId)->with(['equipment', 'equipmentMachine'])
+        ->where('status', 'reserved')
+        ->first();
+
+        return view('workout.index', compact('workout', 'queuedEquipments', 'reservedEquipments'));
     }
 
     public function addWorkoutHabit(){
@@ -26,13 +164,9 @@ class WorkoutController extends Controller
     }
 
     public function store(Request $request){
+        $gymUserId = $this->getGymUserId();
         $durationConstraint = GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
-        $userId = Auth::user()->user_id;
-        $gymUser = GymUser::where('user_id', $userId)->first();
-        if (!$gymUser) {
-            return redirect()->back()->with('error', 'Gym user not found.');
-        }
-        $gymUserId = $gymUser->gym_user_id;
+
         $data = $request->validate([
             'has_weight' => 'required|boolean',
             'equipment_id' => 'required',
@@ -183,20 +317,15 @@ class WorkoutController extends Controller
         return redirect()->back()->with('success', 'Workout habit updated successfully!');
     }
 
-    public function updateHabitAndGetEquipment(Request $request, $id)
+    public function setPlanAndGetEquipment(Request $request, $saveHabit)
     {
-        $userId = Auth::user()->user_id;
-        $gymUser = GymUser::where('user_id', $userId)->first();
-    
-        if (!$gymUser) {
-            return response()->json(['success' => false, 'message' => 'Gym user not found.'], 404);
-        }
-        // Find the workout habit by ID
-        $workoutHabit = WorkoutHabit::findOrFail($id);
+        $gymUserId = $this->getGymUserId();
 
         $durationConstraint = GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
         // Validate the request data
         $data = $request->validate([
+            'equipment_id' => 'required',
+            'workout_habit_id'=>'nullable',
             'has_weight' => 'required|boolean',
             'set' => 'nullable|required_if:has_weight,1|integer|min:1|max:5', 
             'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
@@ -211,50 +340,141 @@ class WorkoutController extends Controller
             'duration.min' => 'The duration must be at least 10 minutes.',
             'duration.max' => 'The duration may not be greater than ' .$durationConstraint->constraint_value??60 .' minutes.',
         ]);
-        $startTime = now();
-        // Update related strength or cardio workout habits
-        if ($data['has_weight']  && $data['has_weight'] == 1) {
-            $workoutHabit->strengthWorkoutHabits()->update([
-                'set' => $data['set'],
-                'repetition' => $data['rep'],
-                'weight' => $data['weight'],
-                'allow_sharing' =>$data['allow_sharing'],
-            ]);
-            $estimatedEndTime = now()->addMinutes($data['set'] * $data['rep'] * 10/60 * (5*($data['set']-1)));
-        } else {
-            $workoutHabit->cardioWorkoutHabits()->update([
-                'duration' => $data['duration'],
-            ]);
-            $estimatedEndTime = now()->addMinutes($data['duration']);
+        if($data['has_weight'] == 1){
+            $data['duration'] =  intval(round($data['set'] * $data['rep'] * 10 / 60 * (5 * ($data['set'] - 1))));
         }
+
+        $queueEquipmentCount = WorkoutQueue::where('gym_user_id', $gymUserId)
+        ->where('status', 'queueing')
+        ->count();
+
+        $existedEquipmentQueue = WorkoutQueue::where('gym_user_id', $gymUserId)
+        ->where('equipment_id', $request->equipment_id)
+        ->where('status', 'queueing')
+        ->orWhere('status', 'reserved')
+        ->orWhere('status', 'inuse')
+        ->exists();
+
+        // queue constraint
+        if($existedEquipmentQueue){
+            return redirect()->back()->with('error', 'You have already queued for this equipment.');
+        }
+
+        if($queueEquipmentCount < 2){
+            $queueEquipment = WorkoutQueue::create([
+                'gym_user_id' => $gymUserId,
+                'equipment_id' => $request->equipment_id,
+                'status' => 'queueing',
+                'duration' => $data['duration'],
+                'sets' => $data['set'] ?? null,
+                'repetitions' => $data['rep'] ?? null,
+                'weight' => $data['weight'] ?? null,
+                'allow_sharing' => $data['allow_sharing'] ?? null,
+            ]);
+        }else{
+            return redirect()->back()->with('error', 'You can only queue for 2 equipment at a time.');
+        }
+
+        $startTime = now();
+        if($saveHabit == 1){
+            $workoutHabit = WorkoutHabit::updateOrCreate(
+                ['gym_user_id' => $gymUserId, 'equipment_id' => $request->equipment_id],
+                ['gym_user_id' => $gymUserId, 'equipment_id' => $request->equipment_id]
+            );
+            // Update related strength or cardio workout habits
+            if ($data['has_weight']  && $data['has_weight'] == 1) {
+                $workoutHabit->strengthWorkoutHabits()->updateOrCreate([
+                    'workout_habit_id' => $data['workout_habit_id']
+                ],
+                [    'set' => $data['set'],
+                    'repetition' => $data['rep'],
+                    'weight' => $data['weight'],
+                    'allow_sharing' =>$data['allow_sharing'],
+                ]);
+            } else {
+                $workoutHabit->cardioWorkoutHabits()->updateOrCreate([
+                    'workout_habit_id' => $data['workout_habit_id']
+                ],
+                [
+                    'duration' => $data['duration'],
+                ]);
+            }   
+        }
+                    
         // Add the equipment machine to the user if available
-        $equipmentMachine = EquipmentMachine::where('equipment_id', $data['equipment_id'])
+        $equipmentMachine = EquipmentMachine::with('equipment')->where('equipment_id', $data['equipment_id'])
         ->where('status', 'available')
         ->first();
 
         if ($equipmentMachine && $equipmentMachine->status == 'available') {
             $equipmentMachine->status = 'in use';
             $equipmentMachine->save();
-    
-
+            $estimatedEndTime = now()->addMinutes(intval($data['duration']));
+            $queueEquipment->status = 'inuse';
+            $queueEquipment->equipment_machine_id = $equipmentMachine->equipment_machine_id;
+            $queueEquipment->save();
+            $timeLimitConstraint = $equipmentMachine->equipment->has_weight == 1 ?
+            GymConstraint::where('constraint_name', 'max_weight_equipment_usage_time')->first() :
+            GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
             // Record the equipment assignment for the user
-            Workout::create(
-                ['gym_user_id' => $gymUser->gym_user_id, 
+            $workout = Workout::create(
+                ['gym_user_id' => $gymUserId, 
                 'equipment_machine_id' => $equipmentMachine->equipment_machine_id,
                 'start_time' => $startTime,
                 'estimated_end_time' => $estimatedEndTime,
                 'status' => 'in_progress',
                 'date' => now()->toDateString(),
-                ],
+                'workout_queue_id' => $queueEquipment->workout_queue_id,
+                'exceeded_time' => now()->addMinutes(intval($timeLimitConstraint->constraint_value)),
+            ],
             );
 
-            return route('workout-index');
+            return redirect()->route('workout-index');
         }
+        return redirect()->route('workout-index')->with('success', 'Workout habit updated successfully!');
+    }
 
+    public function endWorkout(Request $request){
 
+        $data = $request->validate([
+            'set' => 'nullable|required_if:has_weight,1|integer|min:1|', 
+            'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
+            'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
+            'duration' => 'nullable|required_if:has_weight,0|integer',
+        ], [
+            'set.required_if' => 'The sets field is required.',
+            'rep.required_if' => 'The reps field is required.',
+            'weight.required_if' => 'The weights field is required.',
+            'duration.required_if' => 'The duration field is required.',
+        ]);
 
+        $workout = Workout::find($request->workout_id);
 
-        return redirect()->back()->with('success', 'Workout habit updated successfully!');
+        if (!$workout) {
+            return redirect()->back()->with('error', 'No workout in progress.');
+        }
+        if($workout->equipmentMachine->equipment->has_weight == 1){
+            $workout->weight = $data['weight'] ?? null;
+            $workout->set = $data['set'] ?? null;
+            $workout->repetition = $data['rep'] ?? null;
+        }
+       
+        $workout->duration = $data['duration'] ?? null;  
+        $workout->end_time = now();
+        $workout->status = 'completed';
+        $workout->save();
+
+        $workoutQueue = WorkoutQueue::find($workout->workout_queue_id);
+        $workoutQueue->status = 'completed';
+        $workoutQueue->save();
+
+        $equipmentMachine = EquipmentMachine::with('equipment')->find($workout->equipment_machine_id);
+        $equipmentMachine->status = 'available';
+        $equipmentMachine->save();
+
+        $this->callNextInQueue($equipmentMachine->equipment->equipment_id);
+
+        return redirect()->route('workout-index')->with('workoutSuccess', 'Workout ended successfully!');
     }
 
     public function deleteWorkoutHabit($id){

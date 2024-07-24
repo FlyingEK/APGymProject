@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -10,13 +11,13 @@ use Illuminate\Notifications\Notification;
 class ReservationCancelledNotification extends Notification
 {
     use Queueable;
-
+    public $equipment;
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($equipment)
     {
-        //
+        $this->equipment = $equipment;
     }
 
     /**
@@ -26,7 +27,7 @@ class ReservationCancelledNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['broadcast','database'];
     }
 
     /**
@@ -47,8 +48,33 @@ class ReservationCancelledNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
+        if (empty($this->equipment)) {
+            $title = 'Gym Check-In Reservation Cancelled';
+            $message = 'Your gym check-in reservation has expired after two minutes. Please queue or check in again if you wish to use the facility.';
+        } else {
+            $title = 'Equipment Reservation Cancelled';
+            $message = 'Your reservation for ' . $this->equipment . ' has expired after two minutes. Please queue again if you still want to use this equipment.';
+        }
         return [
-            //
+            'title' => $title,
+            'message' => $message,
+            'datetime' => now()->toDateTimeString()
         ];
+    }
+
+    public function toBroadcast($notifiable)
+    {
+        if (empty($this->equipment)) {
+            $title = 'Gym Check-In Reservation Cancelled';
+            $message = 'Your gym check-in reservation has expired after two minutes. Please queue or check in again if you wish to use the facility.';
+        } else {
+            $title = 'Equipment Reservation Cancelled';
+            $message = 'Your reservation for ' . $this->equipment . ' has expired after two minutes. Please queue again if you still want to use this equipment.';
+        }
+        return new BroadcastMessage([
+            'title' => $title,
+            'message' => $message,
+            'datetime' => now()->toDateTimeString()
+        ]);
     }
 }

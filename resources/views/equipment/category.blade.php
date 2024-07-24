@@ -17,10 +17,10 @@
                         $color = $item->status == 'Available'? 'success' : 'danger';
                     @endphp
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
-                        @if($equipment->status == 'Available')
-                        Available: {{ $equipment->available_machines_count }}
+                        @if($item->status == 'Available')
+                        Available: {{ $item->available_machines_count }}
                         @else
-                            {{$equipment->status}}
+                            {{$item->status}}
                         @endif
                     </div><br>
                     <a href="{{route('equipment-view', $item->equipment_id)}}" class="stretched-link"></a>

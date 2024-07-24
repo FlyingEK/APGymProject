@@ -9,6 +9,8 @@ class CardioWorkoutHabit extends Model
 {
     use HasFactory;
     protected $table = 'cardio_workout_habit';
+    protected $primaryKey = 'cardio_workout_habit_id';
+
     protected $fillable = [
         'workout_habit_id',
         'duration',

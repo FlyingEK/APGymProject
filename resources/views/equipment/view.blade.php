@@ -1,10 +1,10 @@
 @extends('layouts.userLayout')
 @section('content')
-<div class="backLink mb-2">
+{{-- <div class="backLink mb-2">
     <a href="{{route('equipment-index')}}">
         <i class="fas fa-chevron-left"></i><span>  Back</span>
     </a>
-</div>
+</div> --}}
 <div class="container px-3 py-2 bg-white myShadow equipmentDetail">
     <div class="row">
         <div class="col-5 ">
