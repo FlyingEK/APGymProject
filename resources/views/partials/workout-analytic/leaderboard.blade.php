@@ -1,8 +1,30 @@
-<div class="report-filter">
+{{-- <div class="report-filter">
   <a href="#">
       <i class="material-symbols-outlined redIcon no-wrap">tune</i><span>  Total Workout Time(hours)</span>
   </a>
+</div> --}}
+<div class="row">
+  <div class="col-6">
+      <div class="dropdown">
+        <button class="report-filter redIcon border-none dropdown-toggle" style="border:none; background:transparent;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-filter"></i><span class="redIcon">  Set Filter</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" id="hour" href="#">Total Workout Hours</a></li>
+          <li><a class="dropdown-item" id="maxWeight" href="#">Maximum Weight</a></li>
+        </ul>
+      </div>
+  </div>
+  <div id="equipmentSelect" class = "col-6 d-none" >
+    <select class="select2 form-control form-select mb-3 " name="equipment_id" id="equipment_id">
+      <option value="" data-has-weight="0" selected>Choose an equipment...</option>
+      @foreach($allEquipments as $equip)
+          <option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}">{{ $equip->name }}</option>
+      @endforeach
+    </select>
+  </div>
 </div>
+
 <div class=" my-3">
   <div class="pgtabs pgtab2 btn-group btn-group-sm " id="report-tab">
       <a href="#" class="btn text-white" aria-current="page">Daily</a>
@@ -68,7 +90,25 @@
       </tr>
       
   </table>
+</div>
 
   @include('partials.profile.profile-modal')
+  <script>
+        $('#equipment_id').select2({
+        placeholder: 'Equipment',
+    });
+
+    $('#maxWeight').on('click', function() {
+        $('#equipmentSelect').removeClass('d-none');
+        $('#equipmentSelect').addClass('d-flex');
+        $('#equipmentSelect').addClass('justify-content-end');
+    });
+
+    $('#hour').on('click', function() {
+        $('#equipmentSelect').addClass('d-none');
+        $('#equipmentSelect').removeClass('d-flex');
+        $('#equipmentSelect').removeClass('justify-content-end');
+    });
+  </script>
 
     
