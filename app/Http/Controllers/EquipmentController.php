@@ -4,6 +4,8 @@ use App\Models\Equipment;
 use App\Models\EquipmentMachine;
 use App\Models\GymConstraint;
 use App\Models\GymQueue;
+use App\Models\Workout;
+use App\Models\WorkoutQueue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -277,6 +279,24 @@ class EquipmentController extends Controller
         ->orderBy('equipment_id')
         ->get();
         return view('equipment.trainer.all', compact('availableEquipments', 'inUseEquipments'));
+    }
+
+    public function statusUpdate($id)
+    {
+        $equipmentMachine = EquipmentMachine::findOrFail($id);
+        $status = $equipmentMachine->status;
+        if($status == 'in use'){
+            $equipmentMachine->update(['status' => 'available']);
+            $workout = Workout::where('equipment_machine_id', $id)
+            ->where('status', 'in_progress')
+            ->first();
+            $workout??$workout->update(['status' => 'completed']);
+            $queue = WorkoutQueue::where('equipment_machine_id', $id)
+            ->where('status', 'inuse')
+            ->first();
+            $queue??$queue->update(['status' => 'completed']);
+        }
+        return redirect()->route('equipment-trainer-category', $equipmentMachine->equipment->category)->with('success', 'Equipment status updated successfully.');
     }
 
     public function getEquipmentMachines(Request $request)

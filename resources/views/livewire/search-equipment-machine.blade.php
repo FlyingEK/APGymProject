@@ -21,10 +21,10 @@
                         {{ucfirst($equipment->status)}}
                     </div><br>
                     @if($equipment->status == 'available'|| $equipment->status == 'in use')
-                    <form id="updateStatus" action = {{route('equipment-status-update', $equipment->id)}} method="POST">
+                    <form id="updateStatus{{$equipment->equipment_machine_id}}" action = {{route('equipment-status-update', $equipment->equipment_machine_id)}} method="POST">
                         @csrf
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="myBtn btnFront btn btn-primary redBtn shadow-none">
+                            <button type="button" onclick="confirmUpdateStatus('updateStatus{{$equipment->equipment_machine_id}}')" class="myBtn btnFront btn btn-primary redBtn shadow-none">
                                 Update Status
                             </button>
                         </div>

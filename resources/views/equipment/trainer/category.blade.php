@@ -20,12 +20,15 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                         {{ucfirst($item->status)}}
                     </div><br>
-                    @if($item->status == 'available'|| $item->status == 'in use')
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
-                            Update Status
-                        </button>
-                    </div>
+                    @if( $item->status == 'in use')
+                    <form id="updateStatus{{$item->equipment_machine_id}}" action = {{route('equipment-status-update', $item->equipment_machine_id)}} method="POST">
+                        @csrf
+                        <div class="d-flex justify-content-end">
+                            <button type="button" onclick="confirmUpdateStatus('updateStatus{{$item->equipment_machine_id}}')" class="myBtn btnFront btn btn-primary redBtn shadow-none">
+                                Update Status
+                            </button>
+                        </div>
+                    </form>
                     @endif
                 </div>
             </div>
@@ -40,3 +43,27 @@
 
 
 @endsection
+@push('script')
+<script>
+
+function confirmUpdateStatus($formId){
+    swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to update the status of the equipment.",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById($formId).submit();
+        }
+    })
+}
+
+
+</script>
+@endpush

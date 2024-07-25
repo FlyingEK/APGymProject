@@ -37,6 +37,16 @@
                     Exceeded {{$equipment['exceededTime']}} minutes
                 </div><br>
             </div>
+            @if( $equipment['equipmentMachine']->status == 'in use')
+            <form id="updateStatus{{$equipment['equipmentMachine']->equipment_machine_id}}" action = {{route('equipment-status-update', $item->equipment_machine_id)}} method="POST">
+                @csrf
+                <div class="d-flex justify-content-end">
+                    <button type="button" onclick="confirmUpdateStatus('updateStatus{{$equipment['equipmentMachine']->equipment_machine_id}}')" class="myBtn btnFront btn btn-primary redBtn shadow-none">
+                        Update Status
+                    </button>
+                </div>
+            </form>
+            @endif
         </div>
     </div>
 </div>
@@ -77,3 +87,27 @@
 </div>
 @include('gym.checkin')
 @endsection
+@push('script')
+<script>
+
+function confirmUpdateStatus($formId){
+    swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to update the status of the equipment.",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById($formId).submit();
+        }
+    })
+}
+
+
+</script>
+@endpush
