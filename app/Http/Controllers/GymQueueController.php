@@ -68,7 +68,7 @@ class GymQueueController extends Controller
                 return redirect()->back()->with('success', 'You have been added to the queue.');
             }else{
                 $code = $this->generateUniqueCheckInCode();
-                GymQueue::create([
+                $queue = GymQueue::create([
                     'gym_user_id' => $gymUserId,
                     'status' => 'reserved',
                     'check_in_code' => $code,
@@ -76,6 +76,7 @@ class GymQueueController extends Controller
                 ]);
                 $user = Auth::user();
                 Notification::sendNow($user, new TurnNotification(true, $code)); // Queue the notification
+                $this->setGymReservationTimer($queue);
                 return redirect()->back()->with('success', 'Check the verification code sent to your notification and enter it on trainer device.');
             }
         }else{
@@ -96,6 +97,7 @@ class GymQueueController extends Controller
             // Send TurnNotification
             $nextUser->gymUser()->user()->notify(new TurnNotification(false, $nextUser->check_in_code));
             $nextUser->save();
+            $this->setGymReservationTimer($nextUser);
             broadcast(new QueueUpdated($nextUser));
         }
     }
@@ -185,6 +187,15 @@ class GymQueueController extends Controller
     {
         // Use a delayed job to change the status back after 2 minutes
         $job = (new \App\Jobs\ReleaseEquipmentReservation($equipmentMachine,$nextInQueue))
+            ->delay(now()->addMinutes(2));
+
+        dispatch($job);
+    }
+
+    protected function setGymReservationTimer(GymQueue $queue)
+    {
+        // Use a delayed job to change the status back after 2 minutes
+        $job = (new \App\Jobs\ReleaseReservation($queue))
             ->delay(now()->addMinutes(2));
 
         dispatch($job);
