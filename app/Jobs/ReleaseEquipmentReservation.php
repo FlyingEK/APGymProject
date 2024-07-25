@@ -35,7 +35,7 @@ class ReleaseEquipmentReservation implements ShouldQueue
     {
         //release the equipment
         if ($this->nextInQueue->status === 'reserved') {
-            $this->nextInQueue->status = 'queueing';
+            $this->nextInQueue->status = 'reservation_expired';
             $this->nextInQueue->save();
 
             $this->equipmentMachine->status = 'available';
