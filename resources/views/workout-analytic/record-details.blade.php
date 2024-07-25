@@ -26,15 +26,15 @@
         @if($workout->equipmentMachine->equipment->has_weight)
         <div class="row mb-3">
             <div class="col-5 label">Weight:</div>
-            <div class="col-7 value">{{$issue->description}}kg</div>
+            <div class="col-7 value">{{$workout->weight}}kg</div>
         </div>
         <div class="row mb-3">
             <div class="col-5 label">Number of sets:</div>
-            <div class="col-7 value">{{$issue->description}}kg</div>
+            <div class="col-7 value">{{$workout->set}}</div>
         </div>
         <div class="row mb-3">
             <div class="col-5 label">Number of repetitions:</div>
-            <div class="col-7 value">{{$issue->description}}kg</div>
+            <div class="col-7 value">{{$workout->repetition}}</div>
         </div>
         @endif
     </div>

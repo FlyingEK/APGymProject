@@ -22,10 +22,10 @@
         <div class="workoutHistoryDate">{{ $date }}</div>
         <table class="table workoutHistoryTable">
             @foreach ($records as $record)
-            <tr>
+            <tr class="position-relative">
                 <td style="width:60%;"><a href={{route('workout-detail',$record['workout_id'])}} class="stretched-link"></a>{{ $record['equipment_machine']['equipment']['name']}}</td>
                 <td style="width:35%;">{{ $record['duration'] }} minutes</td>
-                <td tyle="width:5%;"><span class="material-symbols-outlined">chevron_right</span></td>
+                <td style="width:5%;"><span class="material-symbols-outlined">chevron_right</span></td>
             </tr>
             
             @endforeach
