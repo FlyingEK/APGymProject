@@ -291,6 +291,12 @@ body {
     color: white;
 }
 
+.trainerNav 
+.activeTab {
+    background-color: #68b1de !important;
+    color: black !important;
+}
+
 .formBtn{
     font-size: 18px;
 }

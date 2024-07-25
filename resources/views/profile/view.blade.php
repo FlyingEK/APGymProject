@@ -40,7 +40,12 @@
 </div>
 
 <div class="mt-4 d-flex justify-content-center align-items-center justify-content-center" style="flex-direction: row;gap:8px;"> 
-    <a href="{{route('gym-index')}}" class="blueBtn  btn" style="font-size: 19px;"><i class="fas fa-exchange-alt"></i>&nbsp;&nbsp;Switch Role</a>
-    <a href="{{route('logout')}}" class="redBtn btn" style="font-size: 19px;"><i class="fas fa-sign-out-alt"></i>   Logout</a>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <a class="redBtn btn"  onclick="event.preventDefault();
+                            this.closest('form').submit();">
+            <i class="fas fa-sign-out-alt"></i>   Logout
+        </a>
+    </form>
 </div>
 @endsection

@@ -1,5 +1,5 @@
 
-<div class=" navbar row" style="padding:0; margin:0;"> 
+<div class="trainerNav navbar row" style="padding:0; margin:0;"> 
     <div class = "navtab col col-sm">
         <a href="{{route('gym-index')}}"><span class="whiteIcon material-symbols-outlined">home</span><br>Home</a>        
     </div>

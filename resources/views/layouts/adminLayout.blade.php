@@ -27,11 +27,25 @@
 </head>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="logo m-1">
-            <span  style = "color:#C12323;">AP</span><span   style = "color:#192126;">GYM</span>
-        </div>
-         <i class="toggle-sidebar-btn" style = "color:#192126;"><span class="material-symbols-outlined" > menu</span></i>
+    <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="d-flex align-items-center">
+            <div class="logo m-1">
+                <span style="color:#C12323;">AP</span><span style="color:#192126;">GYM</span>
+            </div>
+            <i class="toggle-sidebar-btn" style="color:#192126;">
+                <span class="material-symbols-outlined">menu</span>
+            </i>
+        </div><!-- Authentication -->
+        <div class="ml-auto"></div>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <a style="font-size: 19px; font-weight:600;" class="redIcon"  onclick="event.preventDefault();
+                                this.closest('form').submit();">
+            <i class="fas fa-sign-out-alt"></i>   Logout
+        </a>
+        </form>
+
     </div>
 </header><!-- End Header -->
 
@@ -120,6 +134,7 @@
 @yield('javascript')
 @stack('script')
 <script src="{{ asset('/js/custom-select-box.js') }}"></script>
+<script src="https://kit.fontawesome.com/c8bccee41a.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     @if(session('success'))
