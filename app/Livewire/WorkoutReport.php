@@ -16,6 +16,7 @@ class WorkoutReport extends Component
     public $totalDays;
     public $totalTime;
     public $mostUsedEquipment;
+    public $activeTab = 'weekly';
     protected $listeners = ['fetchWorkoutRecords'];
 
     public function mount()
@@ -64,13 +65,13 @@ class WorkoutReport extends Component
     {
         $this->totalDays = $workouts->groupBy('date')->count();
         $totalTimeMinutes = $workouts->sum('duration');
-        $this->totalTime = floor($totalTimeMinutes / 60);
+        $this->totalTime = round($totalTimeMinutes / 60);
         $this->mostUsedEquipment = $workouts->groupBy('equipment_machine_id')
             ->map(function ($group) {
                 $totalDurationMinutes = $group->sum('duration');
 
                 return [
-                    'duration' => floor($totalDurationMinutes / 60), // convert to hours and round up
+                    'duration' => round($totalDurationMinutes / 60), // convert to hours and round up
                     'image' => $group->first()->equipmentMachine->equipment->image
                 ];
             })->sortDesc()->take(3);
@@ -79,6 +80,7 @@ class WorkoutReport extends Component
     public function getWeeklyReport()
     {
         $this->filter = 'weekly';
+        $this->activeTab = 'weekly';
         $this->fetchWorkoutRecords();
         $this->render();
 
@@ -87,8 +89,8 @@ class WorkoutReport extends Component
     public function getMonthlyReport()
     {
         $this->filter = 'monthly';
+        $this->activeTab = 'monthly';
         $this->fetchWorkoutRecords();
-        dd($this->workoutRecords);
         $this->render();
 
     }
@@ -96,6 +98,7 @@ class WorkoutReport extends Component
     public function getAnnualReport()
     {
         $this->filter = 'annually';
+        $this->activeTab = 'annual';
         $this->fetchWorkoutRecords();
         $this->render();
     }

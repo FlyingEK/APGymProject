@@ -23,7 +23,9 @@ class EquipmentController extends Controller
         $isCheckIn = $this->isUserCheckedIn();
         $userLimit = GymConstraint::where('constraint_name','max_in_gym_users')->first();
         $userLimit = (int) $userLimit->constraint_value;
-    
+        $isQueue = GymQueue::where('status', 'queueing')
+        ->where('status', 'reserved')
+        ->where('gym_user_id', Auth::user()->gymUser->gym_user_id)->exists();
         $currentQueueCount = GymQueue::where('status', 'entered')->count();
         $gymIsFull = $currentQueueCount >= $userLimit;
 
@@ -43,7 +45,7 @@ class EquipmentController extends Controller
             $query->where('status', 'maintenance');
         })
         ->get();
-        return view('equipment.index', compact('currentQueueCount','isCheckIn','gymIsFull','availableEquipment', 'maintenanceEquipment'));
+        return view('equipment.index', compact('currentQueueCount','isQueue','isCheckIn','gymIsFull','availableEquipment', 'maintenanceEquipment'));
 
     }
 

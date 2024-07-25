@@ -4,6 +4,7 @@
     --secondColor:#C12323;
     --thirdColor:#192126;
     --grayColor: #7c7c7c;
+    --lightRed: #c123234e;
 
 }
 
@@ -53,8 +54,8 @@
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
-  width: 30px;
-  height: 30px;
+  width: 33px;
+  height: 33px;
   background-size: contain;
 }
 
@@ -112,7 +113,7 @@
     color: white;
     align-items: center;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 10px !important;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     position: fixed;
     bottom: 65px; /* Adjust this value to avoid covering the navbar */
@@ -120,6 +121,22 @@
     transform: translateX(-50%);
     width: 90% !important;
     z-index: 1000;
+}
+
+.highlighted-player td {
+    background-color: var(--secondColor) !important;
+    color: white !important;
+    border:none;
+}
+
+.highlighted-player tr {
+    border-radius: 10px !important;
+
+}
+
+.dropdown-item.active, .dropdown-item:active{
+    background-color: #c123234e;
+    color:black;
 }
 
 .highlighted-player img {
@@ -396,6 +413,12 @@ body {
     color:var(--secondColor);
 }
 
+.report-filter span{
+    font-size: 17px;
+    font-weight:bolder;
+    color:var(--secondColor);
+}
+
 .report-filter .material-symbols-outlined, .backLink .material-symbols-outlined{
     font-size: 16px;
     vertical-align: top;
@@ -437,7 +460,7 @@ body {
 
 .workoutHistoryDate{
     color:rgb(130, 129, 129);
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .workoutHistoryTable{
@@ -931,12 +954,12 @@ padding: 6px;
     z-index: 1251 !important; /* Ensure this is higher than the modal's z-index */
 }
 .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-    background-color: #c123234e;
-    color: black;
+    background-color: #c123234e !important;
+    color: black!important;
 }
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background-color: #c123234e;
-    color: #000;
+    background-color: #c123234e!important;
+    color: #000!important;
 }
 .select2-selection__rendered {
     line-height: 40px !important;

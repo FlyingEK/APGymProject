@@ -7,8 +7,12 @@ use App\Models\GymQueue;
 use App\Events\QueueUpdated;
 use App\Models\GymConstraint;
 use App\Models\GymUser;
+use App\Models\WorkoutQueue;
+use App\Models\EquipmentMachine;
 use App\Notifications\TurnNotification;
+use App\Notifications\CheckInSuccess;
 use App\Notifications\ReservationCancelledNotification;
+use App\Notifications\EquipmentReserved;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 
@@ -110,6 +114,27 @@ class GymQueueController extends Controller
                 $user->status = 'left',
             ]);
 
+            //clear all queued gym workout
+            $workoutQueue = WorkoutQueue::with(['equipment.equipmentMachine'])
+            ->where('gym_user_id', $gymUserId)
+            ->where('status', 'queueing')
+            ->orWhere('status', 'reserved')
+            ->orWhere('status', 'inuse')
+            ->get();
+                //actual workout also need to stop
+
+            foreach($workoutQueue as $workout){
+                $workout->status = 'completed';
+                $workout->save();
+
+                //call the next user in the queue for workout
+                if($workout->equipment->equipmentMachine){
+                    $workout->equipment->equipmentMachine->status = 'available';
+                    $workout->equipment->equipmentMachine->save();
+                    $this->callNextInEquipmentQueue($workout->equipment_id);
+                }
+               // $workout->equipment->equipmentMachine->status = 'available';
+            }
             // Reserve the next user in the queue
             if($gymIsFull){
                 $this->reserveNextUser();
@@ -118,6 +143,53 @@ class GymQueueController extends Controller
         }
         return redirect()->back()->with('success', 'You have left the gym.');
     }
+
+    public function callNextInEquipmentQueue($equipmentId){
+        //call next in queue
+        $nextInQueue = WorkoutQueue::with(['gymUser.user', 'workout'])
+        ->where('status', 'queueing')
+        ->where('equipment_id', $equipmentId)
+        ->whereDoesntHave('gymUser.queue', function ($query) {
+            $query->where('status', 'reserved');
+        })
+        ->whereDoesntHave('gymUser.workout', function ($query) {
+            $query->where('status', 'in_progress');
+        })
+        ->orderBy('created_at', 'asc')
+        ->first();
+
+        if($nextInQueue){
+    
+            //assign equipment to user
+            $equipmentMachine = EquipmentMachine::with('equipment')
+            ->where('equipment_id', $equipmentId)
+            ->where('status', 'available')
+            ->first();
+    
+            if ($equipmentMachine && $equipmentMachine->status == 'available') {
+                $equipmentMachine->status = 'reserved';
+                $equipmentMachine->save();
+                //send notification
+                $nextInQueue->status = 'reserved';
+                $nextInQueue->equipment_machine_id = $equipmentMachine->equipment_machine_id;
+                $nextInQueue->save();
+                Notification::send($nextInQueue->gymUser->user, new EquipmentReserved($equipmentMachine->label, $equipmentMachine->equipment->name));
+                $this->setReservationTimer($equipmentMachine, $nextInQueue);
+    
+            }
+        }
+       
+    }
+
+    protected function setReservationTimer(EquipmentMachine $equipmentMachine, WorkoutQueue $nextInQueue)
+    {
+        // Use a delayed job to change the status back after 2 minutes
+        $job = (new \App\Jobs\ReleaseEquipmentReservation($equipmentMachine,$nextInQueue))
+            ->delay(now()->addMinutes(2));
+
+        dispatch($job);
+    }
+
 
     public function showCheckInForm()
     {
@@ -130,7 +202,7 @@ class GymQueueController extends Controller
             'check_in_code' => 'required|string',
         ]);
 
-        $user = GymQueue::where('check_in_code', $request->check_in_code)
+        $user = GymQueue::with('gymUser')->where('check_in_code', $request->check_in_code)
                     ->where('status', 'reserved')
                     ->first();
 
@@ -140,7 +212,7 @@ class GymQueueController extends Controller
             $user->check_in_code = null; // Clear the check-in code
             $user->reserved_until = null;
             $user->save();
-            //send notification
+            Notification::send($user->gymUser->user, new CheckInSuccess());
             return redirect()->back()->with('success', 'User successfully checked in.');
         }
 

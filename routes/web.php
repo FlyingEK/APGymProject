@@ -10,6 +10,7 @@ use App\Http\Controllers\IssueReportController;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\GymQueueController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Livewire\WorkoutReport;
 
 
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,7 @@ Route::get('/', function () {
     } elseif ($user->role == 'admin') {
         return redirect()->intended(route('equipment-all'));
     }
-});
+})->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -68,12 +69,14 @@ Route::group(['prefix' => 'workout'],function(){
     Route::post('/addWorkout/{save}', [WorkoutController::class, 'setPlanAndGetEquipment'])->name('workout-add');
     Route::post('/startWorkout', [WorkoutController::class, 'startWorkout'])->name('workout-start');
     Route::put('/endWorkout', [WorkoutController::class, 'endWorkout'])->name('workout-end');
-    // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
+    Route::get('/view-record/{id}', [WorkoutAnalyticController::class, 'recordDetails'])->name('workout-detail');
 });
 Route::group(['prefix' => 'analytic'],function(){
     Route::get('/', [WorkoutAnalyticController::class, 'index'])->name('analytic-report');
     Route::get('/setGoal', [WorkoutAnalyticController::class, 'setGoal'])->name('set-goal');
-    // Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
+    Route::post('/storeStrengthGoal', [WorkoutAnalyticController::class, 'storeStrengthGoal'])->name('store-strength-goal');
+    Route::post('/storeOverallGoal/{id}', [WorkoutAnalyticController::class, 'storeOverallGoal'])->name('store-overall-goal');
+
 });
 
 Route::group(['prefix' => 'issue'],function(){
@@ -124,7 +127,7 @@ Route::group(['prefix' => 'equipment'], function(){
 Route::get('/get-equipment-machines', [EquipmentController::class, 'getEquipmentMachines'])->name('get-equipment-machines');
 
 // Route::group(['prefix' => 'equipment'],function(){
-//     Route::get('/report', [WorkoutAnalyticController::class, 'report'])->name('analytic-report');
+//     Route::get('/report', [recordDetailsAnalyticController::class, 'report'])->name('analytic-report');
 //     Route::get('/view-record', [WorkoutAnalyticController::class, 'recordDetails'])->name('analytic-report');
 // });
 

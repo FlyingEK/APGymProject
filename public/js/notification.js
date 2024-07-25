@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         confirmButton: 'btn redBtn',
                     },
                 })
-               // showWebNotification(notification.title , notification.message);
+            //    showWebNotification(notification.title , notification.message);
                 addNotificationToDropdown(notification.title, notification.message, notification.check_in_code, notification.datetime);
             });
     

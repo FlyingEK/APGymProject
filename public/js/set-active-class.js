@@ -4,5 +4,5 @@ function setActive(selector) {
         $(this).addClass('activeTab');
     });
 }  
-setActive(".pgtab1 a");
-setActive(".pgtab2 a");
+setActive(".pgtab1 button");
+// setActive(".pgtab2 button");

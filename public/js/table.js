@@ -38,11 +38,11 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
     
-    // $('.datepicker').flatpickr({
-    //     altInput: true,
-    //     dateFormat: "dd/mm/yyyy",
-    //     allowInput: true,
-    // })
+    $('.datepicker').flatpickr({
+        altInput: true,
+        dateFormat: "dd/mm/yyyy",
+        allowInput: true,
+    })
     
     
 });

@@ -29,6 +29,8 @@ class GymController extends Controller
     {
         return view('gym.index');
     }
+
+
     
 
 

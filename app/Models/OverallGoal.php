@@ -10,7 +10,7 @@ class OverallGoal extends Model
     use HasFactory;
     protected $table = 'overall_goal';
     protected $primaryKey = 'goal_id';
-    protected $fillable = ['goal_id','workout_hour', 'target_date'];
+    protected $fillable = ['goal_id','workout_hour', 'target_date','per'];
 
     protected $casts = [
         'created_at' => 'datetime',

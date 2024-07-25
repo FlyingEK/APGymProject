@@ -1,12 +1,12 @@
 
-import Alpine from 'alpinejs';
+// import Alpine from 'alpinejs';
 // Import Bootstrap and its dependencies
 // import 'bootstrap';
 import 'jquery';
 import '@popperjs/core';
 
 
-window.Alpine = Alpine;
+// window.Alpine = Alpine;
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
@@ -19,4 +19,4 @@ window.Echo = new Echo({
 });
 
 
-Alpine.start();
+// Alpine.start();
