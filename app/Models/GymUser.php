@@ -33,4 +33,13 @@ class GymUser extends Model
     public function workout(){
         return $this->hasMany(Workout::class, 'gym_user_id', 'gym_user_id');
     }
+
+    public function goal(){
+        return $this->hasMany(Goal::class, 'gym_user_id', 'gym_user_id');
+    }
+
+    public function gymUserAchievement(){
+        return $this->hasMany(GymUserAchievement::class, 'gym_user_id', 'gym_user_id');
+
+    }
 }
