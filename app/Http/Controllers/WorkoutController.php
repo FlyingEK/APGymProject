@@ -8,6 +8,8 @@ use App\Models\GymConstraint;
 use App\Models\Workout;
 use App\Models\EquipmentMachine;
 use App\Models\WorkoutQueue;
+use App\Models\StrengthEquipmentGoal;
+use App\Models\OverallGoal;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -437,7 +439,7 @@ class WorkoutController extends Controller
     public function endWorkout(Request $request){
 
         $data = $request->validate([
-            'set' => 'nullable|required_if:has_weight,1|integer|min:1|', 
+            'set' => 'nullable|required_if:has_weight,1|integer', 
             'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
             'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
             'duration' => 'nullable|required_if:has_weight,0|integer',
@@ -472,6 +474,41 @@ class WorkoutController extends Controller
         $equipmentMachine->status = 'available';
         $equipmentMachine->save();
 
+        // Update goal progress
+        $strengthGoal = StrengthEquipmentGoal::with(['goal','equipment'])
+        ->where('gym_user_id', $workout->gym_user_id)
+        ->where('equipment_id', $equipmentMachine->equipment_id)
+        ->whereHas('goal', function($query) {
+            $query->where('status', 'active');
+        })
+        ->first();
+
+        if ($strengthGoal) {
+            $strengthGoal->progress = $data['weight'] > $strengthGoal->progress ? $data['weight'] : $strengthGoal->progress;
+            if ($strengthGoal->progress >= $strengthGoal->weight) {
+                $strengthGoal->goal->status = 'completed';
+                $strengthGoal->goal->save();
+                Notification::send($workout->gym_user_id, new GoalCompleted($strengthGoal));
+            }
+            $strengthGoal->save();
+        }
+        $overallGoal = OverallGoal::with('goal')
+        ->where('gym_user_id', $workout->gym_user_id)
+        ->whereHas('goal', function($query) {
+            $query->where('status', 'active');
+        })
+        ->first();
+    
+        if ($overallGoal) {
+            $overallGoal->progress = intval($data['duration']) / 60 + $overallGoal->progress;
+            if ($overallGoal->progress >= $overallGoal->workout_hour) {
+                $overallGoal->goal->status = 'completed';
+                $overallGoal->goal->save();
+                Notification::send($workout->gym_user_id, new GoalCompleted($overallGoal));
+            }
+            $overallGoal->save();
+        }
+        
         $this->callNextInQueue($equipmentMachine->equipment->equipment_id);
 
         return redirect()->route('workout-index')->with('workoutSuccess', 'Workout ended successfully!');

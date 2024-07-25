@@ -23,7 +23,7 @@
         </div>
         <div class="tab-pane fade" id="leaderboard">
             <!-- Leaderboard content -->
-            @include('partials.workout-analytic.leaderboard')
+            @livewire('leaderboard-component')
         </div>
     </div><!-- End Additional Tabs -->
 </div>
