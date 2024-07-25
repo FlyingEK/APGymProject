@@ -33,7 +33,6 @@
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('/js/set-progress.js') }}"></script>
     <script src="{{ asset('/js/set-active-class.js') }}"></script>
     <script>
     window.addEventListener('load', function() {
