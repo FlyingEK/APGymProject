@@ -98,13 +98,13 @@
             </a>
             <ul id="badge-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="">
-                        <i class="bi bi-circle"></i><span>All Badges</span>
+                    <a href="{{ route('achievement-create') }}">
+                        <i class="bi bi-circle"></i><span>All Achievement Badges</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
-                        <i class="bi bi-circle"></i><span>Add Badges</span>
+                    <a href="{{ route('achievement-create') }}">
+                        <i class="bi bi-circle"></i><span>Add Achievement Badges</span>
                     </a>
                 </li>
             </ul>

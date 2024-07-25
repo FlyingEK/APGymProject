@@ -10,6 +10,7 @@ use App\Http\Controllers\IssueReportController;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\GymQueueController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AchievementController;
 use App\Http\Livewire\WorkoutReport;
 
 
@@ -79,6 +80,8 @@ Route::group(['prefix' => 'analytic'],function(){
 
 });
 
+
+
 Route::group(['prefix' => 'issue'],function(){
     Route::get('/', [IssueReportController::class, 'indexUser'])->name('issue-user-index');
     Route::get('/create', [IssueReportController::class, 'create'])->name('issue-create');
@@ -96,12 +99,21 @@ Route::group(['prefix' => 'issue'],function(){
 Route::group(['prefix' => 'constraint'],function(){
     Route::get('/all', [ConstraintController::class, 'allConstraint'])->name('constraint-all');
     Route::get('/create', [ConstraintController::class, 'addConstraint'])->name('constraint-create');
-    Route::post('/store', [EquipmentController::class, 'store'])->name('constraint-store');
+    Route::post('/store', [ConstraintController::class, 'storeConstraint'])->name('constraint-store');
     Route::get('/edit/{id}', [ConstraintController::class, 'editConstraint'])->name('constraint-edit');
     Route::put('/update/{id}', [ConstraintController::class, 'updateConstraint'])->name('constraint-update');
     Route::get('/view/{id}', [ConstraintController::class, 'viewConstraint'])->name('constraint-view');
     
 });
+
+Route::group(['prefix' => 'achievement'],function(){
+    Route::get('/all', [AchievementController::class, 'allAchievement'])->name('achievement-all');
+    Route::get('/create', [AchievementController::class, 'addAchievement'])->name('achievement-create');
+    Route::post('/store', [AchievementController::class, 'storeAchievement'])->name('achievement-store');
+    Route::get('/edit/{id}', [AchievementController::class, 'editAchievement'])->name('achievement-edit');
+    Route::put('/update/{id}', [AchievementController::class, 'updateAchievement'])->name('achievement-update');
+});
+
 
 Route::group(['prefix' => 'user'],function(){
     Route::get('/all', [UserController::class, 'allUser'])->name('user-all');
