@@ -1,23 +1,20 @@
-@extends('layouts.trainerLayout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    <div class="input-group searchBox mb-2">
-        <input type="search" class="form-control rounded border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-      </div>
+    @include('search-equipment-machine', ['category' => ''])
     <div class="page-title">Available Equipment</div>
-    @for($i=0;$i<5;$i++)
+    @forelse($availableEquipments as $equipment)
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
-                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$equipment->equipment->image)}}" alt="Work Order Image" ><br/>
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
-                    <p class="equipmentTitle">Equipment name</p>
+                    <p class="equipmentTitle">{{$equipment->equipment->name}}   <span class="redIcon">#{{$equipment->label}}</span></p>
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
                         <i class="fa-solid fa-helmet-safety"></i> Available
                     </div><br>
-                    <a href="{{route('equipment-view')}}" class="stretched-link"></a>
                     <div class="d-flex justify-content-end">
                         <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
                             Update Status
@@ -27,27 +24,24 @@
             </div>
         </div>
     </div>
-    @endfor
-    @for($i=0;$i<5;$i++)
+    @empty
+        <p> No equipment is available.</p>
+    @endforelse
+
+    <div class="page-title mt-3">In Use Equipment</div>
+
+    @forelse($availableEquipments as $equipment)
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
-                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$equipment->equipment->image)}}" alt="Work Order Image" ><br/>
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
-                    <p class="equipmentTitle">Equipment name</p>
+                    <p class="equipmentTitle">{{$equipment->equipment->name}}   <span class="redIcon">#{{$equipment->label}}</span></p>
                     <div  class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none" >
-                        Not available
+                        In use
                     </div>
-                    <div class="myBtn btn m-2 equipmentSmTag btn-sm btn-outline-dark shadow-none">
-                        Queue: 1 person
-                    </div>
-                    <div class="myBtn btn m-2 equipmentSmTag btn-sm btn-outline-dark shadow-none">
-                        Wait time: 20mins
-                    </div>
-
-                    <a href="{{route('equipment-view')}}" class="stretched-link"></a>
                     <div class="d-flex justify-content-end">
                         <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
                             Update Status
@@ -57,37 +51,9 @@
             </div>
         </div>
     </div>
-    @endfor
-        <div class=" row row-cols-2 row-cols-md-2 g-1">
-            <div class="col no-padding ">
-                <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
-                    <span class="card-title categoryCardTxt p-2 no-wrap w-80">Cardio Machines</span>
-                    <a href="#" class="stretched-link"></a>
-                </div>
-            </div>
-            <div class="col no-padding">
-                <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
-                    <span class="card-title categoryCardTxt p-2 no-wrap w-80">Free Weights</span>
-                    <a href="#" class="stretched-link"></a>
-                </div>
-            </div>
-            <div class="col no-padding">
-                <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
-                    <span class="card-title categoryCardTxt p-2 no-wrap">Leg Machines</span>
-                    <a href="#" class="stretched-link"></a>
-                </div>
-            </div>
-            <div class="col no-padding">
-                <div class="category card border-0 shadow-none m-2">
-                    <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
-                    <span class="card-title categoryCardTxt p-2 no-wrap">Upper Body Machines</span>
-                    <a href="#" class="stretched-link"></a>
-                </div>
-            </div>
-        </div>
+    @empty
+        <p> No equipment is in use.</p>
+    @endforelse
 </div>
 @include('partials.equipment.equipment-habit-modal')
 

@@ -20,56 +20,57 @@
             </div>
         </div>
     </div>
-    @livewire('equipment-search',['isCheckIn' => false, 'category' => ''])
+    @livewire('search-equipment-machine',['category' => ''])
 
     <div class="page-title">Equipment that are used longer</div>
 
-@for($i=0;$i<3;$i++)
+@forelse($exceededEquipments as $equipment)
 <div class="card equipment shadow-sm mt-2 p-2">
     <div class="row">
         <div class="col-5 ">
-                <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$equipment['equipment']->image)}}" alt="Work Order Image" ><br/>
         </div>
         <div class="col-7" style="padding-left: 5px">
             <div class=" mt-md-3 no-wrap">
-                <p class="equipmentTitle">Equipment name  &nbsp;<span class="text-danger ">#TR0{{$i}}</span></p>
+                <p class="equipmentTitle">{{$equipment['equipment']->name}}  &nbsp;<span class="text-danger ">#{{$equipment['equipmentMachine']->label}} </span></p>
                 <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
-                    <i class="fa-solid fa-helmet-safety"></i> 30 minutes
+                    Exceeded {{$equipment['exceededTime']}} minutes
                 </div><br>
-                <a href="{{route('equipment-view',1)}}" class="stretched-link"></a>
             </div>
         </div>
     </div>
 </div>
-@endfor
+@empty
+    <p> No equipment is used longer than the limit.</p>
+@endforelse
     <div class="page-title mt-4">Categories</div>
         <div class=" row row-cols-2 row-cols-md-2 g-1">
             <div class="col no-padding ">
                 <div class="category card border-0 shadow-none m-2">
                     <img src="{{ asset('/img/treadmill.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap w-80">Cardio Machines</span>
-                    <a href="#" class="stretched-link"></a>
+                    <a href="{{route('equipment-trainer-category','cardio machines')}}" class="stretched-link"></a>
                 </div>
             </div>
             <div class="col no-padding">
                 <div class="category card border-0 shadow-none m-2">
                     <img src="{{ asset('/img/dumbbell.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap w-80">Free Weights</span>
-                    <a href="#" class="stretched-link"></a>
+                    <a href="{{route('equipment-trainer-category','free weights')}}" class="stretched-link"></a>
                 </div>
             </div>
             <div class="col no-padding">
                 <div class="category card border-0 shadow-none m-2">
                     <img src="{{ asset('/img/legpress.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap">Leg Machines</span>
-                    <a href="#" class="stretched-link"></a>
+                    <a href="{{route('equipment-trainer-category','leg machines')}}" class="stretched-link"></a>
                 </div>
             </div>
             <div class="col no-padding">
                 <div class="category card border-0 shadow-none m-2">
                     <img src="{{ asset('/img/backmachine.jpg') }}" class="categoryCardImg card-img-overlay" alt="...">
                     <span class="card-title categoryCardTxt p-2 no-wrap">Upper Body Machines</span>
-                    <a href="#" class="stretched-link"></a>
+                    <a href="{{route('equipment-trainer-category','upper body machines')}}" class="stretched-link"></a>
                 </div>
             </div>
         </div>

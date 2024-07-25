@@ -272,6 +272,10 @@ body {
     background-color: var(--secondColor);
 }
 
+.trainerNav .navtab:hover {
+    background-color: #68b1de !important;
+}
+
 .navtab {
     flex: 1;
     text-align: center;

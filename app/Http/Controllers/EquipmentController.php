@@ -65,6 +65,16 @@ class EquipmentController extends Controller
         return view('equipment.category', compact('isCheckIn','equipment', 'category'));
     }
 
+    public function trainerCategoryEquipment($category){
+        $equipment = EquipmentMachine::with('equipment')
+        ->whereHas('equipment', function($query) use ($category){
+            $query->where('category', $category)
+            ->where('is_deleted', false);
+        })
+        ->get();
+
+        return view('equipment.trainer.category', compact('equipment','category'));
+    }
     // public function allEquipment()
     // {
     //     // Fetch all equipment data
@@ -258,7 +268,15 @@ class EquipmentController extends Controller
 
     public function trainerEquipments()
     {
-        return view('equipment.trainer.all');
+        $availableEquipments = EquipmentMachine::with('equipment')
+        ->where('status', 'available')
+        ->orderBy('equipment_id')
+        ->get();
+        $inUseEquipments = EquipmentMachine::with('equipment')
+        ->where('status', 'in use')
+        ->orderBy('equipment_id')
+        ->get();
+        return view('equipment.trainer.all', compact('availableEquipments', 'inUseEquipments'));
     }
 
     public function getEquipmentMachines(Request $request)

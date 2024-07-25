@@ -7,7 +7,6 @@
             <div class="report-filter">
                 <a href="#">
                     <input type="date" wire:model="endDate" class="form-control " id="date" name="date" x-on:change="$wire.setDate( $event.target.value)"
-
                     placeholder="Select a date">
 
                     {{-- <i class="material-symbols-outlined redIcon no-wrap">tune</i><span>  Today</span> --}}
@@ -15,7 +14,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="workoutSection mt-2">
         @forelse ($workoutRecords as $date => $records)
