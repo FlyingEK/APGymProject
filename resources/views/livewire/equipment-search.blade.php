@@ -16,18 +16,25 @@
                     @php
                     $color = $equipment->status == 'Available'? 'success' : 'danger';
                     @endphp
+                    @if($equipment->status == 'Available')
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
-                        @if($equipment->status == 'Available')
-                            Available: {{ $equipment->available_machines_count }}
-                        @else
-                            {{$equipment->status}}
-                        @endif
-
+                    Available: {{ $equipment->available_machines_count }}
                     </div><br>
+                    @else
+                    <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                        {{$equipment->status}}
+                    </div><br>
+                    <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                        {{$equipment->statusDetail['currentPersonInQueue']}} in queue
+                    </div>
+                    <div class = "myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                        Estimated wait time: {{$equipment->statusDetail['totalEstimatedTime']}} mins
+                    </div>
+                    @endif
                     <a href="{{route('equipment-view',$equipment->equipment_id)}}" class="stretched-link"></a>
                     @if ($isCheckIn)
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
+                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-id="{{$equipment->equipment_id}}" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
                             {{$equipment->status == 'Available'? 'Use' : 'Queue'}}
                         </button>
                     </div>

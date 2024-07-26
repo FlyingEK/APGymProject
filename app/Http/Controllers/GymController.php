@@ -34,7 +34,7 @@ class GymController extends Controller
     {
         $timeNow = now();
         $exceededWorkout = Workout::with('equipmentMachine.equipment')
-                            ->where('estimated_end_time', '<', $timeNow)
+                            ->where('exceeded_time', '<', $timeNow)
                             ->where('status', 'in_progress')
                             ->get();
                 // Create a collection to hold the exceeded equipments

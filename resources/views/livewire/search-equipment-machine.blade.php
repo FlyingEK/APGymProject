@@ -12,7 +12,7 @@
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
-                    <p class="equipmentTitle">{{ $equipment->equipment->name }}   &nbsp;<span class="text-danger ">{{$equipment->label}}</span></p>
+                    <p class="equipmentTitle">{{ $equipment->equipment->name }}   &nbsp;<span class="text-danger ">#{{$equipment->label}}</span></p>
                     @php
                     $color = $equipment->status == 'available'? 'success' : 'danger';
                     $color = $equipment->status == 'maintenance'? 'warning' : $color;

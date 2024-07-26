@@ -178,7 +178,8 @@ $(document).ready(function () {
                         modal.find('.loading').html(''); // Clear loading message or replace with actual content
 
                     }, 200); 
-
+                }else{
+                    modal.find('.loading').html(''); // Clear loading message or replace with actual content
                 }
             },
         });

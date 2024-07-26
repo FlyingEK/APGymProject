@@ -38,7 +38,7 @@
                 </div><br>
             </div>
             @if( $equipment['equipmentMachine']->status == 'in use')
-            <form id="updateStatus{{$equipment['equipmentMachine']->equipment_machine_id}}" action = {{route('equipment-status-update', $item->equipment_machine_id)}} method="POST">
+            <form id="updateStatus{{$equipment['equipmentMachine']->equipment_machine_id}}" action = {{route('equipment-status-update', $equipment['equipmentMachine']->equipment_machine_id)}} method="POST">
                 @csrf
                 <div class="d-flex justify-content-end">
                     <button type="button" onclick="confirmUpdateStatus('updateStatus{{$equipment['equipmentMachine']->equipment_machine_id}}')" class="myBtn btnFront btn btn-primary redBtn shadow-none">

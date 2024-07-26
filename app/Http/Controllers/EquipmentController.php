@@ -5,10 +5,12 @@ use App\Models\EquipmentMachine;
 use App\Models\GymConstraint;
 use App\Models\GymQueue;
 use App\Models\Workout;
+use App\Models\GymUser;
 use App\Models\WorkoutQueue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 
 class EquipmentController extends Controller
@@ -20,6 +22,58 @@ class EquipmentController extends Controller
         ->where('status', 'entered')
         ->exists();
     }
+
+    public function getInUseStatus($equipmentId, $userId){
+        $currentTime = now();
+
+         // Fetch all equipment machines related to the equipment
+        $equipmentMachines = EquipmentMachine::where('equipment_id', $equipmentId)->pluck('equipment_machine_id');
+
+         // Fetch ongoing workouts for the equipment machines
+        $equipmentWorkouts = Workout::whereIn('equipment_machine_id', $equipmentMachines)
+                        ->whereIn('status', ['in_progress', 'in_use'])
+                        ->get();
+    
+        $queueWorkouts = WorkoutQueue::where('equipment_id', $equipmentId)
+                                     ->where('status', 'queueing')
+                                     ->orWhere('status', 'reserved')
+                                     ->orderBy('created_at')
+                                     ->get();
+    
+        $currentUserQueuePosition = null;
+        $totalEstimatedTime = 0;
+        $currentPersonInQueue = 0;
+    
+        // Calculate remaining workout time for current users
+        foreach ($equipmentWorkouts as $workout) {
+            $estimatedEndTime = Carbon::parse($workout->estimated_end_time);
+            if ($currentTime->lt($estimatedEndTime)) {
+                $remainingTime = abs($estimatedEndTime->diffInMinutes($currentTime));
+                $totalEstimatedTime += $remainingTime;
+            }
+        }
+    $a = $totalEstimatedTime;
+        // Calculate total waiting time for users in the queue
+        foreach ($queueWorkouts as $index => $queueWorkout) {
+            $currentPersonInQueue++;
+            if ($queueWorkout->gym_user_id == $userId) {
+                $currentUserQueuePosition = $index + 1;
+                break;
+            }
+            $totalEstimatedTime += $queueWorkout->duration;
+
+        }
+        // $timeUntilUserTurn = 0;
+        // if (!is_null($currentUserQueuePosition)) {
+        //     $timeUntilUserTurn = $totalEstimatedTime;
+        // }
+        return [
+            'totalEstimatedTime' => round($totalEstimatedTime),
+            'currentPersonInQueue' => $currentPersonInQueue,
+            'currentUserQueuePosition' => $currentUserQueuePosition,
+        ];
+    }
+
     public function index()
     {
         $isCheckIn = $this->isUserCheckedIn();
@@ -52,6 +106,9 @@ class EquipmentController extends Controller
     }
 
     public function categoryEquipment($category){
+        $userId = Auth::id();
+        $gymUser = GymUser::where('user_id', $userId)->first();
+        $gymUserId = $gymUser->gym_user_id;
         $isCheckIn = $this->isUserCheckedIn();
         $equipment = Equipment::where('is_deleted', false)
         ->where('category', $category)
@@ -61,9 +118,12 @@ class EquipmentController extends Controller
         ->get();
 
         // Adding status to each equipment
-        $equipment->each(function ($item) {
+        $gymUserId = Auth::user()->gymUser->gym_user_id;
+        $equipment->each(function ($item) use ($gymUserId) {
             $item->status = $item->available_machines_count > 1 ? 'Available' : 'Not available';
+            $item->statusDetail = $this->getInUseStatus($item->equipment_id, $gymUserId);
         });
+
         return view('equipment.category', compact('isCheckIn','equipment', 'category'));
     }
 
