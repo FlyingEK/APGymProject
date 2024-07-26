@@ -17,7 +17,6 @@
                         <i class="fas fa-venus" style="color: rgb(245, 89, 89);" ></i>
                     @endif
                 @endif
-                <span  class="pagetitle">({{ $user->role }})</span>
                 <br>
                 <span style="color:gray;font-size:18px;">{{ $user->first_name }} {{ $user->last_name }}</span>
                 <br>

@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Models\GymUser;
+use App\Models\GymUserAchievement;
+use App\Models\Achievement;
+use App\Notifications\AchievementUnlocked;
+use Illuminate\Support\Facades\Notification;
 
 class RegisteredUserController extends Controller
 {
@@ -56,10 +60,19 @@ class RegisteredUserController extends Controller
     // If user creation is successful
     if ($user) {
             $gymUser = GymUser::create([
-                'user_id' => $user->id,
+                'user_id' => $user->user_id,
             ]);
             // Trigger the Registered event
             event(new Registered($user));
+
+            //create registered achievement
+            GymUserAchievement::create([
+                'gym_user_id' => $gymUser->gym_user_id,
+                'achievement_id' => 1,
+            ]);
+            $condition = Achievement::find(1)->condition;
+
+            Notification::send(User::find($gymUser->user_id), new AchievementUnlocked(lcfirst($condition)));
 
             // Log the user in
             Auth::login($user);

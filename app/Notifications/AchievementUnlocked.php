@@ -50,7 +50,7 @@ class AchievementUnlocked extends Notification
     {
         return [
             'title' => 'Achievement Unlocked',
-            'message' => 'You have unlocked a new achievement on '+$this->condition+'!',
+            'message' => 'You have unlocked a new achievement on '.$this->condition.'!',
             'datetime' => now()->toDateString(),
         ];
     }
@@ -59,7 +59,7 @@ class AchievementUnlocked extends Notification
     {
         return new BroadcastMessage([
             'title' => 'Achievement Unlocked',
-            'message' => 'You have unlocked a new achievement on '+$this->condition+'!',
+            'message' => 'You have unlocked a new achievement on '.$this->condition.'!',
             'datetime' => now()->toDateString(),
 
         ]);

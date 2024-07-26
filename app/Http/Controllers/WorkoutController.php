@@ -19,6 +19,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\EquipmentReserved;
+use App\Models\GymUserAchievement;
+
 use Exception;
 
 
@@ -530,9 +532,12 @@ class WorkoutController extends Controller
                 // Check if the user meets the condition for this achievement
                 if ($totalHours >= $requiredHours) {
                     // Unlock the achievement
-                    $gymUser->gymUserAchievement()->attach($achievementId);
+                    GymUserAchievement::create([
+                        'gym_user_id' => $gymUser->gym_user_id,
+                        'achievement_id' => $achievementId,
+                    ]);
                     $condition = Achievement::find($achievementId)->condition;
-                    Notification::send(User::find($gymUser->user_id), new AchievementUnlocked($achievementId, lcfirst($condition)));
+                    Notification::send(User::find($gymUser->user_id), new AchievementUnlocked(lcfirst($condition)));
 
                 }
             }

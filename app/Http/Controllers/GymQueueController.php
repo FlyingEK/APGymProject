@@ -18,7 +18,7 @@ use App\Notifications\ReservationCancelledNotification;
 use App\Notifications\EquipmentReserved;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
-
+use App\Models\GymUserAchievement;
 
 class GymQueueController extends Controller
 {
@@ -251,9 +251,12 @@ class GymQueueController extends Controller
                     // Check if the user meets the condition for this achievement
                     if ($totalDaysCheckedIn >= $requiredDays) {
                     // Unlock the achievement
-                        $gymUser->gymUserAchievement()->attach($achievementId);
+                        GymUserAchievement::create([
+                            'gym_user_id' => $gymUser->gym_user_id,
+                            'achievement_id' => $achievementId,
+                        ]);
                         $condition = Achievement::find($achievementId)->condition;
-                        Notification::send(User::find($gymUser->user_id), new AchievementUnlocked($achievementId, lcfirst($condition)));
+                        Notification::send(User::find($gymUser->user_id), new AchievementUnlocked(lcfirst($condition)));
 
                     }
                 }

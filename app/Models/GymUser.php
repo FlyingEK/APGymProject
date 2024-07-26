@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class GymUser extends Model
 {
+    public $timestamps = false;
+
     use HasFactory;
     protected $table = 'gym_user';
     protected $primaryKey = 'gym_user_id';

@@ -25,7 +25,7 @@
         <table class="table datatable borderless w-100" id="allAchievementTable">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>#ID</th>
                     <th style="width: 40%;">Achievement Condition</th>
                     <th>Badge Image</th>
                     <th>Action</th>
@@ -34,7 +34,7 @@
             <tbody>
                 @foreach ($achievements as $achievement)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $achievement->achievement_id }}</td>
                     <td>{{ $achievement->condition }}</td>
                     <td><img style="height:90px;" src="{{ asset('storage/'.$achievement->image)}}"></td>
                     <td>
