@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Models\GymUser;
 
 class RegisteredUserController extends Controller
 {
@@ -54,6 +55,9 @@ class RegisteredUserController extends Controller
 
     // If user creation is successful
     if ($user) {
+            $gymUser = GymUser::create([
+                'user_id' => $user->id,
+            ]);
             // Trigger the Registered event
             event(new Registered($user));
 

@@ -12,7 +12,7 @@
             <div class=" mt-md-3 no-wrap">
                 <p class="equipmentTitle">Equipment name</p>
                 <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
-                    <i class="fa-solid fa-helmet-safety"></i> 30 minutes
+                    <i class="fas fa-helmet-safety"></i> 30 minutes
                 </div><br>
                 <a href="{{route('equipment-view')}}" class="stretched-link"></a>
             </div>

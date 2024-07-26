@@ -56,7 +56,7 @@
             <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
                 <span class="material-symbols-outlined">
                     person
-                </span>  &nbsp&nbsp<span>Users</span><i class="fa-solid fa-chevron-down ms-auto"></i>
+                </span>  &nbsp&nbsp<span>Users</span><i class="fas fa-chevron-down ms-auto"></i>
             </a>
             <ul id="user-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
@@ -70,7 +70,7 @@
             <a class="nav-link collapsed" data-bs-target="#equipment-nav" data-bs-toggle="collapse" href="#">
                 <span class="material-symbols-outlined">
                     exercise
-                </span>  &nbsp&nbsp<span>Gym Equipments</span><i class="fa-solid fa-chevron-down ms-auto"></i>
+                </span>  &nbsp&nbsp<span>Gym Equipments</span><i class="fas fa-chevron-down ms-auto"></i>
             </a>
             <ul id="equipment-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
@@ -89,7 +89,7 @@
             <a class="nav-link collapsed" data-bs-target="#constraint-nav" data-bs-toggle="collapse" href="#">
                 <span class="material-symbols-outlined">
                     browse_gallery
-                </span>  &nbsp&nbsp<span>Gym Constraints</span><i class="fa-solid fa-chevron-down ms-auto"></i>
+                </span>  &nbsp&nbsp<span>Gym Constraints</span><i class="fas fa-chevron-down ms-auto"></i>
             </a>
             <ul id="constraint-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
@@ -108,7 +108,7 @@
             <a class="nav-link collapsed" data-bs-target="#badge-nav" data-bs-toggle="collapse" href="#">
                 <span class="material-symbols-outlined">
                     emoji_events
-                    </span>  &nbsp&nbsp<span>Achievement Badges</span><i class="fa-solid fa-chevron-down ms-auto"></i>
+                    </span>  &nbsp&nbsp<span>Achievement Badges</span><i class="fas fa-chevron-down ms-auto"></i>
             </a>
             <ul id="badge-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>

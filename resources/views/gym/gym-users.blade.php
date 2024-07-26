@@ -43,8 +43,10 @@ $(document).ready(function () {
           success: function (response) {
               if (response.success){
                   var user = response.user;
+                  var achievement = response.achievement;
+                  console.log(achievement);
                   const modal = $('#viewProfile');
-                  displayDetails(user, modal);
+                  displayDetails(user, achievement, modal);
               }
           },
           error: function(xhr, status, error) {
@@ -53,7 +55,7 @@ $(document).ready(function () {
       });
   });
 
-  function displayDetails(user, modal) {
+  function displayDetails(user, achievement, modal) {
       modal.find('.username').text(user.username);
       if(user.image) {
           modal.find('.profileImg').attr('src', '{{ asset('storage') }}/' + user.image);
@@ -67,6 +69,10 @@ $(document).ready(function () {
           icon = '<i class="fas fa-venus" style="color: rgb(245, 89, 89);"></i>';
       }
       modal.find('.profileGender').html(icon);
+      modal.find('.badgeModal').empty();
+      for (let i = 0; i < achievement.length; i++) {
+          modal.find('.badgeModal').append('<img src="{{ asset('storage') }}/' + achievement[i].achievement.image + '" class="badgeImg" alt="Warrior Badge" data-toggle="tooltip" data-placement="bottom" title="' + achievement[i].achievement.condition + '">');
+      }
   }
 });
 </script>

@@ -233,9 +233,10 @@ class GymQueueController extends Controller
 
             // Calculate total days checked in
             $totalDaysCheckedIn = GymQueue::where('gym_user_id', $gymUser->gym_user_id)
-            ->where('entered_at', 'NOT NULL')
+            ->whereNotNull('entered_at')
+            ->selectRaw('DATE(entered_at) as date')
             ->distinct()
-            ->count('entered_at'); 
+            ->count('date');
 
             // Define the achievements with their conditions
             $achievements = [

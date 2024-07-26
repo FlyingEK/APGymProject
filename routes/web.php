@@ -12,10 +12,12 @@ use App\Http\Controllers\GymQueueController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AchievementController;
 use App\Http\Livewire\WorkoutReport;
+// use Livewire\Livewire;
 
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+// Livewire::routes();
 
 Route::get('/', function () {
     // Redirect based on user role

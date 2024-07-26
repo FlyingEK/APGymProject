@@ -40,7 +40,6 @@
                     <td>
                         <div class="dropdown">
                             <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-view', $constraint->constraint_id)}}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>

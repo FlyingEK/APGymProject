@@ -84,8 +84,8 @@ function addNotificationToDropdown(title, message, checkInCode, datetime) {
     // Insert the notification item at the beginning of the notifications list
     notificationsList.insertBefore(notificationItem, notificationsList.firstChild);
 
-    // Update notification count
-    const notificationsCount = document.getElementById('notificationsCount');
-    notificationsCount.textContent = parseInt(notificationsCount.textContent) + 1;
+    // // Update notification count
+    // const notificationsCount = document.getElementById('notificationsCount');
+    // notificationsCount.textContent = parseInt(notificationsCount.textContent) + 1;
 
 }

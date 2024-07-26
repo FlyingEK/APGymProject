@@ -13,8 +13,7 @@
                     </div>
                     <div style="color: gray;font-size:18px;" class=" text-center profileName"></div>
                     <div class="d-flex justify-content-center mt-2 badgeModal">
-                        <img src="{{ asset('/img/champBadge1.png') }}" class="badgeImg" alt="Warrior Badge" data-toggle="tooltip" data-placement="bottom" title="Obtained first place once in monthly leaderboard">
-                        <img src="{{ asset('/img/warriorBadge30.png') }}" class="badgeImg" alt="Champ Badge">
+                        
                     </div>
                 </div>
             </div>

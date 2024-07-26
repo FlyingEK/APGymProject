@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -18,8 +17,8 @@ class LeaderboardComponent extends Component
     public $restDaily = [];
     public $currentUserOverall;
     public $currentUserDaily;
-    public $filter = 'hour'; // default filter
-    public $period = 'daily'; // default period
+    public $filter; // default filter
+    public $period; // default period
     public $currentUserOverallPosition;
     public $currentUserDailyPosition;
     public $equipmentId;
@@ -28,40 +27,47 @@ class LeaderboardComponent extends Component
 
     public function mount()
     {
-        $this->currentUser =  Auth::user();
+        // Retrieve the values from the session or set default values
+        $this->filter = session('filter', 'hour'); // default filter
+        $this->period = session('period', 'daily'); // default period
+        $this->equipmentId = session('equipmentId', null);
+
+        $this->currentUser = Auth::user();
         $this->getAllEquipments();
         $this->updateLeaderboard();
+
     }
 
-    public function getAllEquipments(){
+    public function getAllEquipments()
+    {
         $this->allEquipments = Equipment::where('is_deleted', false)
-        ->where('has_weight',1)
-        ->get();
+            ->where('has_weight', 1)
+            ->get();
     }
 
-    public function setEquipment($equipmentId){
+    public function setEquipment($equipmentId)
+    {
         $this->equipmentId = $equipmentId;
-        $this->setFilter("weight");
+        session(['equipmentId' => $equipmentId]);
+        $this->setFilter('weight');
     }
 
     public function setFilter($filter)
     {
         $this->filter = $filter;
-
+        session(['filter' => $filter]);
         $this->updateLeaderboard();
     }
 
     public function setPeriod($period)
     {
         $this->period = $period;
-        // dd($this->period, $this->filter, $this->equipmentId);
-
+        session(['period' => $period]);
         $this->updateLeaderboard();
     }
 
     private function updateLeaderboard()
     {
-
         if ($this->filter == 'hour') {
             if ($this->period == 'overall') {
                 $this->getOverallBoard();
@@ -75,7 +81,6 @@ class LeaderboardComponent extends Component
                 $this->getDailyWeightBoard();
             }
         }
-        $this->render();
     }
 
     public function getOverallBoard()
@@ -86,11 +91,9 @@ class LeaderboardComponent extends Component
             ->groupBy('gym_user_id')
             ->orderBy('total_duration', 'desc')
             ->get();
-        
+
         $this->topOverall = $overallLeaderboard->take(3)->toArray(); // Convert to array
-
         $this->restOverall = $overallLeaderboard->slice(3);
-
         $this->updateCurrentUserPosition($overallLeaderboard);
     }
 
@@ -105,9 +108,8 @@ class LeaderboardComponent extends Component
             ->orderBy('total_duration', 'desc')
             ->get();
 
-        $this->topDaily = $dailyLeaderboard->take(3);
+        $this->topDaily = $dailyLeaderboard->take(3)->toArray();
         $this->restDaily = $dailyLeaderboard->slice(3);
-
         $this->updateCurrentUserPosition($dailyLeaderboard, true);
     }
 
@@ -125,9 +127,8 @@ class LeaderboardComponent extends Component
             ->orderBy('max_weight', 'desc')
             ->get();
 
-        $this->topDaily = $dailyLeaderboard->take(3);
+        $this->topDaily = $dailyLeaderboard->take(3)->toArray();
         $this->restDaily = $dailyLeaderboard->slice(3);
-
         $this->updateCurrentUserPosition($dailyLeaderboard, true);
     }
 
@@ -165,7 +166,6 @@ class LeaderboardComponent extends Component
 
         $this->topOverall = $overallLeaderboard->take(3)->toArray();
         $this->restOverall = $overallLeaderboard->slice(3);
-
         $this->updateCurrentUserPosition($overallLeaderboard);
     }
 

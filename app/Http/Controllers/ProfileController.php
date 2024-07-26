@@ -44,12 +44,16 @@ class ProfileController extends Controller
 
      public function profileDetails(Request $request)
      {
-         $user = User::find($request->id);
+         $user = User::with('gymUser')->find($request->id);
      
+         $achievement = GymUserAchievement::with('achievement')
+         ->where('gym_user_id', $user->gymUser->gym_user_id)
+         ->get();
          if ($user) {
              return response()->json([
                  'success' => true,
                  'user' => $user,
+                 'achievement' => $achievement,
              ]);
          } else {
              return response()->json([
