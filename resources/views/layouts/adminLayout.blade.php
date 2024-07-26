@@ -52,6 +52,11 @@
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
+            <a class="nav-link collapsed"  href="{{route('gym-log-admin')}}">
+                <span class="material-symbols-outlined">
+                    supervisor_account
+                    </span>  &nbsp&nbsp<span>Gym Entry Log</span><i class="fas fa-chevron-down ms-auto"></i>
+            </a>
             <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
                 <span class="material-symbols-outlined">
                     person

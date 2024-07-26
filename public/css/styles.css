@@ -447,6 +447,9 @@ body {
     color: var(--secondColor);
 }
 
+.datatable td, .datatable th{
+    text-align: left;
+}
 /* .equipmentCard{
     
 } */

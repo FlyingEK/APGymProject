@@ -21,4 +21,5 @@ class GymQueue extends Model
     {
         return $this->belongsTo(GymUser::class, 'gym_user_id', 'gym_user_id');
     }
+
 }

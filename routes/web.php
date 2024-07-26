@@ -38,7 +38,7 @@ Route::get('/dashboard', function () {
     } elseif ($user->role == 'trainer') {
         return redirect()->intended(route('gym-index'));
     } elseif ($user->role == 'admin') {
-        return redirect()->intended(route('equipment-all'));
+        return redirect()->intended(route('gym-log-admin'));
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -59,6 +59,9 @@ Route::group(['prefix' => 'gym'],function(){
     Route::post('/checkin-post', [GymQueueController::class, 'checkIn'])->name('gym-checkin-post');
     Route::post('/enter-gym', [GymQueueController::class, 'userEntersGym'])->name('enter-gym');
     Route::post('/leave-gym', [GymQueueController::class, 'userLeavesGym'])->name('leave-gym');
+    Route::get('/log/admin', [GymController::class, 'adminViewLog'])->name('gym-log-admin');
+    Route::get('/log/trainer', [GymController::class, 'trainerViewLog'])->name('gym-log-trainer');
+
 });
 
 Route::middleware('auth')->group(function () {

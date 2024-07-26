@@ -61,8 +61,22 @@ class GymController extends Controller
     }
 
 
-    
+    public function getGymUserLog(){
+        return GymQueue::with('gymUser.user')
+        ->whereNotNull('entered_at')
+        ->where('status', 'left')
+        ->orderBy('entered_at', 'desc');
+    }
 
+    public function adminViewLog(){
+        $users = $this->getGymUserLog()->get();
+        return view('gym.adminViewLog', compact('users'));
+    }
+
+    public function trainerViewLog(){
+        $users = $this->getGymUserLog()->get();
+        return view('gym.trainerViewLog', compact('users'));
+    }
 
 }
 ?>
