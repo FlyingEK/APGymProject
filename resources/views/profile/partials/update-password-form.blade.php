@@ -32,14 +32,27 @@
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn redBtn">{{ __('Save') }}</button>
         </div>
-        @if (session('status') === 'password-updated')
-        <p
-            x-data="{ show: true }"
-            x-show="show"
-            x-transition
-            x-init="setTimeout(() => show = false, 2000)"
-            class="text-sm text-gray-600 dark:text-gray-400"
-        >{{ __('Saved.') }}</p>
-    @endif
+        <script>
+            @if (session('status') === 'password-updated')
+                swal.fire({
+                    title: 'Password Updated',
+                    text: 'Your password has been updated.',
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn redBtn'
+                    }
+                });
+            @elseif ($errors->any())
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: '{!! implode('<br>', $errors->all()) !!}',
+                    customClass : {
+                        confirmButton: 'btn redBtn'
+                    }
+                });
+            @endif
+        </script>
     </form>
+
 </section>

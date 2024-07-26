@@ -37,14 +37,13 @@
             </i>
         </div><!-- Authentication -->
         <div class="ml-auto"></div>
+        <div class = "d-flex align-items-center mx-3">
+            <a href={{route("profile.edit")}}>
+                <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('/img/user.jpg') }}" class="rounded " style="height:50px;width:50px;">
+                <span style="color:#192126;" class="Inter">{{ Auth::user()->username}}</span>
+            </a>
 
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <a style="font-size: 19px; font-weight:600;" class="redIcon"  onclick="event.preventDefault();
-                                this.closest('form').submit();">
-            <i class="fas fa-sign-out-alt"></i>   Logout
-        </a>
-        </form>
+        </div>
 
     </div>
 </header><!-- End Header -->
