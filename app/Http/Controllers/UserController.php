@@ -4,6 +4,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Exception;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 
 class UserController extends Controller
@@ -25,16 +28,24 @@ class UserController extends Controller
     {
         $request->validate([
             'username' => 'required|string|max:255|unique:users',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'role' => 'required|string|in:trainer,user',
         ]);
 
-        User::create([
+        $password = Str::random(8);
+
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' =>  $request->last_name,
             'username' => $request->username,
             'email' => $request->email,
-            'role' => $request->role,
-            'password' => Hash::make('Admin1234!')
+            'role' => 'trainer',
+            'status' => 'active',
+            'password' => Hash::make($password)
         ]);
+
+        Mail::to($user->email)->send(new WelcomeMail($user, $password));
 
         return redirect()->route('user-all')->with('success', 'User added successfully.');
     }

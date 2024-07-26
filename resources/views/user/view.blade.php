@@ -48,15 +48,7 @@
             </div>
             <div class="row mb-4">
                     <div class="col-lg-3 col-md-4 label">Role:</div>
-                    <div class="col-lg-9 col-md-8">
-                    <div class=custom-select>
-                        <select class="form-control form-select select" name="role">
-                            <option >Choose...</option>
-                            <option value="trainer" {{ $user->role == 'trainer' ? 'selected' : '' }}>Gym Trainer</option>
-                            <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>Gym User</option>
-                        </select>
-                    </div>
-                </div>
+                    <div class="col-lg-9 col-md-8">{{ $user->gender }}</div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">

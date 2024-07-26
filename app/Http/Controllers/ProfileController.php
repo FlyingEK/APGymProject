@@ -32,14 +32,23 @@ class ProfileController extends Controller
 
      public function view(Request $request): View
      {
-        $achievement = GymUserAchievement::with('achievement')
-        ->where('gym_user_id', Auth::user()->gymUser->gym_user_id)->get();
-        $lockAchievement = Achievement::whereNotIn('achievement_id', $achievement->pluck('achievement_id'))->get();
+        if(Auth::user()->role == 'trainer' || Auth::user()->role == 'admin'){
+            return view('profile.view', [
+                'user' => $request->user(),
+            ]);
+        }
+
+        if(Auth::user()->role == 'user'){
+            $achievement = GymUserAchievement::with('achievement')
+            ->where('gym_user_id', Auth::user()->gymUser->gym_user_id)->get();
+            $lockAchievement = Achievement::whereNotIn('achievement_id', $achievement->pluck('achievement_id'))->get();
          return view('profile.view', [
              'user' => $request->user(),
              'achievements' => $achievement,
              'lockAchievements' => $lockAchievement
          ]);
+        }
+        
      }
 
      public function profileDetails(Request $request)

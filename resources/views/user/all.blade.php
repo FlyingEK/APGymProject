@@ -47,7 +47,7 @@
                                 <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                     </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('user-view',$user->user_id)}}"><span class="material-symbols-outlined">edit</span>&nbsp View/Edit</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center" href="{{route('user-view',$user->user_id)}}"><span class="material-symbols-outlined">visibility</span>&nbsp View</a></li>
                                     <li><a class="dropdown-item d-flex align-items-center" onclick="deactivateUser('{{$user->user_id}}')"><span class="material-symbols-outlined">
                                         person_remove
                                         </span> &nbsp Deactivate</a></li>

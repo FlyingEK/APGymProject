@@ -17,6 +17,9 @@
                         <i class="fas fa-venus" style="color: rgb(245, 89, 89);" ></i>
                     @endif
                 @endif
+                <span  class="pagetitle">({{ $user->role }})</span>
+                <br>
+                <span style="color:gray;font-size:18px;">{{ $user->first_name }} {{ $user->last_name }}</span>
                 <br>
                 <a href="{{ route('profile.edit') }}" class="redLink">Edit Profile</a>
             </div>
@@ -25,6 +28,7 @@
         <!-- Display badges here -->
     </div>
 </div>
+@if(Auth::user()->role == 'user')
 <div class="page-title mt-3">Achievement Badges</div>
 <div class="card mb-5">
     <div class="badge">
@@ -40,7 +44,7 @@
         </div>
     </div>
 </div>
-
+@endif
 <div class="mt-4 d-flex justify-content-center align-items-center justify-content-center" style="flex-direction: row;gap:8px;"> 
     <form method="POST" action="{{ route('logout') }}">
         @csrf

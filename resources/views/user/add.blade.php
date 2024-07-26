@@ -6,17 +6,39 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('user-all') }}">User</a></li>
-            <li class="breadcrumb-item active">Add User</li>
+            <li class="breadcrumb-item active">Add Gym Trainer</li>
         </ol>
     </nav>
 </div>
 
 <div class="container rounded-2 shadow" style="background-color:white;position: relative;">
     <div class="pagetitle p-3">
-        <h1>User Details</h1>
+        <h1>Trainer Details</h1>
     </div>
     <form method="POST" action="{{ route('user-store') }}">
         @csrf
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group local-forms m-3">
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                    <label for="floatingInput">First Name <span class="text-danger">*</span></label>
+                    @error('first_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="form-group local-forms m-3">
+                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                    <label for="floatingInput">Last Name <span class="text-danger">*</span></label>
+                    @error('last_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="form-group local-forms m-3">
@@ -41,7 +63,7 @@
             </div>
         </div>
 
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-lg-12">
                 <div class="form-group local-forms m-3">
                     <label for="formSelect">Role<span class="text-danger">*</span></label>
@@ -49,7 +71,7 @@
                         <select class="form-control form-select select" name="role" required>
                             <option selected>Choose...</option>
                             <option value="trainer">Gym Trainer</option>
-                            <option value="user">Gym User</option>
+                            <option value="admin">Admin</option>
                         </select>
                     </div>
                     @error('role')
@@ -57,7 +79,7 @@
                     @enderror
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="row">
             <div class="col-lg-12 mt-3 mb-3 mr-4 text-end">

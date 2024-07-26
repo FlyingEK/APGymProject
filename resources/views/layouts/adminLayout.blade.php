@@ -64,7 +64,7 @@
                         <i class="bi bi-circle"></i><span>All Users</span>
                     </a>
                     <a href="{{ route('user-add') }}">
-                        <i class="bi bi-circle"></i><span>Add Users</span>
+                        <i class="bi bi-circle"></i><span>Add Gym Trainer</span>
                     </a>
                 </li>
             </ul>
