@@ -25,16 +25,18 @@
         <!-- Display badges here -->
     </div>
 </div>
-<div class="page-title mt-3">Badges</div>
+<div class="page-title mt-3">Achievement Badges</div>
 <div class="card mb-5">
     <div class="badge">
         <div class="d-flex flex-row flex-wrap justify-content-center">
-            <img src="{{ asset('/img/warriorBadge7.png') }}" class="badgeImg" alt="Warrior Badge" data-toggle="tooltip" data-placement="bottom" title="Workout at gym for total 7 days">
-            <img src="{{ asset('/img/champBadge1.png') }}" class="badgeImg" alt="Champ Badge">
-            <img src="{{ asset('/img/warriorBadge30.png') }}" class="badgeImg" alt="Champ Badge">
-            <img src="{{ asset('/img/warriorBadge100.png') }}" class="badgeImg fadeBadge" alt="Warrior Badge">
-            <img src="{{ asset('/img/champBadge5.png') }}" class="badgeImg fadeBadge" alt="Warrior Badge">
-            <img src="{{ asset('/img/champBadge10.png') }}" class="badgeImg fadeBadge" alt="Champ Badge">
+            @forelse($achievements as $achievement)
+                <img src="{{ asset('storage/'.$achievement->achievement->image) }}" class="badgeImg" alt="Warrior Badge" data-toggle="tooltip" data-placement="bottom" title="{{ $achievement->achievement->condition }}">
+            @empty
+            @endforelse
+            @forelse($lockAchievements as $achievement)
+                <img src="{{ asset('storage/'.$achievement->image) }}" class="badgeImg fadeBadge" alt="Warrior Badge" data-toggle="tooltip" data-placement="bottom" title="{{ $achievement->condition }}">
+            @empty
+            @endforelse
         </div>
     </div>
 </div>

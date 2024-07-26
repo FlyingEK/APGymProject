@@ -2,7 +2,13 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Achievement;
+use App\Models\GymUserAchievement;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AchievementUnlocked;
+use App\Models\GymUser;
+use App\Models\User;
 
 class AchievementController extends Controller
 {
@@ -10,6 +16,24 @@ class AchievementController extends Controller
     public function addAchievement()
     {
         return view('achievement.admin.add');
+    }
+
+    public function storeUserAchievement($achievementId, $userId){
+        $gymUser = GymUser::where('user_id', $userId)->first();
+        if(!$gymUser){
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        GymUserAchievement::create([
+            'achievement_id' => $achievementId,
+            'gym_user_id' => $gymUser->gym_user_id,
+        ]);
+
+        $condition = Achievement::find($achievementId)->condition;
+        Notification::send(User::find($userId), new AchievementUnlocked($achievementId, lcfirst($condition)));
+        
+
+        return redirect()->route('achievement-all')->with('success', 'Achievement added successfully.');
     }
 
     public function storeAchievement(Request $request){

@@ -112,6 +112,7 @@ Route::group(['prefix' => 'achievement'],function(){
     Route::post('/store', [AchievementController::class, 'storeAchievement'])->name('achievement-store');
     Route::get('/edit/{id}', [AchievementController::class, 'editAchievement'])->name('achievement-edit');
     Route::put('/update/{id}', [AchievementController::class, 'updateAchievement'])->name('achievement-update');
+    Route::post('/user/{userId}/achievement/{achievementId}', [AchievementController::class, 'storeUserAchievement'])->name('user-achievement-store');
 });
 
 
