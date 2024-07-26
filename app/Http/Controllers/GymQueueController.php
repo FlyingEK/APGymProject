@@ -9,6 +9,9 @@ use App\Models\GymConstraint;
 use App\Models\GymUser;
 use App\Models\WorkoutQueue;
 use App\Models\EquipmentMachine;
+use App\Models\Achievement;
+use App\Models\User;
+use App\Notifications\AchievementUnlocked;
 use App\Notifications\TurnNotification;
 use App\Notifications\CheckInSuccess;
 use App\Notifications\ReservationCancelledNotification;
@@ -126,7 +129,7 @@ class GymQueueController extends Controller
                 //actual workout also need to stop
 
             foreach($workoutQueue as $workout){
-                $workout->status = 'completed';
+                $workout->update(['status' => 'completed']);
                 $workout->save();
 
                 //call the next user in the queue for workout
@@ -224,6 +227,37 @@ class GymQueueController extends Controller
             $user->reserved_until = null;
             $user->save();
             Notification::send($user->gymUser->user, new CheckInSuccess());
+
+            // check in achievement for user
+            $gymUser = GymUser::with('gymUserAchievement')->where('gym_user_id', $user->gym_user_id)->firstOrFail();
+
+            // Calculate total days checked in
+            $totalDaysCheckedIn = GymQueue::where('gym_user_id', $gymUser->gym_user_id)
+            ->where('entered_at', 'NOT NULL')
+            ->distinct()
+            ->count('entered_at'); 
+
+            // Define the achievements with their conditions
+            $achievements = [
+            2 => 7,  // Achievement ID 2 for 7 days
+            3 => 30,  
+            4 => 100,  
+            ];
+
+            foreach ($achievements as $achievementId => $requiredDays) {
+                // Check if the user already has this achievement
+                if (!$gymUser->gymUserAchievement()->where('achievement_id', $achievementId)->exists()) {
+                    // Check if the user meets the condition for this achievement
+                    if ($totalDaysCheckedIn >= $requiredDays) {
+                    // Unlock the achievement
+                        $gymUser->gymUserAchievement()->attach($achievementId);
+                        $condition = Achievement::find($achievementId)->condition;
+                        Notification::send(User::find($gymUser->user_id), new AchievementUnlocked($achievementId, lcfirst($condition)));
+
+                    }
+                }
+            }
+
             return redirect()->back()->with('success', 'User successfully checked in.');
         }
 

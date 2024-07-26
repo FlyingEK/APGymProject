@@ -10,6 +10,10 @@ use App\Models\EquipmentMachine;
 use App\Models\WorkoutQueue;
 use App\Models\StrengthEquipmentGoal;
 use App\Models\OverallGoal;
+use App\Models\Achievement;
+use App\Models\User;
+use App\Notifications\GoalCompleted;
+use App\Notifications\AchievementUnlocked;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -508,8 +512,35 @@ class WorkoutController extends Controller
             }
             $overallGoal->save();
         }
-        
+        $gymUser = GymUser::with('gymUserAchievement')->where('gym_user_id',$workout->gym_user_id )->firstOrFail();
+
+        // check if achievement is unlocked
+        $totalHours = Workout::where('gym_user_id', $workout->gym_user_id)
+                             ->where('status', 'completed')
+                             ->sum('duration') / 60;
+            $achievements = [
+            6 => 10,  // Achievement ID 6 for 10 hours
+            7 => 50,  
+            8 => 100, 
+        ];
+
+        foreach ($achievements as $achievementId => $requiredHours) {
+            // Check if the user already has this achievement
+            if (!$gymUser->gymUserAchievement()->where('achievement_id', $achievementId)->exists()) {
+                // Check if the user meets the condition for this achievement
+                if ($totalHours >= $requiredHours) {
+                    // Unlock the achievement
+                    $gymUser->gymUserAchievement()->attach($achievementId);
+                    $condition = Achievement::find($achievementId)->condition;
+                    Notification::send(User::find($gymUser->user_id), new AchievementUnlocked($achievementId, lcfirst($condition)));
+
+                }
+            }
+        }
+
         $this->callNextInQueue($equipmentMachine->equipment->equipment_id);
+
+        
 
         return redirect()->route('workout-index')->with('workoutSuccess', 'Workout ended successfully!');
     }
