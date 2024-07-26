@@ -2,7 +2,13 @@
 @section('content')
 <div class="content container p-1">
     <div class="gymCheckIn">
-        <div class="page-title">Gym status: <span class="text-success">Not full</span></div>
+        <div class="page-title">
+            Gym status: 
+            {!! $gymIsFull 
+                ? '<span class="text-danger">Full</span>' 
+                : '<span class="text-success">Not full</span>' 
+            !!}
+        </div>
         <div class="card workout-card mb-4" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
             <div class="card-body">
                 {{-- <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
@@ -10,7 +16,6 @@
                 <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Current gym user: 10</div>
             </div>
             <div class="m-3 d-flex justify-content-end" style="gap:8px;">
-                {{-- if got queue --}}
                 <button type="button" data-bs-toggle="modal" data-bs-target="#checkInModal" class="btn redBtn">
                     User Check In
                 </button>
@@ -22,7 +27,28 @@
     </div>
     @livewire('search-equipment-machine',['category' => ''])
 
-    <div class="page-title">Equipment that are used longer</div>
+@if ($maintenanceEquipment && $maintenanceEquipment->count() > 0)
+<div class="page-title">Equipment Under Maintenance</div>
+@foreach($maintenanceEquipment as $equipment)
+<div class="card equipment shadow-sm mt-2 mb-2 p-2">
+    <div class="row">
+        <div class="col-5 ">
+                <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$equipment->image) }}" alt="Work Order Image" ><br/>
+        </div>
+        <div class="col-7" style="padding-left: 5px">
+            <div class=" mt-md-3 no-wrap">
+                <p class="equipmentTitle">{{$equipment->name}} <span class="text-danger">#{{$equipment->equipmentMachines[0]->label}}</span></p>
+                <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-warning shadow-none">
+                        Maintenance
+                </div><br>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endif
+
+<div class="page-title">Equipment that are used longer</div>
 
 @forelse($exceededEquipments as $equipment)
 <div class="card equipment shadow-sm mt-2 p-2">

@@ -102,7 +102,7 @@
             // if the current path is like this link, make it active
             if($this.attr('href').indexOf(current) !== -1){
                 $('.navtab a').removeClass('activeTab'); 
-                    $this.closest('.navtab a').addClass('activeTab');          
+                    $this.closest('.navtab').addClass('activeTab');          
              }
         });
     });

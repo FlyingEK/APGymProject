@@ -12,30 +12,33 @@ use Illuminate\Support\Facades\DB;
 class LeaderboardComponent extends Component
 {
     public $topOverall = [];
-    public $topDaily = [];
     public $restOverall = [];
-    public $restDaily = [];
     public $currentUserOverall;
     public $currentUserDaily;
-    public $filter; // default filter
-    public $period; // default period
+    public $filter = 'hour';
+    public $period = 'daily';
     public $currentUserOverallPosition;
     public $currentUserDailyPosition;
     public $equipmentId;
+
     public $allEquipments;
     public $currentUser;
 
     public function mount()
     {
-        // Retrieve the values from the session or set default values
-        $this->filter = session('filter', 'hour'); // default filter
-        $this->period = session('period', 'daily'); // default period
-        $this->equipmentId = session('equipmentId', null);
-
         $this->currentUser = Auth::user();
         $this->getAllEquipments();
         $this->updateLeaderboard();
 
+    }
+
+    public function setAll($equipmentId, $filter, $period)
+    {
+        $this->equipmentId = $equipmentId?$equipmentId :  session(['equipmentId' => $equipmentId]);
+        $this->filter = $filter?$filter :  session(['filter' => $filter]);
+        
+        $this->period = $period?$period :  session(['period' => $period]);
+        $this->updateLeaderboard();
     }
 
     public function getAllEquipments()
@@ -48,21 +51,19 @@ class LeaderboardComponent extends Component
     public function setEquipment($equipmentId)
     {
         $this->equipmentId = $equipmentId;
-        session(['equipmentId' => $equipmentId]);
         $this->setFilter('weight');
+        $this->updateLeaderboard();
     }
 
     public function setFilter($filter)
     {
         $this->filter = $filter;
-        session(['filter' => $filter]);
         $this->updateLeaderboard();
     }
 
     public function setPeriod($period)
     {
         $this->period = $period;
-        session(['period' => $period]);
         $this->updateLeaderboard();
     }
 
@@ -81,6 +82,7 @@ class LeaderboardComponent extends Component
                 $this->getDailyWeightBoard();
             }
         }
+        // $this->render();
     }
 
     public function getOverallBoard()
@@ -92,9 +94,15 @@ class LeaderboardComponent extends Component
             ->orderBy('total_duration', 'desc')
             ->get();
 
-        $this->topOverall = $overallLeaderboard->take(3)->toArray(); // Convert to array
-        $this->restOverall = $overallLeaderboard->slice(3);
-        $this->updateCurrentUserPosition($overallLeaderboard);
+        if(!$overallLeaderboard->isEmpty()){
+            $this->topOverall = $overallLeaderboard->take(3)->toArray();
+            $this->restOverall = $overallLeaderboard->slice(3);
+            $this->updateCurrentUserPosition($overallLeaderboard, true);
+        }else{
+            $this->topOverall = [];
+            $this->restOverall = [];
+            $this->currentUserOverallPosition = "N/A";
+        }
     }
 
     public function getDailyBoard()
@@ -108,28 +116,44 @@ class LeaderboardComponent extends Component
             ->orderBy('total_duration', 'desc')
             ->get();
 
-        $this->topDaily = $dailyLeaderboard->take(3)->toArray();
-        $this->restDaily = $dailyLeaderboard->slice(3);
-        $this->updateCurrentUserPosition($dailyLeaderboard, true);
+        if(!$dailyLeaderboard->isEmpty()){
+            $this->topOverall = $dailyLeaderboard->take(3)->toArray();
+            $this->restOverall = $dailyLeaderboard->slice(3);
+            $this->updateCurrentUserPosition($dailyLeaderboard, true);
+        }else{
+            $this->topOverall = [];
+            $this->restOverall = [];
+            $this->currentUserOverallPosition = "N/A";
+        }
     }
 
     public function getDailyWeightBoard()
     {
         // Fetch daily leaderboard by maximum weight lifted
         $today = Carbon::today()->toDateString();
-        $dailyLeaderboard = Workout::with('gymUser.user')->select('gym_user_id', DB::raw('MAX(weight) as max_weight'))
+        $dailyLeaderboard = Workout::with(['gymUser.user', 'equipmentMachine.equipment'])
+            ->select('gym_user_id', DB::raw('MAX(weight) as max_weight'))
             ->where('status', 'completed')
             ->whereDate('date', $today)
             ->when($this->equipmentId, function ($query) {
-                return $query->where('equipment_id', $this->equipmentId);
+                return $query->whereHas('equipmentMachine', function($query) {
+                    $query->where('equipment_id', $this->equipmentId);
+                });
             })
             ->groupBy('gym_user_id')
             ->orderBy('max_weight', 'desc')
             ->get();
 
-        $this->topDaily = $dailyLeaderboard->take(3)->toArray();
-        $this->restDaily = $dailyLeaderboard->slice(3);
-        $this->updateCurrentUserPosition($dailyLeaderboard, true);
+        if(!$dailyLeaderboard->isEmpty()){
+            $this->topOverall = $dailyLeaderboard->take(3)->toArray();
+            $this->restOverall = $dailyLeaderboard->slice(3);
+            $this->updateCurrentUserPosition($dailyLeaderboard, true);
+        }else{
+            $this->topOverall = [];
+            $this->restOverall = [];
+            $this->currentUserOverallPosition = "N/A";
+        }
+       
     }
 
     private function updateCurrentUserPosition($leaderboard, $isDaily = false)
@@ -155,18 +179,27 @@ class LeaderboardComponent extends Component
     public function getWeightBoard()
     {
         // Fetch overall leaderboard by maximum weight lifted
-        $overallLeaderboard = Workout::with('gymUser.user')->select('gym_user_id', DB::raw('MAX(weight) as max_weight'))
-            ->where('status', 'completed')
-            ->when($this->equipmentId, function ($query) {
-                return $query->where('equipment_id', $this->equipmentId);
-            })
-            ->groupBy('gym_user_id')
-            ->orderBy('max_weight', 'desc')
-            ->get();
+        $overallLeaderboard = Workout::with(['gymUser.user','equipmentMachine.equipment'])
+                            ->select('gym_user_id', DB::raw('MAX(weight) as max_weight'))
+                            ->where('status', 'completed')
+                            ->when($this->equipmentId, function ($query) {
+                                return $query->whereHas('equipmentMachine', function($query) {
+                                    $query->where('equipment_id', $this->equipmentId);
+                                });
+                            })
+                            ->groupBy('gym_user_id')
+                            ->orderBy('max_weight', 'desc')
+                            ->get();
 
-        $this->topOverall = $overallLeaderboard->take(3)->toArray();
-        $this->restOverall = $overallLeaderboard->slice(3);
-        $this->updateCurrentUserPosition($overallLeaderboard);
+        if(!$overallLeaderboard->isEmpty()){
+            $this->topOverall = $overallLeaderboard->take(3)->toArray();
+            $this->restOverall = $overallLeaderboard->slice(3);
+            $this->updateCurrentUserPosition($overallLeaderboard, true);
+        }else{
+            $this->topOverall = [];
+            $this->restOverall = [];
+            $this->currentUserOverallPosition = "N/A";
+        }
     }
 
     public function render()

@@ -888,6 +888,12 @@ body {
     fill: #585858;
 }
 
+.circular-progress .progress-color {
+    font-size: 13px;
+    font-weight: 500;
+    fill: black;
+}
+
 .progress{
     height:20px;
     font-weight:550;

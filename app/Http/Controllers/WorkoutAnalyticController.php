@@ -9,6 +9,7 @@ use App\Models\StrengthEquipmentGoal;
 use App\Models\StrengthWorkoutHabit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class WorkoutAnalyticController extends Controller
 {
@@ -28,8 +29,12 @@ class WorkoutAnalyticController extends Controller
         })->get();
         $overallGoal = OverallGoal::whereHas('goal', function($query) use ($gymUserId){
             $query->where('gym_user_id', $gymUserId)
-            ->where('status', 'active');
+            ->where('status', 'active')
+            ->orWhere('status', 'completed');
         })->first();
+         // Ensure these are Carbon instances
+        $overallGoal->updated_at = Carbon::parse($overallGoal->updated_at);
+        $overallGoal->target_date = Carbon::parse($overallGoal->target_date);
         $completedStrengthGoals = StrengthEquipmentGoal::with('equipment')->whereHas('goal', function($query) use ($gymUserId){
             $query->where('gym_user_id', $gymUserId)
             ->where('status', 'completed');
@@ -51,9 +56,10 @@ class WorkoutAnalyticController extends Controller
         $strengthGoal = StrengthEquipmentGoal::with('equipment')->whereHas('goal', function($query) use ($gymUserId){
             $query->where('gym_user_id', $gymUserId);
         })->get();
-        $overallGoal = OverallGoal::whereHass('goal', function($query) use ($gymUserId){
+        $overallGoal = OverallGoal::whereHas('goal', function($query) use ($gymUserId){
             $query->where('gym_user_id', $gymUserId)
-            ->where('status', 'active');
+            ->where('status', 'active')
+            ->orWhere('status', 'completed');
         })->first();
         // $
         // $strengthGoal = $goals->pluck('strengthEquipmentGoal')->flatten();

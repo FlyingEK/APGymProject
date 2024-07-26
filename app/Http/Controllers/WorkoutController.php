@@ -124,8 +124,36 @@ class WorkoutController extends Controller
                 } else {
                     return response()->json(['success' => false, 'message' => 'Equipment machine not found!']);
                 }
-            } else {
-                return response()->json(['success' => false, 'message' => 'Invalid workout queue status!']);
+            } else if ($workoutQueue->status === 'queueing') {
+                $equipmentMachine = EquipmentMachine::with('equipment')->where('equipment_id', $workoutQueue->equipment_id)
+                    ->where('status', 'available')
+                    ->first();
+        
+                if ($equipmentMachine && $equipmentMachine->status == 'available') {
+                    $equipmentMachine->status = 'in use';
+                    $equipmentMachine->save();
+                    $estimatedEndTime = now()->addMinutes(intval($workoutQueue->duration));
+                    $workoutQueue->status = 'inuse';
+                    $workoutQueue->equipment_machine_id = $equipmentMachine->equipment_machine_id;
+                    $workoutQueue->save();
+                    $timeLimitConstraint = $equipmentMachine->equipment->has_weight == 1 ?
+                    GymConstraint::where('constraint_name', 'max_weight_equipment_usage_time')->first() :
+                    GymConstraint::where('constraint_name', 'max_cardio_equipment_usage_time')->first();
+                    // Record the equipment assignment for the user
+                    $workout = Workout::create(
+                        ['gym_user_id' => $gymUserId, 
+                        'equipment_machine_id' => $equipmentMachine->equipment_machine_id,
+                        'start_time' => now(),
+                        'estimated_end_time' => $estimatedEndTime,
+                        'status' => 'in_progress',
+                        'date' => now()->toDateString(),
+                        'workout_queue_id' => $workoutQueue->workout_queue_id,
+                        'exceeded_time' => now()->addMinutes(intval($timeLimitConstraint->constraint_value)),
+                    ],
+                    );
+        
+                    return response()->json(['success' => true, 'message' => 'Workout started successfully!']);
+                }
             }
         } catch (\Exception $e) {
             // Log the error message for debugging
@@ -456,7 +484,7 @@ class WorkoutController extends Controller
             'duration.required_if' => 'The duration field is required.',
         ]);
 
-        $workout = Workout::find($request->workout_id);
+        $workout = Workout::with('gymUser.user')->find($request->workout_id);
 
         if (!$workout) {
             return redirect()->back()->with('error', 'No workout in progress.');
@@ -482,26 +510,31 @@ class WorkoutController extends Controller
 
         // Update goal progress
         $strengthGoal = StrengthEquipmentGoal::with(['goal','equipment'])
-        ->where('gym_user_id', $workout->gym_user_id)
         ->where('equipment_id', $equipmentMachine->equipment_id)
-        ->whereHas('goal', function($query) {
+        ->whereHas('goal', function($query) use($workoutQueue) {
             $query->where('status', 'active');
+            $query->where('gym_user_id', $workoutQueue->gym_user_id);
         })
         ->first();
+
+        // $user = User::with('gymUser')->whereHas('gymUser', function($query) use($workoutQueue) {
+        //     $query->where('gym_user_id', $workoutQueue->gym_user_id);
+        // })->first();
+
 
         if ($strengthGoal) {
             $strengthGoal->progress = $data['weight'] > $strengthGoal->progress ? $data['weight'] : $strengthGoal->progress;
             if ($strengthGoal->progress >= $strengthGoal->weight) {
                 $strengthGoal->goal->status = 'completed';
                 $strengthGoal->goal->save();
-                Notification::send($workout->gym_user_id, new GoalCompleted($strengthGoal));
+                Notification::send(User::find($workout->gymUser->user->user_id), new GoalCompleted($strengthGoal));
             }
             $strengthGoal->save();
         }
         $overallGoal = OverallGoal::with('goal')
-        ->where('gym_user_id', $workout->gym_user_id)
-        ->whereHas('goal', function($query) {
-            $query->where('status', 'active');
+        ->whereHas('goal', function($query) use($workoutQueue) {
+            $query->where('status', 'active')
+            ->where('gym_user_id', $workoutQueue->gym_user_id);
         })
         ->first();
     
@@ -510,7 +543,7 @@ class WorkoutController extends Controller
             if ($overallGoal->progress >= $overallGoal->workout_hour) {
                 $overallGoal->goal->status = 'completed';
                 $overallGoal->goal->save();
-                Notification::send($workout->gym_user_id, new GoalCompleted($overallGoal));
+                Notification::send(User::find($workout->gymUser->user->user_id), new GoalCompleted($overallGoal));
             }
             $overallGoal->save();
         }
@@ -544,9 +577,6 @@ class WorkoutController extends Controller
         }
 
         $this->callNextInQueue($equipmentMachine->equipment->equipment_id);
-
-        
-
         return redirect()->route('workout-index')->with('workoutSuccess', 'Workout ended successfully!');
     }
 

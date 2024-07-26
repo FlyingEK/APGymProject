@@ -24,8 +24,8 @@
     </div>
     @endforeach
     @endif
-    <div class="page-title">Available Equipment</div>
-    @forelse($availableEquipment as $equipment)
+    <div class="page-title">Equipment Picks Just for You</div>
+    @forelse($topUsedEquipment as $equipment)
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
@@ -35,7 +35,7 @@
                 <div class=" mt-md-3 no-wrap">
                     <p class="equipmentTitle">{{$equipment->name}}</p>
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-success shadow-none">
-                        Available: {{$equipment->available_machines_count}}
+                        Available
                     </div><br>
                     <a href="{{route('equipment-view',$equipment->equipment_id)}}" class="stretched-link"></a>
                     @if($isCheckIn)

@@ -73,7 +73,7 @@
                                     <td><input type="number" name="goalValues[]" placeholder="Weight" class="form-control" value={{$goal->weight}} /></td>
                                     @if($index==0)
                                         <td><input type="hidden" name="goal_id" value="{{$goal->goal_id}}">
-                                            <button type="button" class="btn blueBtn" name="add" id="add">Add</button>
+                                            <button type="button" id="addGoal" class="btn blueBtn" name="add" id="add">Add</button>
                                         </td>
                                     @else
                                         <td><button type="button" class="btn btn-danger btn_remove" id="{{ $index + 1 }}">X</button></td>
@@ -131,6 +131,7 @@ $(document).ready(function() {
    $("#addGoal").click(function(){
      i++;
      no++;
+     console.log('hi');
      var newRow = '<tr id="row' + i + '">';
      newRow += '<td><select class="select2 form-control form-select mb-3" name="equipment_ids[]" id="equipment-name2'+i+' required>';
      newRow += '<option value="" data-has-weight="0" selected>Choose an equipment...</option>';

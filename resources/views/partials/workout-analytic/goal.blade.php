@@ -4,6 +4,9 @@
     <p> No goal set yet. Click the add button to add new goals now.</p>
     @endif
     @if($overallGoal)
+    <div class="d-flex justify-content-start page-title mb-3" >
+        <p></p>
+    </div>
         <div class="d-flex justify-content-center">
             <svg
                 width="250" height="250" viewBox="0 0 250 250"
@@ -13,9 +16,12 @@
                 <text x="50%" y="35%" class="progress-label">Workout Time</text>
                 <text x="50%" y="50%" class="progress-value" id="progress-value" >{{$overallGoal->progress}}  hour{{$overallGoal->progress>1?'s':''}} </text>
                 <text x="50%" y="63%"  class="progress-subtext">of {{$overallGoal->workout_hour}} hour{{$overallGoal->workout_hour>1?'s':''}}</text>
+                <text x="50%" y="72%"  class="progress-color">before</text>
+                <text x="50%" y="80%"  class="progress-subtext"> {{$overallGoal->target_date->format('F j, Y')}}</text>
             </svg>
-            <p>{{ __('Start Date:') }} {{$overallGoal->created_at->format('F j, Y')}} ~ {{ __('Target Date:') }} {{$overallGoal->target_date->format('F j, Y')}}</p>
+            <br>
         </div>
+
         @endif
         <div class="container mt-5">
             @forelse($strengthGoals as $goal)

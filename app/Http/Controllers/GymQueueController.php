@@ -8,6 +8,7 @@ use App\Events\QueueUpdated;
 use App\Models\GymConstraint;
 use App\Models\GymUser;
 use App\Models\WorkoutQueue;
+use App\Models\Workout;
 use App\Models\EquipmentMachine;
 use App\Models\Achievement;
 use App\Models\User;
@@ -19,6 +20,7 @@ use App\Notifications\EquipmentReserved;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Models\GymUserAchievement;
+use Illuminate\Support\Facades\DB;
 
 class GymQueueController extends Controller
 {
@@ -108,6 +110,16 @@ class GymQueueController extends Controller
     public function userLeavesGym()
     {
         $gymUserId = $this->getGymUserId();
+
+        $workouts = Workout::with(['equipmentMachine'])
+            ->where('gym_user_id', $gymUserId)
+            ->where('status', 'in_progress')
+            ->exists();
+
+        if($workouts){
+            return redirect()->back()->with('error', 'You cannot leave the gym while you have an ongoing workout.');
+        }
+
         $gymIsFull = $this->gymIsFull();
         $user = GymQueue::where('gym_user_id', $gymUserId)
         ->where('status', 'entered')
@@ -120,7 +132,7 @@ class GymQueueController extends Controller
             ]);
 
             //clear all queued gym workout
-            $workoutQueue = WorkoutQueue::with(['equipment.equipmentMachine'])
+            $workoutQueue = WorkoutQueue::with(['equipmentMachine'])
             ->where('gym_user_id', $gymUserId)
             ->where('status', 'queueing')
             ->orWhere('status', 'reserved')
@@ -133,20 +145,21 @@ class GymQueueController extends Controller
                 $workout->save();
 
                 //call the next user in the queue for workout
-                if($workout->equipment->equipmentMachine){
-                    $workout->equipment->equipmentMachine->status = 'available';
-                    $workout->equipment->equipmentMachine->save();
+                if($workout->equipmentMachine && $workout->equipmentMachine->status == 'in use'){ 
+                    $workout->equipmentMachine->status = 'available';
+                    $workout->equipmentMachine->save();
                     $this->callNextInEquipmentQueue($workout->equipment_id);
                 }
                // $workout->equipment->equipmentMachine->status = 'available';
             }
+
+            
             // Reserve the next user in the queue
             if($gymIsFull){
                 $this->reserveNextUser();
-
             }
         }
-        return redirect()->back()->with('success', 'You have left the gym.');
+        return redirect()->back()->with('success', 'You have checked out from the gym.');
     }
 
     public function callNextInEquipmentQueue($equipmentId){
@@ -234,9 +247,9 @@ class GymQueueController extends Controller
             // Calculate total days checked in
             $totalDaysCheckedIn = GymQueue::where('gym_user_id', $gymUser->gym_user_id)
             ->whereNotNull('entered_at')
-            ->selectRaw('DATE(entered_at) as date')
-            ->distinct()
-            ->count('date');
+            ->select(DB::raw('DATE(entered_at) as date'))
+            ->groupBy(DB::raw('DATE(entered_at)'))
+            ->count();
 
             // Define the achievements with their conditions
             $achievements = [

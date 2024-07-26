@@ -8,6 +8,7 @@ use App\Models\GymUser;
 use App\Models\Equipment;
 use App\Models\Workout;
 use App\Models\EquipmentMachine;
+use App\Models\WorkoutQueue;
 
 
 class GymController extends Controller
@@ -15,7 +16,6 @@ class GymController extends Controller
     public function gymIsFull(){
         $userLimit = GymConstraint::where('constraint_name','max_in_gym_users')->first();
         $userLimit = (int) $userLimit->constraint_value;
-    
         $currentQueueCount = GymQueue::where('status', 'entered')->count();
         return $currentQueueCount >= $userLimit;
     }
@@ -47,7 +47,12 @@ class GymController extends Controller
                 'exceededTime' => round(abs($timeNow->diffInMinutes($workout->exceeded_time))),
             ]);
         }
-
+        $maintenanceEquipment = Equipment::with('equipmentMachines')
+        ->where('is_deleted', false)
+        ->whereHas('equipmentMachines', function ($query) {
+            $query->where('status', 'maintenance');
+        })
+        ->get();
 
         // Optionally, flatten the collection if you have nested collections
        // $exceededEquipments = $exceededEquipments->flatten();
@@ -57,7 +62,7 @@ class GymController extends Controller
         $userLimit = (int) $userLimit->constraint_value;
         $currentQueueCount = GymQueue::where('status', 'queueing')->count();
         $gymIsFull = $currentQueueCount >= $userLimit;
-        return view('gym.index', compact('exceededEquipments', 'currentUserCount', 'currentQueueCount', 'gymIsFull'));
+        return view('gym.index', compact('maintenanceEquipment','exceededEquipments', 'currentUserCount', 'currentQueueCount', 'gymIsFull'));
     }
 
 

@@ -114,6 +114,13 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                         {{$equipment->status}}
                     </div><br>
+                    @if($equipment->status == 'Available' && !$workout)
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="start myBtn btnFront btn btn-primary redBtn shadow-none" data-id={{$equipment->workout_queue_id}}>
+                            Start
+                        </button>
+                    </div>
+                    @endif
                     <a href="{{route('equipment-view',$equipment->equipment->equipment_id)}}" class="stretched-link"></a>
                 </div>
             </div>
@@ -121,7 +128,6 @@
     </div>
     @empty
     @endforelse
-
 </div>
 <div class="d-flex justify-content-center mt-5">
     <a href="{{route('workout-habit')}}" class="p-2 redBtn btn">

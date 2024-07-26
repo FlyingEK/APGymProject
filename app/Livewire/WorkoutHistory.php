@@ -26,7 +26,7 @@ class WorkoutHistory extends Component
 
     public function fetchWorkoutRecords()
     {
-        $gymUser = GymUser::where('gym_user_id', Auth::user()->user_id)->first();
+        $gymUser = GymUser::where('user_id', Auth::user()->user_id)->first();
 
         $this->workoutRecords = Workout::with('equipmentMachine.equipment')
         ->where('gym_user_id', $gymUser->gym_user_id) 
