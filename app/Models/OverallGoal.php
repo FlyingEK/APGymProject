@@ -28,7 +28,11 @@ class OverallGoal extends Model
 
     public static function checkDailyGoals()
     {
-        $goals = self::where('status', 'active')->get();
+        $goals = self::with('goal')
+        ->whereHas('goal', function ($query) {
+            $query->where('status', 'active');
+        })
+        ->get();
 
         foreach ($goals as $goal) {
             $gymUserId = $goal->goal->gym_user_id;
@@ -53,7 +57,7 @@ class OverallGoal extends Model
                 }else if($goal->per == "month"){
                     $goal->target_date = $targetDate->addMonth();
                 }
-                $goal->status = 'active';
+                $goal->goal->status = 'active';
                 $goal->save();
 
             }

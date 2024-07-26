@@ -8,4 +8,4 @@ use Illuminate\Support\Facades\DB;
 //     $this->comment(Inspiring::quote());
 // })->purpose('Display an inspiring quote')->hourly();
 
-Schedule::command('app:checkGoalDaily')->daily();
+Schedule::command('goals:check-daily')->daily();
