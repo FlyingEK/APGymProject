@@ -14,6 +14,7 @@
                 <text x="50%" y="50%" class="progress-value" id="progress-value" >{{$overallGoal->progress}}  hour{{$overallGoal->progress>1?'s':''}} </text>
                 <text x="50%" y="63%"  class="progress-subtext">of {{$overallGoal->workout_hour}} hour{{$overallGoal->workout_hour>1?'s':''}}</text>
             </svg>
+            <p>{{ __('Start Date:') }} {{$overallGoal->created_at->format('F j, Y')}} ~ {{ __('Target Date:') }} {{$overallGoal->target_date->format('F j, Y')}}</p>
         </div>
         @endif
         <div class="container mt-5">
