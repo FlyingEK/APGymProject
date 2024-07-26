@@ -44,7 +44,7 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-view', $constraint->constraint_id)}}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
                                 <li><a class="dropdown-item d-flex align-items-center" href="{{route('constraint-edit', $constraint->constraint_id)}}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
-                                <li><a class="dropdown-item d-flex align-items-center" href="#" onclick="return confirm('Are you sure you want to delete this constraint?');"><span class="material-symbols-outlined">delete</span> &nbsp Delete</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center" onclick="deleteConstraint('{{$constraint->constraint_id}}')"><span class="material-symbols-outlined">delete</span> &nbsp Delete</a></li>
                             </ul>
                         </div>
                     </td>
@@ -57,3 +57,70 @@
 </section>
 
 @endsection
+@push('script')
+<script>
+function deleteConstraint(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setTimeout(() => {
+                token = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: '{{ route("constraint-delete") }}',
+                    type: 'POST',
+                    data: { 
+                        _token: token, 
+                        _method: 'DELETE',
+                        id: id 
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Constraint has been deleted successfully',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to delete constraint',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to delete constraint',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }, 1000);
+        }
+    });
+}
+
+</script>
+@endpush

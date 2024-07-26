@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Exception;
+
 
 class UserController extends Controller
 {
@@ -61,5 +63,26 @@ class UserController extends Controller
     }
 
 
+    public function deactivateUser(Request $request)
+    {
+        try{
+            $userId = $request->input('id');
+
+            $user = User::find($userId);
+    
+            if ($user) {
+                $user->status = 'inactive';
+                $user->save();
+    
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        }catch(Exception $e){
+            return response()->json(['success' => false, $e->getMessage()]);
+
+        }
+       
+    }
 }
 ?>

@@ -105,7 +105,7 @@ Route::group(['prefix' => 'constraint'],function(){
     Route::get('/edit/{id}', [ConstraintController::class, 'editConstraint'])->name('constraint-edit');
     Route::put('/update/{id}', [ConstraintController::class, 'updateConstraint'])->name('constraint-update');
     Route::get('/view/{id}', [ConstraintController::class, 'viewConstraint'])->name('constraint-view');
-    
+    Route::delete('/delete', [ConstraintController::class, 'deleteConstraint'])->name('constraint-delete');
 });
 
 Route::group(['prefix' => 'achievement'],function(){
@@ -114,15 +114,18 @@ Route::group(['prefix' => 'achievement'],function(){
     Route::post('/store', [AchievementController::class, 'storeAchievement'])->name('achievement-store');
     Route::get('/edit/{id}', [AchievementController::class, 'editAchievement'])->name('achievement-edit');
     Route::put('/update/{id}', [AchievementController::class, 'updateAchievement'])->name('achievement-update');
-    Route::post('/user/{userId}/achievement/{achievementId}', [AchievementController::class, 'storeUserAchievement'])->name('user-achievement-store');
+    Route::delete('/delete', [AchievementController::class, 'deleteAchievement'])->name('achievement-delete');
 });
 
 
 Route::group(['prefix' => 'user'],function(){
     Route::get('/all', [UserController::class, 'allUser'])->name('user-all');
-    Route::post('/store', [EquipmentController::class, 'store'])->name('user-store');
+    Route::get('/add', [UserController::class, 'addUser'])->name('user-add');
+    Route::post('/store', [UserController::class, 'store'])->name('user-store');
     Route::put('/edit/{id}', [UserController::class, 'editUser'])->name('user-edit');
     Route::get('/view/{id}', [UserController::class, 'viewUser'])->name('user-view');
+    Route::get('/edit/{id}', [UserController::class, 'editUser'])->name('user-edit');
+    Route::put('/deactivate', [UserController::class, 'deactivateUser'])->name('user-deactivate');
 });
 
 Route::group(['prefix' => 'equipment'], function(){
@@ -138,6 +141,7 @@ Route::group(['prefix' => 'equipment'], function(){
     Route::get('/equipmentsTrainer', [EquipmentController::class, 'trainerEquipments'])->name('equipments-trainer');
     Route::get('/trainerCategory/{id}', [EquipmentController::class, 'trainerCategoryEquipment'])->name('equipment-trainer-category');
     Route::post('/statusUpdate/{id}', [EquipmentController::class, 'statusUpdate'])->name('equipment-status-update');
+    Route::put('/delete', [EquipmentController::class, 'deleteEquipment'])->name('equipment-delete');
 
 });
 

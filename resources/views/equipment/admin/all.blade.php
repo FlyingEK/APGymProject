@@ -47,13 +47,11 @@
                                     <li><a class="dropdown-item d-flex align-items-center" href="{{ route('equipment-admin-view', $equip->equipment_id) }}"><span class="material-symbols-outlined">visibility</span> &nbsp View</a></li>
                                     <li><a class="dropdown-item d-flex align-items-center" href="{{ route('equipment-edit', $equip->equipment_id) }}"><span class="material-symbols-outlined">edit</span>&nbsp Edit</a></li>
                                     <li>
-                                        <form action="{{ route('equipment-edit', $equip->equipment_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this equipment?');">
-                                            @csrf
-                                           {{-- quantity 0 --}}
-                                            <button type="submit" class="dropdown-item d-flex align-items-center">
-                                                <span class="material-symbols-outlined">delete</span> &nbsp Delete
-                                            </button>
-                                        </form>
+                                        {{-- quantity 0 --}}
+                                        <button type="button" onclick="deleteEquipment('{{$equip->equipment_id}}')" class="dropdown-item d-flex align-items-center">
+                                            <span class="material-symbols-outlined">delete</span> &nbsp Delete
+                                        </button>
+
                                     </li>
                                 </ul>
                             </div>
@@ -67,3 +65,70 @@
 </section>
 
 @endsection
+@push('script')
+<script>
+function deleteEquipment(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setTimeout(() => {
+                token = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: '{{ route("equipment-delete") }}',
+                    type: 'POST',
+                    data: { 
+                        _token: token, 
+                        _method: 'PUT',
+                        id: id 
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Equipment has been deleted successfully',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to delete equipment',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to delete equipment',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }, 1000);
+        }
+    });
+}
+
+</script>
+@endpush

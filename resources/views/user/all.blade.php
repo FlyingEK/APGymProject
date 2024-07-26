@@ -48,7 +48,9 @@
                                     </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <li><a class="dropdown-item d-flex align-items-center" href="{{route('user-view',$user->user_id)}}"><span class="material-symbols-outlined">edit</span>&nbsp View/Edit</a></li>
-                                    <li><a class="dropdown-item d-flex align-items-center" onclick=""><span class="material-symbols-outlined">Deactivate</span> &nbsp Delete</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center" onclick="deactivateUser('{{$user->user_id}}')"><span class="material-symbols-outlined">
+                                        person_remove
+                                        </span> &nbsp Deactivate</a></li>
     
                                 </ul>
                             </div>
@@ -63,12 +65,70 @@
 
 @endsection
 
-@section('javascript')
+@push('script')
 <script>
-    function confirmDelete(userId) {
-        if (confirm('Are you sure you want to delete this user?')) {
-            // Add delete logic here
+function deactivateUser(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, deactive the user!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setTimeout(() => {
+                token = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: '{{ route("user-deactivate") }}',
+                    type: 'POST',
+                    data: { 
+                        _token: token, 
+                        _method: 'PUT',
+                        id: id 
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'User has been deactivated successfully',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to deactivate user',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to deactivate user',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }, 1000);
         }
-    }
+    });
+}
+
 </script>
-@endsection
+@endpush

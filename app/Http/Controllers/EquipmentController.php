@@ -99,6 +99,21 @@ class EquipmentController extends Controller
         return view('equipment.view', compact('isCheckIn','equipment'));
     }
 
+    public function deleteEquipment(Request $request)
+    {
+        $equipmentId = $request->input('id');
+
+        $equipment = Equipment::find($equipmentId);
+
+        if ($equipment) {
+            $equipment->is_deleted = true;
+            $equipment->save();
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
+
     public function addEquipment()
     {
         return view('equipment.admin.add');

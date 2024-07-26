@@ -43,6 +43,22 @@ class ConstraintController extends Controller
         return view('constraint.edit', compact('constraint'));
     }
 
+    public function deleteConstraint(Request $request)
+    {
+        $constraintId = $request->input('id');
+
+        $constraint = GymConstraint::find($constraintId);
+
+        if ($constraint) {
+            $constraint->delete();
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
+
+
     public function updateConstraint(Request $request, $id)
     {
         $request->validate([

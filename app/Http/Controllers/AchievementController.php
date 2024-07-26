@@ -100,6 +100,22 @@ class AchievementController extends Controller
         return redirect()->route('achievement-all')->with('success', 'Achievement updated successfully.');
     }
 
+    public function deleteAchievement(Request $request)
+    {
+        $achievementId = $request->input('id');
+
+        // Find the achievement by ID
+        $achievement = Achievement::find($achievementId);
+
+        if ($achievement) {
+            // Delete the achievement
+            $achievement->delete();
+
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false]);
+        }
+    }
 
 }
 ?>

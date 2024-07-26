@@ -81,7 +81,7 @@
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">
                     <a href="{{ route('equipment-edit', $equipment->equipment_id) }}" class="btn blueBtn">Edit</a>
-                    <a onclick="confirmDelete()" class="btn redBtn">Delete</a>
+                    <a onclick="deleteEquipment('{{$equipment->equipment_id}}')" class="btn redBtn">Delete</a>
                 </div>
             </div>
         </div>
@@ -90,13 +90,70 @@
 
 
 @endsection
-
-@section('javascript')
+@push('script')
 <script>
-    function confirmDelete() {
-        if (confirm('Are you sure you want to delete this equipment?')) {
-            // Add delete logic here
+function deleteEquipment(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setTimeout(() => {
+                token = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: '{{ route("equipment-delete") }}',
+                    type: 'POST',
+                    data: { 
+                        _token: token, 
+                        _method: 'PUT',
+                        id: id 
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Equipment has been deleted successfully',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                window.location.href = '{{ route("equipment-all") }}';
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to delete equipment',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to delete equipment',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }, 1000);
         }
-    }
+    });
+}
+
 </script>
-@endsection
+@endpush
