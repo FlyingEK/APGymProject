@@ -25,6 +25,9 @@
       @endforelse
     </tbody>
 </table>
+<div class="d-flex justify-content-center mt-5">
+    <a href={{route('gym-log-trainer')}} class="p-2 redBtn btn">View Full Gym Entry Log</a>
+</div>
     @include('partials/profile/profile-modal')
 @endsection
 

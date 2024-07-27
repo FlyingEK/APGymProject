@@ -4,6 +4,7 @@ $(document).ready(function() {
     $(window).on('load', function() {
         var url = $('input[name="urlAddress"]').val();
         if (url) {
+            console.log(url);
             setVideoPreview(url);
         }
     });

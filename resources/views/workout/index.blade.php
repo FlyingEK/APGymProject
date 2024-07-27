@@ -27,6 +27,7 @@
                             <div class="circle red"></div>
                         </div>
                     </div>
+
                     <div class="mb-4 timer d-flex justify-content-center align-items-center flex-column">
                         <h1 id="timer">00:00:00</h1>
                         <p id="workoutStatus"></p>
@@ -82,7 +83,7 @@
                         </div><br>
                         <a href="{{route('equipment-view',$reservedEquipments->equipment->equipment_id)}}" class="stretched-link"></a>
                         <div class="d-flex justify-content-end">
-                            <button type="button" class=" start myBtn btnFront btn btn-primary redBtn shadow-none" data-id="{{$reservedEquipments->workout_queue_id}}">
+                            <button type="button" class=" start myBtn btnFront btn btn-primary redBtn shadow-none" data-label ="{{$reservedEquipments->equipmentMachine->label}}" data-id="{{$reservedEquipments->workout_queue_id}}">
                                 Start
                             </button>
                         </div>
@@ -147,7 +148,12 @@
 
     window.workoutStartRoute = '{{ route("workout-start") }}'; // Pass the route URL to a global JavaScript variable
     window.workoutIndex = '{{ route("workout-index") }}'; // Pass the route URL to a global JavaScript variable
-
+    window.has_weight;
+    window.workout_id;
+    @if($workout && $workout->equipmentMachine && $workout->equipmentMachine->equipment)
+        window.has_weight = "{{ $workout->equipmentMachine->equipment->has_weight }}";
+        window.workout_id = "{{$workout->workout_id}}";
+    @endif
 @if(session('workoutsuccess'))
     Swal.fire({
         title: "Workout Completed!",

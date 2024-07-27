@@ -167,7 +167,7 @@ class WorkoutController extends Controller
     {
         $gymUserId = $this->getGymUserId();
         //workout
-        $workout = Workout::where('gym_user_id', $gymUserId)->with(['workoutQueue','equipmentMachine.equipment'])
+        $workout = Workout::with('equipmentMachine.equipment')->where('gym_user_id', $gymUserId)->with(['workoutQueue','equipmentMachine.equipment'])
         ->where('status', 'in_progress')
         ->first();
         //get equipment to populate in workout index
@@ -368,6 +368,8 @@ class WorkoutController extends Controller
             'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
             'duration' => 'nullable|required_if:has_weight,0|integer|min:10|max:'.$durationConstraint->constraint_value??60,
             'allow_sharing' => 'nullable|boolean',
+            'share' => 'nullable|boolean',
+            'machine_id' => 'nullable',
         ], [
             'set.required_if' => 'The sets field is required.',
             'rep.required_if' => 'The reps field is required.',
@@ -436,13 +438,17 @@ class WorkoutController extends Controller
                 ]);
             }   
         }
-                    
-        // Add the equipment machine to the user if available
-        $equipmentMachine = EquipmentMachine::with('equipment')->where('equipment_id', $data['equipment_id'])
-        ->where('status', 'available')
-        ->first();
 
-        if ($equipmentMachine && $equipmentMachine->status == 'available') {
+        if($data['share']){
+            $equipmentMachine = EquipmentMachine::with('equipment')->find($data['machine_id']);
+        }else{
+            // Add the equipment machine to the user if available
+            $equipmentMachine = EquipmentMachine::with('equipment')->where('equipment_id', $data['equipment_id'])
+            ->where('status', 'available')
+            ->first();
+        }
+
+        if ($equipmentMachine->equipment_machine_id) {
             $equipmentMachine->status = 'in use';
             $equipmentMachine->save();
             $estimatedEndTime = now()->addMinutes(intval($data['duration']));

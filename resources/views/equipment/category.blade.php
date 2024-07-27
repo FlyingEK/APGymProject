@@ -48,6 +48,36 @@
     No equipment
     @endforelse
 
+    @forelse($allowSharing as $item)
+    <div class="card equipment shadow-sm mt-2 p-2">
+        <div class="row">
+            <div class="col-5 ">
+                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+            </div>
+            <div class="col-7" style="padding-left: 5px">
+                <div class=" mt-md-3 no-wrap">
+                    <p class="equipmentTitle">{{$item->name}} #{{$item->equipment_machine_id}}</p>
+                        <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
+                        In Use
+                        </div>
+                        <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-success shadow-none">
+                        Allow Sharing
+                        </div><br>
+                    <a href="{{route('equipment-view', $item->equipment_id)}}" class="stretched-link"></a>
+                    @if($isCheckIn)
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-machineid="" data-id="{{$item->equipment_id}}" data-share="1" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
+                            Use
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @empty
+    @endforelse
+
 
 </div>
 @include('partials.equipment.equipment-habit-modal')
@@ -58,13 +88,16 @@
 $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var equipment_id = button.data('id');
+    var share = button.data('canuse') == "1"; // Convert to boolean by comparing to "1"
+    var machine_id = button.data('machineid');
     $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
 
 
     $.ajax({
         url: '{{ route("workout-habit-details") }}',
         type: 'GET',
-        data: { id: equipment_id },
+        data: { id: equipment_id
+        },
         success: function (response) {
             if (response.success){
                 var equipment = response.equipment;
@@ -84,6 +117,10 @@ $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
     });
 
     function displayDetails(equipment, modal) {
+        if(share){
+            modal.find('#machine_id').val(machine_id);
+        }
+        modal.find('#share').val(share);
         modal.find('#reps').val("");
         modal.find('#sets').val("");
         modal.find('#weights').val("");

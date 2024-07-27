@@ -156,6 +156,10 @@ class EquipmentController extends Controller
         }])
         ->get();
 
+        $allowSharing = collect(Equipment::getAllowSharingEquipment());
+        $allowSharing = $allowSharing->filter(function ($item) {
+            return $item->status !== 'available';
+        });
         // Adding status to each equipment
         $gymUserId = Auth::user()->gymUser->gym_user_id;
         $equipment->each(function ($item) use ($gymUserId) {
@@ -163,7 +167,7 @@ class EquipmentController extends Controller
             $item->statusDetail = $this->getInUseStatus($item->equipment_id, $gymUserId);
         });
 
-        return view('equipment.category', compact('isCheckIn','equipment', 'category'));
+        return view('equipment.category', compact('isCheckIn','allowSharing','equipment', 'category'));
     }
 
     public function trainerCategoryEquipment($category){
@@ -423,23 +427,6 @@ class EquipmentController extends Controller
         return response()->json($machines);
     }
 
-    public function getAllowSharingEquipment()
-    {
-        return Equipment::whereDoesntHave('equipmentMachines', function($query) {
-            $query->where('status', 'available');
-        })
-        ->whereHas('equipmentMachines', function($query) {
-            $query->where('status', 'in_use')
-                  ->whereHas('workout', function($query) {
-                      $query->where('allow_sharing', true)
-                            ->whereIn('status', ['in_progress', 'in_use']);
-                  })
-                  ->whereHas('workout', function($query) {
-                      $query->where('status', 'in_progress')
-                            ->having(DB::raw('count(*)'), '<', 2);
-                  });
-        })
-        ->get();
-    }
+    
 }
 ?>

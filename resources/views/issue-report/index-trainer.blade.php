@@ -39,7 +39,7 @@
     <div id="knownIssue">
         <div class="row mt-4">
             <div class="col-12">
-                <div class="page-title no-wrap" style="padding-right: 0px;">Closed Issues</div>
+                <div class="page-title no-wrap text-success" style="padding-right: 0px;">Closed Issues</div>
             </div>
         </div>
 
@@ -72,7 +72,7 @@
     <div id="knownIssue">
         <div class="row mt-4">
             <div class="col-12">
-                <div class="page-title no-wrap" style="padding-right: 0px;">Rejected Issues</div>
+                <div class="page-title text-danger no-wrap" style="padding-right: 0px;">Rejected Issues</div>
             </div>
         </div>
 

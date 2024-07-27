@@ -57,7 +57,7 @@
                 <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$equipment['equipment']->image)}}" alt="Work Order Image" ><br/>
         </div>
         <div class="col-7" style="padding-left: 5px">
-            <div class=" mt-md-3 no-wrap">
+            <div class=" mt-md-3 mb-3 no-wrap">
                 <p class="equipmentTitle">{{$equipment['equipment']->name}}  &nbsp;<span class="text-danger ">#{{$equipment['equipmentMachine']->label}} </span></p>
                 <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-danger shadow-none">
                     Exceeded {{$equipment['exceededTime']}} minutes

@@ -4,7 +4,7 @@ var totalSecs = 0;
 var timerInterval;
 var holdTimeout;
 var holdDuration = 3000; // 3 seconds to hold
-var setNo = 0;
+var setNo = 1;
 let isTimerRunning = false;
 
 function incTimer() {
@@ -20,28 +20,63 @@ function incTimer() {
     $("#timer").text(currentHours + ":" + currentMinutes + ":" + currentSeconds);
 }
 
-$(document).ready(function() {
-    // Attach the beforeunload event to the window
-    window.addEventListener('beforeunload', function (e) {
-        // If the timer is running, show the confirmation dialog
-        if(isTimerRunning){
-            e.preventDefault();
-            e.returnValue = ''; // Modern browsers require returnValue to be set
-            return 'Are you sure you want to leave? Your workout timer will be reset.';
-        }
+function saveTimerToSession() {
 
-    });
+    sessionStorage.setItem('totalSecs', totalSecs);
+    sessionStorage.setItem('setNo', setNo);
+    sessionStorage.setItem('workoutId', workout_id);
+    sessionStorage.setItem('has_weight', has_weight);
+}
+
+function loadTimerFromSession() {
+    totalSecs = parseInt(sessionStorage.getItem('totalSecs')) || 0;
+    setNo = parseInt(sessionStorage.getItem('setNo')) || 0;
+
+    var currentHours = Math.floor(totalSecs / 3600);
+    var currentMinutes = Math.floor((totalSecs % 3600) / 60);
+    var currentSeconds = totalSecs % 60;
+
+    if(currentSeconds < 10) currentSeconds = "0" + currentSeconds;
+    if(currentMinutes < 10) currentMinutes = "0" + currentMinutes;
+    if(currentHours < 10) currentHours = "0" + currentHours;
+
+    $("#timer").text(currentHours + ":" + currentMinutes + ":" + currentSeconds);
+    if(setNo){
+        $("#setNo").text("Set " + setNo);
+    } 
+}
+
+$(document).ready(function() {
+
+    if(workout_id && sessionStorage.getItem('workoutId') == workout_id){
+        loadTimerFromSession();
+    }
+
+    // Store the original beforeunload event handler
+    var originalBeforeUnload = window.onbeforeunload;
+
+    function handleBeforeUnload(e) {
+        saveTimerToSession();
+        e.preventDefault();
+        e.returnValue = ''; // Modern browsers require returnValue to be set
+        return 'Are you sure you want to leave? Your workout timer will be paused.';
+    }
+
+    function allowUnload(e){
+        saveTimerToSession();
+    }
+
 
     var holdTextInterval;
     // $('.turnEquipment').removeClass('d-none');
 
     $(".start").click(function() {
         var workoutQueueId = $(this).data('id');
-
+        var machineLabel = $(this).data('label');
         if (!timerInterval) {
             Swal.fire({
                 title: "Start workout?",
-                html: "<p>Please proceed to the treadmill labeled <strong style='color: red;'>#TR02</strong>.</p>",
+                html: "<p>Please proceed to the treadmill labeled <strong style='color: red;'>"+machineLabel+"</strong></p>",
                 imageUrl: '/img/workoutIcon.png',
                 imageWidth:70,
                 imageHeight: 70,
@@ -55,7 +90,7 @@ $(document).ready(function() {
                 cancelButtonText: "I don't want to use it",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    isTimerRunning=true;
+                    // isTimerRunning=true;
 
                 // Send a POST request to start the workout
                 $.ajax({
@@ -132,37 +167,51 @@ $(document).ready(function() {
     });
 
     $("#pause").click(function () {
+
         if (timerInterval) {
-            Swal.fire({
-                title: "Finish this set?",
-                text: "The timer will be paused and you can rest for a while before another set.",
-                imageUrl: '/img/workoutIcon.png',
-                imageWidth: 70,
-                imageHeight: 70,
-                imageAlt: "dumbbell",
-                showCancelButton: true,
-                customClass: {
-                    confirmButton: 'btn blueBtn',
-                    cancelButton: 'btn redBtn'
-                },
-                confirmButtonText: "Yes",
-                cancelButtonText: "Not yet",
-              }).then((result) => {
-                if (result.isConfirmed) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    $("#pauseIcon").html('<span class="material-symbols-outlined">play_arrow</span>');
-                    $("#pauseText").html("Resume");
-                    $("#workoutStatus").html('Resting');
-                }
-              });
+            if(has_weight){
+                Swal.fire({
+                    title: "Finish this set?",
+                    text: "The timer will be paused and you can rest for a while before another set.",
+                    imageUrl: '/img/workoutIcon.png',
+                    imageWidth: 70,
+                    imageHeight: 70,
+                    imageAlt: "dumbbell",
+                    showCancelButton: true,
+                    customClass: {
+                        confirmButton: 'btn blueBtn',
+                        cancelButton: 'btn redBtn'
+                    },
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "Not yet",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setNo++;
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        $("#pauseIcon").html('<span class="material-symbols-outlined">play_arrow</span>');
+                        $("#pauseText").html("Resume");
+                        $("#workoutStatus").html('Resting');
+                    }
+                });
+            }else{
+                setNo++;
+                clearInterval(timerInterval);
+                        timerInterval = null;
+                        $("#pauseIcon").html('<span class="material-symbols-outlined">play_arrow</span>');
+                        $("#pauseText").html("Resume");
+                        $("#workoutStatus").html('Resting');
+            }
         } else {
-              setNo++;
-              timerInterval = setInterval(incTimer, 1000);
-              $("#setNo").html("Set "+setNo);
-              $("#pauseIcon").html('<span class="material-symbols-outlined">pause</span>');
-              $("#pauseText").html("Rest");
-              $("#workoutStatus").html('Working Out');
+            isTimerRunning = true;
+            
+            // Attach the handleBeforeUnload function to the beforeunload event
+            window.addEventListener('beforeunload', handleBeforeUnload);
+            timerInterval = setInterval(incTimer, 1000);
+            $("#setNo").html("Set "+setNo);
+            $("#pauseIcon").html('<span class="material-symbols-outlined">pause</span>');
+            $("#pauseText").html("Rest");
+            $("#workoutStatus").html('Working Out');
         }
     });
 
@@ -170,10 +219,8 @@ $(document).ready(function() {
         var countdown = holdDuration / 1000;
 
         holdTimeout = setTimeout(function() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            totalSecs = 0;
-            isTimerRunning = false;
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.addEventListener('beforeunload', allowUnload);
              // Get the timer text and transform it to minutes
             var timerText = $("#timer").text();
             var timeParts = timerText.split(":");
@@ -182,8 +229,9 @@ $(document).ready(function() {
             var seconds = parseInt(timeParts[2], 10);
             var totalMinutes = (hours * 60) + minutes + Math.floor(seconds / 60);
 
-            $("#timer").text("00:00:00");
-            $('#modalSet').val(setNo); // Example value for set
+            if(has_weight){
+                $('#modalSet').val(setNo); // Example value for set
+            }
             $('#modalDuration').val(totalMinutes); // Example value for duration
             $('#endWorkout').modal('toggle');
             button.html('<span class="material-symbols-outlined">stop</span>');
@@ -198,6 +246,18 @@ $(document).ready(function() {
                 clearInterval(holdTextInterval);
             }
         }, 1000);
+    }
+
+    function submitEndWorkout(){
+        $('#endWorkoutForm').on('submit', function(e){
+
+            clearInterval(timerInterval);
+            timerInterval = null;
+            totalSecs = 0;
+            isTimerRunning = false;
+            $("#timer").text("00:00:00");
+
+        });
     }
 
     function endHold(button) {

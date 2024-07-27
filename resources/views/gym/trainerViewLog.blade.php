@@ -1,5 +1,11 @@
 @extends('layouts.userLayout')
 @section('content')
+
+<div class="backLink mb-2">
+    <a href="{{route('gym-user')}}">
+        <i class="fas fa-chevron-left"></i><span>  Back</span>
+    </a>
+  </div>
 <div class="page-title align-content-center justify-content-center mb-4">
     Gym Entry Log
 </div>

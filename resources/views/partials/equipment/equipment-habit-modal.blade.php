@@ -17,9 +17,11 @@
                             <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
                           </div>
                           <input type="hidden" id="formMethod" name="_method" value="">
-                        <input type="hidden" name="equipment_id" id="equipment_id" >
-                        <input type="hidden" name="workout_habit_id" id="workout_habit_id" >
-                        <input type="hidden" name="has_weight" id="has_weight" >
+                          <input type="hidden" name="share" id="share" >
+                          <input type="hidden" name="machine_id" id="machine_id" >
+                            <input type="hidden" name="equipment_id" id="equipment_id" >
+                            <input type="hidden" name="workout_habit_id" id="workout_habit_id" >
+                            <input type="hidden" name="has_weight" id="has_weight" >
                         <div class="hasWeightInput d-none">
                             <div class="mb-3">
                                 <label for="set" class="form-label"><strong>Set:</strong></label>

@@ -39,7 +39,7 @@
         console.log("HI");
         e.preventDefault();
         swal.fire({
-            text: "Do you want to save this workout plan to your workout habit?",
+            text: "Do you want to save this workout plan to your workout habit? You can manage your workout habit in Workout tab later.",
             icon: "question",
             showCancelButton: true,
             cancelButtonText: "Not for this time",

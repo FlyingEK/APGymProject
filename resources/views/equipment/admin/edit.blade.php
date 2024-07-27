@@ -164,8 +164,9 @@
     // Add more instruction fields dynamically
     $(document).ready(function() {
         var oldLabels = {!! json_encode($equipment->equipmentMachines->pluck('label')) !!};
-        var i = {{ $equipment->instructions? count($equipment->instructions) : 1 }};
-        var no = {{ $equipment->instructions? count($equipment->instructions) : 1 }};
+        var i = {{ $equipment->tutorials? count($equipment->tutorials) : 1 }};
+        console.log(i);
+        var no = {{ $equipment->tutorials? count($equipment->tutorials) : 1 }};
         $("#add").click(function() {
             i++;
             no++;
