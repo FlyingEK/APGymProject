@@ -19,8 +19,8 @@
                     <p>Please confirm the workout details for this workout</p>
                     <label for="weight" class="form-label"><strong>Weight:</strong></label>
                     <input type="text" name="weight" id="weight" value="{{$workout->workoutQueue->weight}}" class="form-control ">
-                    <label for="rep" class="form-label"><strong>Repetition:</strong></label>
-                    <input type="text" name="rep" id="rep" value="{{$workout->workoutQueue->repetition}}" class="form-control ">
+                    {{-- <label for="rep" class="form-label"><strong>Repetition:</strong></label>
+                    <input type="text" name="rep" id="rep" value="{{$workout->workoutQueue->repetition}}" class="form-control "> --}}
                     @endif
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn redBtn">

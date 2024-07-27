@@ -480,12 +480,11 @@ class WorkoutController extends Controller
 
         $data = $request->validate([
             'set' => 'nullable|required_if:has_weight,1|integer', 
-            'rep' => 'nullable|required_if:has_weight,1|integer|min:1|max:40', 
+            'rep' => 'nullable|integer|min:1|max:40', 
             'weight' => 'nullable|required_if:has_weight,1|integer|min:5|max:500',
             'duration' => 'nullable|required_if:has_weight,0|integer',
         ], [
             'set.required_if' => 'The sets field is required.',
-            'rep.required_if' => 'The reps field is required.',
             'weight.required_if' => 'The weights field is required.',
             'duration.required_if' => 'The duration field is required.',
         ]);
@@ -526,7 +525,6 @@ class WorkoutController extends Controller
         // $user = User::with('gymUser')->whereHas('gymUser', function($query) use($workoutQueue) {
         //     $query->where('gym_user_id', $workoutQueue->gym_user_id);
         // })->first();
-
 
         if ($strengthGoal) {
             $strengthGoal->progress = $data['weight'] > $strengthGoal->progress ? $data['weight'] : $strengthGoal->progress;

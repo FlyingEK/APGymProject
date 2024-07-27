@@ -61,7 +61,7 @@ class GymController extends Controller
         $userLimit = GymConstraint::where('constraint_name','max_in_gym_users')->first();
         $userLimit = (int) $userLimit->constraint_value;
         $currentQueueCount = GymQueue::where('status', 'queueing')->count();
-        $gymIsFull = $currentQueueCount >= $userLimit;
+        $gymIsFull = $currentUserCount >= $userLimit;
         return view('gym.index', compact('maintenanceEquipment','exceededEquipments', 'currentUserCount', 'currentQueueCount', 'gymIsFull'));
     }
 

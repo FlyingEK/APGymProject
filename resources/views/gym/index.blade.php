@@ -11,9 +11,10 @@
         </div>
         <div class="card workout-card mb-4" style="background: url('{{ asset('/img/workoutbg.jpg') }}') ">
             <div class="card-body">
-                {{-- <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">The gym is currently full. Please queue to enter the gym.</div>
-                <div style="font-size:15px;font-weight:bold;" >Current queue: 3 people</div> --}}
-                <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Current gym user: 10</div>
+                <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Current gym user: {{$currentUserCount}} people</div>
+                @if($currentQueueCount > 0)
+                <div style="font-size:15px;font-weight:bold;" >Current queue: {{$currentQueueCount}} people</div>
+                @endif
             </div>
             <div class="m-3 d-flex justify-content-end" style="gap:8px;">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#checkInModal" class="btn redBtn">
