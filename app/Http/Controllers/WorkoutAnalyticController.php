@@ -103,12 +103,10 @@ class WorkoutAnalyticController extends Controller
                     $query->where('equipment_id', $equipmentId);
                 })
                 ->max('weight');
-
-                
                 $newGoal->strengthEquipmentGoal()->create([
                     'equipment_id' => $equipmentId,
                     'weight' => $data['goalValues'][$index],
-                    'progress' => $maxWeight??0,
+                    'progress' => $maxWeight? $maxWeight: 0,
                 ]);
             }
         }

@@ -79,6 +79,7 @@ class GymQueueController extends Controller
                     'check_in_code' => $code,
                     'reserved_until' => now()->addMinutes(2),
                 ]);
+                $queue = GymQueue::with('gymUser.user')->where('id', $queue->id)->first();
                 $user = Auth::user();
                 Notification::sendNow($user, new TurnNotification(true, $code)); // Queue the notification
                 $this->setGymReservationTimer($queue);
@@ -98,9 +99,9 @@ class GymQueueController extends Controller
             $nextUser->status = 'reserved';
             $nextUser->reserved_until = now()->addMinutes(2);
             $nextUser->check_in_code = $this->generateUniqueCheckInCode(); 
-            
+
             // Send TurnNotification
-            $nextUser->gymUser()->user()->notify(new TurnNotification(false, $nextUser->check_in_code));
+            Notification::send($nextUser->gymUser->user, new TurnNotification(false, $nextUser->check_in_code))  ;
             $nextUser->save();
             $this->setGymReservationTimer($nextUser);
             broadcast(new QueueUpdated($nextUser));

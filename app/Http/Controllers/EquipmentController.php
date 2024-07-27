@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
 
 class EquipmentController extends Controller
 {
@@ -76,24 +76,63 @@ class EquipmentController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
+        $gymUser = GymUser::where('user_id', $user->user_id)->first();
+        $gymUserId = $gymUser->gym_user_id;
         $isCheckIn = $this->isUserCheckedIn();
         $userLimit = GymConstraint::where('constraint_name','max_in_gym_users')->first();
         $userLimit = (int) $userLimit->constraint_value;
         $isQueue = GymQueue::where('status', 'queueing')
-        ->where('status', 'reserved')
         ->where('gym_user_id', Auth::user()->gymUser->gym_user_id)->exists();
+        $isReserved = GymQueue::where('status', 'reserved')       
+        ->where('gym_user_id', Auth::user()->gymUser->gym_user_id)->exists();
+
         $currentQueueCount = GymQueue::where('status', 'entered')->count();
         $gymIsFull = $currentQueueCount >= $userLimit;
 
-        $availableEquipment = Equipment::where('is_deleted', false)
-        ->whereHas('equipmentMachines', function ($query) {
-            $query->where('status', 'available');
+        $topUsedEquipmentMachineIds = Workout::where('gym_user_id', $gymUserId)
+        ->select('equipment_machine_id', DB::raw('count(*) as usage_count'))
+        ->groupBy('equipment_machine_id')
+        ->orderByDesc('usage_count')
+        ->pluck('equipment_machine_id');
+
+        $topUsedEquipment = Equipment::where('is_deleted', false)
+        ->whereHas('equipmentMachines', function ($query) use ($topUsedEquipmentMachineIds) {
+            $query->whereIn('equipment_machine_id', $topUsedEquipmentMachineIds)
+                ->where('status', 'available');
         })
-        ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
-            $query->where('status', 'available');
-        }])
-        ->having('available_machines_count', '>', 1)
+        ->limit(5)
         ->get();
+
+        $topUsedEquipmentCount = $topUsedEquipment->count();
+
+        if ($topUsedEquipmentCount < 5) {
+            $needed = 5 - $topUsedEquipmentCount;
+    
+            $additionalEquipment = Equipment::where('is_deleted', false)
+                ->whereDoesntHave('equipmentMachines', function ($query) use ($topUsedEquipmentMachineIds) {
+                    $query->whereIn('equipment_machine_id', $topUsedEquipmentMachineIds)
+                          ->where('status', 'available');
+                })
+                ->whereHas('equipmentMachines', function ($query) {
+                    $query->where('status', 'available');
+                })
+                ->limit($needed)
+                ->get();
+    
+            // Merge the additional equipment with the top used equipment
+            $topUsedEquipment = $topUsedEquipment->merge($additionalEquipment);
+        }
+
+        // $availableEquipment = Equipment::where('is_deleted', false)
+        // ->whereHas('equipmentMachines', function ($query) {
+        //     $query->where('status', 'available');
+        // })
+        // ->withCount(['equipmentMachines as available_machines_count' => function ($query) {
+        //     $query->where('status', 'available');
+        // }])
+        // ->having('available_machines_count', '>', 1)
+        // ->get();
 
         $maintenanceEquipment = Equipment::with('equipmentMachines')
         ->where('is_deleted', false)
@@ -101,7 +140,7 @@ class EquipmentController extends Controller
             $query->where('status', 'maintenance');
         })
         ->get();
-        return view('equipment.index', compact('currentQueueCount','isQueue','isCheckIn','gymIsFull','availableEquipment', 'maintenanceEquipment'));
+        return view('equipment.index', compact('currentQueueCount','isReserved' ,'isQueue','isCheckIn','gymIsFull','topUsedEquipment', 'maintenanceEquipment'));
 
     }
 
@@ -382,6 +421,25 @@ class EquipmentController extends Controller
         ->get();
 
         return response()->json($machines);
+    }
+
+    public function getAllowSharingEquipment()
+    {
+        return Equipment::whereDoesntHave('equipmentMachines', function($query) {
+            $query->where('status', 'available');
+        })
+        ->whereHas('equipmentMachines', function($query) {
+            $query->where('status', 'in_use')
+                  ->whereHas('workout', function($query) {
+                      $query->where('allow_sharing', true)
+                            ->whereIn('status', ['in_progress', 'in_use']);
+                  })
+                  ->whereHas('workout', function($query) {
+                      $query->where('status', 'in_progress')
+                            ->having(DB::raw('count(*)'), '<', 2);
+                  });
+        })
+        ->get();
     }
 }
 ?>

@@ -21,7 +21,6 @@
             </select>
         </div>
     </div>
-<p>{{$period. $filter. $equipmentId}}</p>
     <div class="my-3">
         <div class="pgtabs pgtab2 btn-group btn-group-sm" id="report-tab">
             <button wire:click="setPeriod('daily')" class="btn text-white {{ $period === 'daily' ? 'activeTab' : '' }}">Daily</button>

@@ -18,7 +18,6 @@ use App\Http\Livewire\WorkoutReport;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 // Livewire::routes();
-
 Route::get('/', function () {
     // Redirect based on user role
     $user = Auth::user();
@@ -51,6 +50,7 @@ Route::put('/notifications/read-all', function () {
 })->name('notifications.readAll');
 Route::get('/notifications', [NotificationController::class, 'index'])->name('notification-index');
 
+Route::get('/test', [NotificationController::class, 'test'])->name('test');
 
 Route::group(['prefix' => 'gym'],function(){
     Route::get('/gymUser', [GymController::class, 'gymUser'])->name('gym-user');

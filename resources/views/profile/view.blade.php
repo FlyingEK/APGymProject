@@ -6,10 +6,10 @@
     <div class="card-body">
         <div class="row">
             <div class="col-4">
-                <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('/img/user.jpg') }}" alt="Profile Image" class="rounded-circle" style="width:80px;height:80px;">
+                <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('/img/user.jpg') }}" alt="Profile Image" class="rounded-circle" style="width:80px;height:80px;object-fit:cover ;">
             </div>
             <div class="col-8">
-                <span class="pagetitle" style="font-weight:bold;">{{ $user->username }} &nbsp</span>
+                <span class="pagetitle" style="font-weight:bold;">{{ $user->username }} &nbsp;</span>
                 @if($user->gender)
                     @if($user->gender == 'male')
                         <i class="fas fa-mars" style="color: rgb(66, 170, 223);"></i>
@@ -52,5 +52,6 @@
             <i class="fas fa-sign-out-alt"></i>   Logout
         </a>
     </form>
+</div>
 </div>
 @endsection

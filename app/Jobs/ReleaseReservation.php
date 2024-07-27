@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
@@ -9,19 +8,23 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\GymQueue;
 use App\Notifications\TurnNotification;
+use App\Notifications\ReservationCancelledNotification;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class ReleaseReservation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $gymQueue;
+
     /**
      * Create a new job instance.
      */
-    protected $gymQueue;
     public function __construct(GymQueue $gymQueue)
     {
-        $gymQueue = $gymQueue;
+        $this->gymQueue = $gymQueue;
     }
 
     /**
@@ -29,13 +32,20 @@ class ReleaseReservation implements ShouldQueue
      */
     public function handle(): void
     {
-        if($this->gymQueue->status === 'reserved'){
+        Log::info('ReleaseReservation job started', ['gymQueue_id' => $this->gymQueue->id]);
+
+        if ($this->gymQueue->status === 'reserved') {
             $this->gymQueue->status = 'left';
             $this->gymQueue->save();
-            $this->callNextInQueue();
-        }
 
+                Notification::send($this->gymQueue->gymUser->user, new ReservationCancelledNotification(""))  ;
+        
+            $this->callNextInQueue();
+        } else {
+            Log::info('GymQueue status is not reserved', ['gymQueue_id' => $this->gymQueue->id, 'status' => $this->gymQueue->status]);
+        }
     }
+
     public function generateUniqueCheckInCode()
     {
         do {
@@ -45,32 +55,36 @@ class ReleaseReservation implements ShouldQueue
         return $code;
     }
 
-    public function callNextInQueue(){
+    public function callNextInQueue()
+    {
         $nextUser = GymQueue::with('gymUser.user')
-        ->where('status', 'queueing')
-       ->orderBy('created_at')
-       ->first();
+            ->where('status', 'queueing')
+            ->orderBy('created_at')
+            ->first();
 
         if ($nextUser) {
             $nextUser->status = 'reserved';
             $nextUser->reserved_until = now()->addMinutes(2);
-            $nextUser->check_in_code = $this->generateUniqueCheckInCode(); 
-            
-            // Send TurnNotification
-            $nextUser->gymUser()->user()->notify(new TurnNotification(false, $nextUser->check_in_code));
-            $nextUser->save();
-            $this->setGymReservationTimer($nextUser);
+            $nextUser->check_in_code = $this->generateUniqueCheckInCode();
 
+            // Send TurnNotification
+            Notification::send($nextUser->gymUser->user, new TurnNotification(false, $nextUser->check_in_code))  ;
+
+            $nextUser->save();
+
+            Log::info('Next user reserved', ['gymQueue_id' => $nextUser->id, 'check_in_code' => $nextUser->check_in_code]);
+
+            $this->setGymReservationTimer($nextUser);
+        } else {
+            Log::info('No users in the queue');
         }
     }
-    
+
     protected function setGymReservationTimer(GymQueue $queue)
     {
-        // Use a delayed job to change the status back after 2 minutes
         $job = (new \App\Jobs\ReleaseReservation($queue))
             ->delay(now()->addMinutes(2));
 
         dispatch($job);
     }
-
 }

@@ -10,7 +10,7 @@ class StrengthEquipmentGoal extends Model
     use HasFactory;
     protected $table = 'strength_equipment_goal';
     protected $primaryKey = 'goal_id';
-    protected $fillable = ['goal_id', 'equipment_id','weight'];
+    protected $fillable = ['goal_id', 'equipment_id','weight','progress'];
 
     protected $casts = [
         'created_at' => 'datetime',
