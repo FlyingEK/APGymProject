@@ -1,4 +1,4 @@
-@extends('layouts.trainerLayout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="container px-3 py-2 bg-white myShadow rounded">
     <h3 class=" mb-4">{{$issue->title}}</h3>

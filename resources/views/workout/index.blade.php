@@ -1,7 +1,8 @@
 @extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    @if(!$workout && !$reservedEquipments && !$queuedEquipments)
+    <p> {{ !isset($queuedEquipments) }}</p>
+    @if(!$workout && (!$reservedEquipments ||$reservedEquipments->isEmpty() ) && (!$queuedEquipments ||$queuedEquipments->isEmpty()))
         <div class="row mt-3">
             <div class="page-title" style="padding-right: 0px;">You are currently not using or queueing for any equipments </div>
             <br>
@@ -94,7 +95,7 @@
     </div>
     @endif
 
-    @if($queuedEquipments)
+    @if(!$queuedEquipments->isEmpty())
     <div class="row mt-3">
         <div class="page-title" style="padding-right: 0px;">Queued Equipment</div>
     </div>

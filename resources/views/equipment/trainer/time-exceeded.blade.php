@@ -1,4 +1,4 @@
-@extends('layouts.trainerLayout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="page-title">Equipment that are used longer</div>
 

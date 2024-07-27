@@ -1,11 +1,6 @@
-@extends('layouts.trainerLayout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
-    <div class="backLink">
-        <a href="{{route('equipment-index')}}">
-            <i class="material-symbols-outlined redIcon no-wrap">home</i><span>  Home</span>
-        </a>
-    </div>
     <div id="userIssue">
         <div class="row mt-4">
             <div class="col-12" style="padding-right: 0px;">

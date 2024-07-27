@@ -116,8 +116,13 @@ class IssueReportController extends Controller
 
     public function cancelIssue($id)
     {
-        $issue = Issue::findOrFail($id);
+        $issue = Issue::with('equipmentMachine')->findOrFail($id);
         $issue->update(['status' => 'cancelled']);
+        if($issue->equipment_machine_id){
+            $issue->equipmentMachine()->update([
+                'status' => 'available'
+            ]);
+        }
         return redirect()->route('issue-user-index')->with('success', 'Issue cancelled successfully.');
     }
 
@@ -144,7 +149,7 @@ class IssueReportController extends Controller
             'status' => 'required|in:reported,resolved,rejected',
         ]);
         $issue->update($data);
-        if($data['status'] == 'resolved'){
+        if($data['status'] == 'resolved' || $data['status'] == 'rejected' && $issue->equipment_machine_id){
             $issue->equipmentMachine()->update([
                 'status' => 'available'
             ]);

@@ -1,4 +1,4 @@
-@extends('layouts.trainerLayout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="content container p-1">
     <div class="gymCheckIn">

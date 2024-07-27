@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{-- <link rel="shortcut icon" type="image/x-icon" href=img src="{{ asset('/img/treadmill.jpg') }}"> --}}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/img/apulogo.png') }}">
     <title>APGym</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +50,11 @@
 </body>
 
 @if (!Route::is(['password.reset', 'confirm-mail','password.request','login','lock-screen','register','error-404','error-500','verification.notice']) )
-@include('partials.shared.bottomnav-user')
+    @if (Auth::check() && (Auth::user()->role == 'user'))
+        @include('partials.shared.bottomnav-user')
+    @elseif(Auth::check() && (Auth::user()->role == 'trainer'))
+        @include('partials.shared.bottomnav-trainer')
+    @endif
 @endif
 
 

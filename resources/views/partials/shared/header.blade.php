@@ -6,7 +6,7 @@
           </div>
       </div>
        <!-- Display different partials based on user role -->
-       @if (Auth::check() && (Auth::user()->role == 'user' || Auth::user()->role == 'trainer'))
+       @if (Auth::check() && (Auth::user()->role == 'user'))
        <div class="col-2 col-sm-2 d-flex justify-content-center a-no-underline">
           <li class="nav-item dropdown">
               <a class="nav-link nav-icon d-inline" href="#" id="notificationsDropdown" data-bs-toggle="dropdown">
@@ -46,9 +46,9 @@
               </ul><!-- End Notification Dropdown Items -->
             </li><!-- End Notification Nav -->
        </div>
-      @endif
       <div class="col-2 col-sm-2 d-flex justify-content-center a-no-underline">
           <a href="{{ route('issue-user-index') }}" class="material-symbols-outlined blackIcon icons m-1 align-middle">construction</a>
       </div>
+      @endif
   </div>
 </div>

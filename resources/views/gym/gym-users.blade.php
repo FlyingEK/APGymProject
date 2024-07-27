@@ -1,4 +1,4 @@
-@extends('layouts.trainerLayout')
+@extends('layouts.userLayout')
 @section('content')
 <div class="backLink mb-2">
   <a href="{{route('gym-index')}}">
