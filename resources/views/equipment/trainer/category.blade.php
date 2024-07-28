@@ -20,16 +20,17 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                         {{ucfirst($item->status)}}
                     </div><br>
-                    {{-- @if( $item->status == 'in use')
+                    @if( $item->status == 'in use')
                     <form id="updateStatus{{$item->equipment_machine_id}}" action = {{route('equipment-status-update', $item->equipment_machine_id)}} method="POST">
                         @csrf
                         <div class="d-flex justify-content-end">
+                            <input type="hidden" name="machine_id" value="{{$item->equipment_machine_id}}">
                             <button type="button" onclick="confirmUpdateStatus('updateStatus{{$item->equipment_machine_id}}')" class="myBtn btnFront btn btn-primary redBtn shadow-none">
                                 Update Status
                             </button>
                         </div>
                     </form>
-                    @endif --}}
+                    @endif
                 </div>
             </div>
         </div>

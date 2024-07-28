@@ -163,7 +163,7 @@ Route::group(['middleware' => ['auth','verified']],function(){
             Route::get('/view/{id}', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
             Route::get('/equipmentsTrainer', [EquipmentController::class, 'trainerEquipments'])->name('equipments-trainer');
             Route::get('/trainerCategory/{id}', [EquipmentController::class, 'trainerCategoryEquipment'])->name('equipment-trainer-category');
-            // Route::post('/statusUpdate/{id}', [EquipmentController::class, 'statusUpdate'])->name('equipment-status-update');
+            Route::post('/statusUpdate/{id}', [EquipmentController::class, 'statusUpdate'])->name('equipment-status-update');
         });
     });
 

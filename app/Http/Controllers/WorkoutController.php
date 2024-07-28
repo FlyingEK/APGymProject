@@ -529,7 +529,11 @@ class WorkoutController extends Controller
             'duration.required_if' => 'The duration field is required.',
         ]);
 
-        $workout = Workout::with('gymUser.user')->find($request->workout_id);
+        $workout = Workout::with('gymUser.user')
+                ->where('equipment_machine_id', $request->machine_id)
+                ->where('status', 'in_progress')
+                ->first();
+
 
         if (!$workout) {
             return redirect()->back()->with('error', 'No workout in progress.');

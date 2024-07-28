@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\StrengthEquipmentGoal;
+use App\Models\OverallGoal;
+use App\Models\GymUserAchievement;
+use App\Models\Achievement;
+use App\Models\User;
+use App\Notifications\GoalCompleted;
+use App\Notifications\AchievementUnlocked;
+use App\Http\Controllers\WorkoutController;
+use Illuminate\Support\Facades\Notification;
+
 
 class EquipmentController extends Controller
 {
@@ -399,23 +409,135 @@ class EquipmentController extends Controller
         return view('equipment.trainer.all', compact('availableEquipments', 'inUseEquipments'));
     }
 
-    // public function statusUpdate($id)
-    // {
-    //     $equipmentMachine = EquipmentMachine::findOrFail($id);
-    //     $status = $equipmentMachine->status;
-    //     if($status == 'in use'){
-    //         $equipmentMachine->update(['status' => 'available']);
-    //         $workout = Workout::where('equipment_machine_id', $id)
-    //         ->where('status', 'in_progress')
-    //         ->first();
-    //         $workout??$workout->update(['status' => 'completed']);
-    //         $queue = WorkoutQueue::where('equipment_machine_id', $id)
-    //         ->where('status', 'inuse')
-    //         ->first();
-    //         $queue??$queue->update(['status' => 'completed']);
-    //     }
-    //     return redirect()->route('equipment-trainer-category', $equipmentMachine->equipment->category)->with('success', 'Equipment status updated successfully.');
-    // }
+    public function statusUpdate($id)
+    {
+        $equipmentMachine = EquipmentMachine::findOrFail($id);
+        $status = $equipmentMachine->status;
+        if($status == 'in use'){
+            $equipmentMachine->update(['status' => 'available']);
+            $workout = Workout::where('equipment_machine_id', $id)
+            ->where('status', 'in_progress')
+            ->first();
+            $workout??$workout->update(['status' => 'completed']);
+            $queue = WorkoutQueue::where('equipment_machine_id', $id)
+            ->where('status', 'inuse')
+            ->first();
+            $queue??$queue->update(['status' => 'completed']);
+
+            // update workout status of the equipment machine
+            $workout = Workout::with('gymUser.user')
+                    ->where('equipment_machine_id', $id)
+                    ->where('status', 'in_progress')
+                    ->first();
+
+    
+            if (!$workout) {
+                return redirect()->back()->with('error', 'No workout in progress.');
+            }
+            if($workout->equipmentMachine->equipment->has_weight == 1){
+                $workout->weight = $data['weight'] ?? null;
+                $workout->set = $data['set'] ?? null;
+                $workout->repetition = $data['rep'] ?? null;
+            }
+           
+            $workout->duration = $data['duration'] ?? null;  
+            $workout->end_time = now();
+            $workout->status = 'completed';
+            $workout->save();
+    
+            $workoutQueue = WorkoutQueue::find($workout->workout_queue_id);
+            $workoutQueue->status = 'completed';
+            $workoutQueue->save();
+    
+            // For sharing workout
+            // Find the EquipmentMachine and its related Equipment
+            $equipmentMachine = EquipmentMachine::with('equipment')->find($workout->equipment_machine_id);
+    
+            //  Check if there are other 'in_progress' or 'in_use' workouts for the same EquipmentMachine
+            $otherWorkoutsCount = Workout::where('equipment_machine_id', $equipmentMachine->equipment_machine_id)
+                ->whereIn('status', ['in_progress', 'in_use'])
+                ->where('workout_id', '!=', $workout->workout_id) // Exclude the current workout if it's still 'in_progress' or 'in_use'
+                ->count();
+    
+            //  Update the status if no other workouts exist
+            if ($otherWorkoutsCount === 0) {
+                $equipmentMachine->status = 'available';
+                $equipmentMachine->save();
+            }
+    
+            // Update goal progress
+            $strengthGoal = StrengthEquipmentGoal::with(['goal','equipment'])
+            ->where('equipment_id', $equipmentMachine->equipment_id)
+            ->whereHas('goal', function($query) use($workoutQueue) {
+                $query->where('status', 'active');
+                $query->where('gym_user_id', $workoutQueue->gym_user_id);
+            })
+            ->first();
+    
+            // $user = User::with('gymUser')->whereHas('gymUser', function($query) use($workoutQueue) {
+            //     $query->where('gym_user_id', $workoutQueue->gym_user_id);
+            // })->first();
+    
+            if ($strengthGoal) {
+                $strengthGoal->progress = $data['weight'] > $strengthGoal->progress ? $data['weight'] : $strengthGoal->progress;
+                if ($strengthGoal->progress >= $strengthGoal->weight) {
+                    $strengthGoal->goal->status = 'completed';
+                    $strengthGoal->goal->save();
+                    Notification::send(User::find($workout->gymUser->user->user_id), new GoalCompleted($strengthGoal));
+                }
+                $strengthGoal->save();
+            }
+            $overallGoal = OverallGoal::with('goal')
+            ->whereHas('goal', function($query) use($workoutQueue) {
+                $query->where('status', 'active')
+                ->where('gym_user_id', $workoutQueue->gym_user_id);
+            })
+            ->first();
+        
+            if ($overallGoal) {
+                $overallGoal->progress = intval($data['duration']) / 60 + $overallGoal->progress;
+                if ($overallGoal->progress >= $overallGoal->workout_hour) {
+                    $overallGoal->goal->status = 'completed';
+                    $overallGoal->goal->save();
+                    Notification::send(User::find($workout->gymUser->user->user_id), new GoalCompleted($overallGoal));
+                }
+                $overallGoal->save();
+            }
+            $gymUser = GymUser::with('gymUserAchievement')->where('gym_user_id',$workout->gym_user_id )->firstOrFail();
+    
+            // check if achievement is unlocked
+            $totalHours = Workout::where('gym_user_id', $workout->gym_user_id)
+                                 ->where('status', 'completed')
+                                 ->sum('duration') / 60;
+                $achievements = [
+                6 => 10,  // Achievement ID 6 for 10 hours
+                7 => 50,  
+                8 => 100, 
+            ];
+    
+            foreach ($achievements as $achievementId => $requiredHours) {
+                // Check if the user already has this achievement
+                if (!$gymUser->gymUserAchievement()->where('achievement_id', $achievementId)->exists()) {
+                    // Check if the user meets the condition for this achievement
+                    if ($totalHours >= $requiredHours) {
+                        // Unlock the achievement
+                        GymUserAchievement::create([
+                            'gym_user_id' => $gymUser->gym_user_id,
+                            'achievement_id' => $achievementId,
+                        ]);
+                        $condition = Achievement::find($achievementId)->condition;
+                        Notification::send(User::find($gymUser->user_id), new AchievementUnlocked(lcfirst($condition)));
+    
+                    }
+                }
+            }
+            $workoutController = new WorkoutController();
+            $workoutController->callNextInQueue($equipmentMachine->equipment->equipment_id);
+        }else{
+            return redirect()->back()->with('error', 'Equipment is not in used.');
+        }
+        return redirect()->back()->with('success', 'Equipment status updated successfully.');
+    }
 
     public function getEquipmentMachines(Request $request)
     {
