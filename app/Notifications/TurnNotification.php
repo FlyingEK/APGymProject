@@ -32,7 +32,7 @@ class TurnNotification extends Notification implements ShouldBroadcast
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail','broadcast'];
+        return ['database','broadcast'];
     }
 
     /**
