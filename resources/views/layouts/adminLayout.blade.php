@@ -58,6 +58,11 @@
                     supervisor_account
                     </span>  &nbsp&nbsp<span>Gym Entry Log</span><i class="fas fa-chevron-down ms-auto"></i>
             </a>
+            <a class="nav-link collapsed"  href="{{route('issue-reported')}}">
+                <span class="material-symbols-outlined">
+                    supervisor_account
+                    </span>  &nbsp&nbsp<span>Reported Issues</span><i class="fas fa-chevron-down ms-auto"></i>
+            </a>
             <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
                 <span class="material-symbols-outlined">
                     person

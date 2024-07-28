@@ -40,6 +40,17 @@ class IssueReportController extends Controller
         return view('issue-report.index-trainer', compact('openIssues', 'closedIssues', 'rejectedIssues'));
     }
 
+    public function reportedIssue()
+    {
+        $openIssues = Issue::where('status', "pending")
+        ->orWhere('status', 'reported')
+        ->orWhere('status', 'resolved')
+        ->get();
+
+        return view('issue-report.admin.reported_issue', compact('openIssues'));
+    }
+
+
 
     public function create()
     {
@@ -144,6 +155,15 @@ class IssueReportController extends Controller
         return view('issue-report.view-trainer', compact('issue','user'));
     }
 
+    public function viewAdmin($id)
+    {
+        $issue = Issue::with('equipmentMachine.equipment')
+        ->with('comment.user')             
+        ->findOrFail($id);  
+        $user = GymUser::with('user')->findOrFail($issue->created_by);
+        return view('issue-report.admin.view', compact('issue','user'));
+    }
+
     
     public function updateStatus(Request $request, $id)
     {
@@ -161,11 +181,14 @@ class IssueReportController extends Controller
             $issue->equipmentMachine()->update([
                 'status' => 'maintenance'
             ]);
-            $admins = User::where('role', 'admin')->get();
 
-            foreach($admins as $admin){
-                Notification::send($admin, new ReportIssue($issue));
-                $sendNotification = true;
+            if(Auth::user()->role != 'admin'){
+                $admins = User::where('role', 'admin')->get();
+
+                foreach($admins as $admin){
+                    Notification::send($admin, new ReportIssue($issue));
+                    $sendNotification = true;
+                }
             }
         }
         if($request->has('comment')){
@@ -184,9 +207,9 @@ class IssueReportController extends Controller
         }
 
         if($sendNotification){
-            return redirect()->route('issue-trainer-view', $issue->issue_id)->with('success', 'Issue status updated successfully. Issue is sent to the admin.');
+            return redirect()->back()->with('success', 'Issue status updated successfully. Issue is sent to the admin.');
         }
-        return redirect()->route('issue-trainer-view', $issue->issue_id)->with('success', 'Issue status updated successfully.');
+        return redirect()->back()->with('success', 'Issue status updated successfully.');
     }
 
 }

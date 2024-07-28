@@ -1,9 +1,20 @@
-@extends('layouts.userLayout')
-
+@extends('layouts.adminLayout')
 @section('content')
 
-<div class="container px-3 py-2 bg-white myShadow rounded equipmentDetail">
-    <h3 class=" mb-4">{{$issue->title}}</h3>
+<div class="pagetitle">
+    <h1>Reported Issue</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item "><a href={{route('issue-reported')}}>Reported Issue</a></li>
+            <li class="breadcrumb-item active">{{$issue->title}}</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<div class="container rounded-2 shadow" style="background-color:white;position: relative;font-size:14px;">
+    <div class="pagetitle p-3">
+        <h1>Issue Details</h1>
+    </div>
     <div class="row">
         <div class="row mb-3">
             <div class="col-5 label">Issue Title:</div>
@@ -48,7 +59,7 @@
             }
 
         @endphp
-        <div class="row mb-4">
+        <div class="row mt-2 mb-4">
             <div class="col-5 label">Status:</div>
             <div class="col-7 ">
                 <span class=" badge {{ $color}} rounded-pill">{{$issue->status}}</span>
@@ -76,6 +87,9 @@
     </div>
 </div>
 
+
+
+
 @include('issue-report.update-status-modal')
 @include('issue-report.reject-issue-modal')
 
@@ -87,3 +101,4 @@
     });
 </script>
 @endpush
+
