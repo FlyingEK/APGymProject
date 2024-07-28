@@ -9,6 +9,9 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Notifications\ReportIssue;
+use Illuminate\Support\Facades\Notification;
 
 class IssueReportController extends Controller
 {
@@ -144,6 +147,7 @@ class IssueReportController extends Controller
     
     public function updateStatus(Request $request, $id)
     {
+        $sendNotification = false;
         $issue = Issue::with('comment','equipmentMachine')->findOrFail($id);
         $data = $request->validate([
             'status' => 'required|in:reported,resolved,rejected',
@@ -157,6 +161,12 @@ class IssueReportController extends Controller
             $issue->equipmentMachine()->update([
                 'status' => 'maintenance'
             ]);
+            $admins = User::where('role', 'admin')->get();
+
+            foreach($admins as $admin){
+                Notification::send($admin, new ReportIssue($issue));
+                $sendNotification = true;
+            }
         }
         if($request->has('comment')){
             if($issue->comment()){
@@ -171,6 +181,10 @@ class IssueReportController extends Controller
                 ]);
             }
 
+        }
+
+        if($sendNotification){
+            return redirect()->route('issue-trainer-view', $issue->issue_id)->with('success', 'Issue status updated successfully. Issue is sent to the admin.');
         }
         return redirect()->route('issue-trainer-view', $issue->issue_id)->with('success', 'Issue status updated successfully.');
     }
