@@ -8,7 +8,7 @@
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
-                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$item->image) }}" alt="Work Order Image" ><br/>
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
@@ -52,7 +52,7 @@
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
-                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$item->image) }}" alt="Work Order Image" ><br/>
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
@@ -66,7 +66,7 @@
                     <a href="{{route('equipment-view', $item->equipment_id)}}" class="stretched-link"></a>
                     @if($isCheckIn)
                     <div class="d-flex justify-content-end mt-3">
-                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-machineid="" data-id="{{$item->equipment_id}}" data-share="1" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
+                        <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none" data-machineid="{{$item->equipment_machine_id}}" data-id="{{$item->equipment_id}}" data-share="1" data-bs-toggle="modal" data-bs-target="#viewEquipmentHabit">
                             Use
                         </button>
                     </div>
@@ -88,7 +88,7 @@
 $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var equipment_id = button.data('id');
-    var share = button.data('canuse') == "1"; // Convert to boolean by comparing to "1"
+    var share = button.data('share') == "1"?"1":"0"; // Convert to boolean by comparing to "1"
     var machine_id = button.data('machineid');
     $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
 

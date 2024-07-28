@@ -90,13 +90,16 @@ Route::group(['middleware' => ['auth','verified']],function(){
         Route::group(['prefix' => 'gym'],function(){
             Route::get('/log/admin', [GymController::class, 'adminViewLog'])->name('gym-log-admin');        
         });
+        Route::get('/viewIssue/{id}', [IssueReportController::class, 'viewAdmin'])->name('issue-admin-view');
+        Route::get('/reportedIssue', [IssueReportController::class, 'reportedIssue'])->name('issue-reported');
     });
 
     // for user
     Route::group(['middleware' => 'role:user'],function(){
         Route::group(['prefix' => 'gym'],function(){
             Route::post('/enter-gym', [GymQueueController::class, 'userEntersGym'])->name('enter-gym');
-            Route::post('/leave-gym', [GymQueueController::class, 'userLeavesGym'])->name('leave-gym');        
+            Route::post('/leave-gym', [GymQueueController::class, 'userLeavesGym'])->name('leave-gym');
+            Route::post('/exit-queue', [GymQueueController::class, 'removeQueue'])->name('exit-queue');        
         });
 
         Route::group(['prefix' => 'workout'],function(){
@@ -111,6 +114,7 @@ Route::group(['middleware' => ['auth','verified']],function(){
             Route::post('/startWorkout', [WorkoutController::class, 'startWorkout'])->name('workout-start');
             Route::put('/endWorkout', [WorkoutController::class, 'endWorkout'])->name('workout-end');
             Route::get('/view-record/{id}', [WorkoutAnalyticController::class, 'recordDetails'])->name('workout-detail');
+            Route::post('/remove-queue/{id}', [WorkoutController::class, 'removeQueue'])->name('remove-queue');
         });
 
         Route::group(['prefix' => 'analytic'],function(){
@@ -152,8 +156,6 @@ Route::group(['middleware' => ['auth','verified']],function(){
         });
 
         Route::group(['prefix' => 'issue'],function(){
-            Route::put('/updateStatus/{id}', [IssueReportController::class, 'updateStatus'])->name('issue-status-update');
-            Route::get('/viewTrainer/{id}', [IssueReportController::class, 'viewTrainer'])->name('issue-trainer-view');
             Route::get('/index', [IssueReportController::class, 'indexTrainer'])->name('issue-trainer-index');
         });
 
@@ -161,7 +163,7 @@ Route::group(['middleware' => ['auth','verified']],function(){
             Route::get('/view/{id}', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
             Route::get('/equipmentsTrainer', [EquipmentController::class, 'trainerEquipments'])->name('equipments-trainer');
             Route::get('/trainerCategory/{id}', [EquipmentController::class, 'trainerCategoryEquipment'])->name('equipment-trainer-category');
-            Route::post('/statusUpdate/{id}', [EquipmentController::class, 'statusUpdate'])->name('equipment-status-update');
+            // Route::post('/statusUpdate/{id}', [EquipmentController::class, 'statusUpdate'])->name('equipment-status-update');
         });
     });
 
@@ -170,6 +172,15 @@ Route::group(['middleware' => ['auth','verified']],function(){
             Route::get('/view/{id}', [EquipmentController::class, 'viewEquipment'])->name('equipment-view');
         });
     });
+
+    Route::group(['middleware' => 'role:trainer|admin'],function(){
+        Route::group(['prefix' => 'issue'],function(){
+            Route::put('/updateStatus/{id}', [IssueReportController::class, 'updateStatus'])->name('issue-status-update');
+            Route::get('/viewTrainer/{id}', [IssueReportController::class, 'viewTrainer'])->name('issue-trainer-view');
+        });
+    });
+
+    
 
 
 });

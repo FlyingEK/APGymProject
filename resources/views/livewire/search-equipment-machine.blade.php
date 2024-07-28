@@ -20,7 +20,7 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                         {{ucfirst($equipment->status)}}
                     </div><br>
-                    @if($equipment->status == 'available'|| $equipment->status == 'in use')
+                    {{-- @if($equipment->status == 'available'|| $equipment->status == 'in use')
                     <form id="updateStatus{{$equipment->equipment_machine_id}}" action = {{route('equipment-status-update', $equipment->equipment_machine_id)}} method="POST">
                         @csrf
                         <div class="d-flex justify-content-end">
@@ -29,7 +29,7 @@
                             </button>
                         </div>
                     </form>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
