@@ -540,6 +540,18 @@ body {
     color:white;
 }
 
+/* Ensures the button is above the stretched link */
+.myBtn {
+    position: relative;
+    z-index: 1;
+}
+
+/* Ensures the form is above the stretched link */
+#removeQueue {
+    position: relative;
+    z-index: 2;
+}
+
 .category{
     border-radius: 15px;
     font-weight: bold;
@@ -802,13 +814,13 @@ body {
 }
 
 .sharing .circle {
-    display: inline-block;
     width: 40px;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    background-color: red;
 
 }
+
+
 
 .timer h1{
     font-size: 45px;

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\EquipmentReserved;
 use App\Models\GymUserAchievement;
+use App\Notifications\JoinedEquipmentSharing;
 
 use Exception;
 
@@ -80,6 +81,13 @@ class WorkoutController extends Controller
             ->delay(now()->addMinutes(2));
 
         dispatch($job);
+    }
+
+    public function removeQueue($queueId){
+        $queue = WorkoutQueue::find($queueId);
+        $queue->delete();
+
+        return redirect()->route('workout-index')->with('success', 'Queue removed successfully!');
     }
 
     public function startWorkout(Request $request)
@@ -167,8 +175,22 @@ class WorkoutController extends Controller
     {
         $gymUserId = $this->getGymUserId();
         //workout
-        $workout = Workout::with('equipmentMachine.equipment')->where('gym_user_id', $gymUserId)->with(['workoutQueue','equipmentMachine.equipment'])
+        $workout = Workout::with([
+            'equipmentMachine.equipment',
+            'workoutQueue'
+        ])
+        ->where('gym_user_id', $gymUserId)
         ->where('status', 'in_progress')
+        ->first();
+        
+        $sharedWorkout = Workout::with(['equipmentMachine.equipment', 'gymUser.user'])
+        ->where('status', 'in_progress')
+        ->whereHas('equipmentMachine', function($query) use ($gymUserId) {
+            $query->whereHas('workout', function($query) use ($gymUserId) {
+                $query->where('status', 'in_progress')
+                      ->where('gym_user_id', '!=', $gymUserId);
+            });
+        })
         ->first();
         //get equipment to populate in workout index
         // $queuedEquipments = WorkoutQueue::where('gym_user_id', $gymUserId)->with('equipment')
@@ -191,7 +213,7 @@ class WorkoutController extends Controller
         ->where('status', 'reserved')
         ->first();
 
-        return view('workout.index', compact('workout', 'queuedEquipments', 'reservedEquipments'));
+        return view('workout.index', compact('workout', 'sharedWorkout', 'queuedEquipments', 'reservedEquipments'));
     }
 
     public function addWorkoutHabit(){
@@ -387,12 +409,15 @@ class WorkoutController extends Controller
         ->count();
 
         $existedEquipmentQueue = WorkoutQueue::where('gym_user_id', $gymUserId)
-        ->where('equipment_id', $request->equipment_id)
-        ->where('status', 'queueing')
-        ->orWhere('status', 'reserved')
-        ->orWhere('status', 'inuse')
+        ->where(function ($query) {
+            $query->where('equipment_id', request('equipment_id'))
+                  ->where(function ($query) {
+                      $query->where('status', 'queueing')
+                            ->orWhere('status', 'reserved')
+                            ->orWhere('status', 'inuse');
+                  });
+        })
         ->exists();
-
         // queue constraint
         if($existedEquipmentQueue){
             return redirect()->back()->with('error', 'You have already queued for this equipment.');
@@ -440,7 +465,22 @@ class WorkoutController extends Controller
         }
 
         if($data['share']){
-            $equipmentMachine = EquipmentMachine::with('equipment')->find($data['machine_id']);
+
+            $sharedWorkout = Workout::with(['equipmentMachine.equipment', 'gymUser.user'])
+            ->where('status', 'in_progress')
+            ->whereHas('equipmentMachine', function($query) use ($gymUserId) {
+                $query->whereHas('workout', function($query) use ($gymUserId) {
+                    $query->where('status', 'in_progress')
+                        ->where('gym_user_id', '!=', $gymUserId);
+                });
+            })
+            ->first();
+
+            if ($sharedWorkout && $sharedWorkout->gymUser && $sharedWorkout->gymUser->user) {
+                $user = Auth::user();
+                $equipmentMachine = EquipmentMachine::with('equipment')->find($data['machine_id']);
+                Notification::send(User::find($sharedWorkout->gymUser->user->user_id), new JoinedEquipmentSharing($user));
+            }
         }else{
             // Add the equipment machine to the user if available
             $equipmentMachine = EquipmentMachine::with('equipment')->where('equipment_id', $data['equipment_id'])
@@ -448,7 +488,7 @@ class WorkoutController extends Controller
             ->first();
         }
 
-        if ($equipmentMachine->equipment_machine_id) {
+        if ($equipmentMachine && $equipmentMachine->equipment_machine_id) {
             $equipmentMachine->status = 'in use';
             $equipmentMachine->save();
             $estimatedEndTime = now()->addMinutes(intval($data['duration']));
@@ -509,9 +549,21 @@ class WorkoutController extends Controller
         $workoutQueue->status = 'completed';
         $workoutQueue->save();
 
+        // For sharing workout
+        // Find the EquipmentMachine and its related Equipment
         $equipmentMachine = EquipmentMachine::with('equipment')->find($workout->equipment_machine_id);
-        $equipmentMachine->status = 'available';
-        $equipmentMachine->save();
+
+        //  Check if there are other 'in_progress' or 'in_use' workouts for the same EquipmentMachine
+        $otherWorkoutsCount = Workout::where('equipment_machine_id', $equipmentMachine->equipment_machine_id)
+            ->whereIn('status', ['in_progress', 'in_use'])
+            ->where('workout_id', '!=', $workout->workout_id) // Exclude the current workout if it's still 'in_progress' or 'in_use'
+            ->count();
+
+        //  Update the status if no other workouts exist
+        if ($otherWorkoutsCount === 0) {
+            $equipmentMachine->status = 'available';
+            $equipmentMachine->save();
+        }
 
         // Update goal progress
         $strengthGoal = StrengthEquipmentGoal::with(['goal','equipment'])

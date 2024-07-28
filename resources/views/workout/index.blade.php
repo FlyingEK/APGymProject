@@ -21,11 +21,24 @@
                         <div class="col-5">
                             <h4>{{$workout->equipmentMachine->equipment->name}} </h4>
                         </div>
-    
-                        <div class="col-7 sharing">
-                            <div class="circle grey"></div>
-                            <div class="circle red"></div>
+                        <div class="col-7">
+                            <div class=" sharing d-flex justify-content-end">
+                                <div class="circle">
+                                    <img class="circle" style="object-fit:cover; " src="{{Auth::user()->image ? asset('storage/' . Auth::user()->image ) : asset('/img/user.jpg')}}">
+                                </div>
+                                @if($sharedWorkout)
+                                <div class="circle" data-bs-toggle="modal" data-bs-target="#viewProfile" data-id="{{$sharedWorkout->gymUser->user->user_id}}">
+                                    <img class="circle" style="object-fit:cover; " src="{{$sharedWorkout->gymUser->user->image ? asset('storage/' . $sharedWorkout->gymUser->user->image) : asset('/img/user.jpg')}}">
+                                </div>
+                                @endif
+                            </div>
+                            @if($sharedWorkout)
+                            <div class=" mt-1 sharing d-flex justify-content-end" style="margin-right:11px;">
+                            <div>Sharing</div>
+                            </div>
+                            @endif
                         </div>
+
                     </div>
 
                     <div class="mb-4 timer d-flex justify-content-center align-items-center flex-column">
@@ -123,7 +136,15 @@
                         </button>
                     </div>
                     @endif
-                    <a href="{{route('equipment-view',$equipment->equipment->equipment_id)}}" class="stretched-link"></a>
+                    <div class="d-flex justify-content-end">
+                        <form id="removeQueue" action="{{route('remove-queue',$equipment->workout_queue_id)}}" method="POST">
+                            @csrf
+                            <button type="submit" class="myBtn mt-2 btnFront btn btn-primary redBtn shadow-none" >
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+                        <a href="{{ route('equipment-view', $equipment->equipment->equipment_id) }}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
@@ -146,15 +167,79 @@
 @push('script')
 <script>
 
-    window.workoutStartRoute = '{{ route("workout-start") }}'; // Pass the route URL to a global JavaScript variable
-    window.workoutIndex = '{{ route("workout-index") }}'; // Pass the route URL to a global JavaScript variable
-    window.has_weight;
-    window.workout_id;
-    @if($workout && $workout->equipmentMachine && $workout->equipmentMachine->equipment)
-        window.has_weight = "{{ $workout->equipmentMachine->equipment->has_weight }}";
-        window.workout_id = "{{$workout->workout_id}}";
-    @endif
-@if(session('workoutsuccess'))
+window.workoutStartRoute = '{{ route("workout-start") }}'; // Pass the route URL to a global JavaScript variable
+window.workoutIndex = '{{ route("workout-index") }}'; // Pass the route URL to a global JavaScript variable
+window.has_weight;
+window.workout_id;
+@if($workout && $workout->equipmentMachine && $workout->equipmentMachine->equipment)
+    window.has_weight = "{{ $workout->equipmentMachine->equipment->has_weight }}";
+    window.workout_id = "{{$workout->workout_id}}";
+@endif
+
+$('#removeQueue').submit(function(e){
+    e.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You will be removed from the queue.",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, remove me!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            this.submit();
+        }
+    });
+}); 
+
+$('#viewProfile').on('shown.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var user_id = button.data('id');
+      console.log('Document ready');
+
+      $.ajax({
+          url: '{{ route("profile-details") }}',
+          type: 'GET',
+          data: { id: user_id },
+          success: function (response) {
+              if (response.success){
+                  var user = response.user;
+                  var achievement = response.achievement;
+                  console.log(achievement);
+                  const modal = $('#viewProfile');
+                  displayDetails(user, achievement, modal);
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error('Error fetching profile details:', error);
+          }
+      });
+  });
+
+  function displayDetails(user, achievement, modal) {
+      modal.find('.username').text(user.username);
+      if(user.image) {
+          modal.find('.profileImg').attr('src', '{{ asset('storage') }}/' + user.image);
+      }
+      modal.find('.profileName').text(user.first_name + ' ' + user.last_name);
+
+      var icon = '';
+      if(user.gender && user.gender == 'male') {
+          icon = '<i class="fas fa-mars" style="color: rgb(66, 170, 223);"></i>';
+      } else if(user.gender && user.gender == 'female') {
+          icon = '<i class="fas fa-venus" style="color: rgb(245, 89, 89);"></i>';
+      }
+      modal.find('.profileGender').html(icon);
+      modal.find('.badgeModal').empty();
+      for (let i = 0; i < achievement.length; i++) {
+          modal.find('.badgeModal').append('<img src="{{ asset('storage') }}/' + achievement[i].achievement.image + '" class="badgeImg" alt="Warrior Badge" data-toggle="tooltip" data-placement="bottom" title="' + achievement[i].achievement.condition + '">');
+      }
+  }
+
+@if(session('workoutSuccess'))
     Swal.fire({
         title: "Workout Completed!",
         text: "You are stronger than you think.",
@@ -162,6 +247,9 @@
         imageWidth: 60,
         imageHeight: 60,
         imageAlt: "Tada"
+        customClass: {
+            confirmButton: 'btn redBtn'
+        }
     });
 @endif
 </script>

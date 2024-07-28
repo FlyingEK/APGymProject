@@ -22,7 +22,7 @@
                     {{-- <label for="rep" class="form-label"><strong>Repetition:</strong></label>
                     <input type="text" name="rep" id="rep" value="{{$workout->workoutQueue->repetition}}" class="form-control "> --}}
                     @endif
-                    <div class="d-flex justify-content-end">
+                    <div class="mt-3 d-flex justify-content-end">
                         <button type="submit" class="btn redBtn">
                             End Workout
                         </button>

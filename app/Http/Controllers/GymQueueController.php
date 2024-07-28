@@ -91,6 +91,16 @@ class GymQueueController extends Controller
         }
     }
 
+    public function removeQueue(){
+        $gymUserId = $this->getGymUserId();
+        $queue = GymQueue::where('gym_user_id', $gymUserId)
+        ->where('status', 'queueing')
+        ->first();
+        $queue->delete();
+        
+        return redirect()->back()->with('success', 'You are removed from the queue.');
+    }
+
     public function reserveNextUser()
     {
         $gymIsFull = $this->gymIsFull();
