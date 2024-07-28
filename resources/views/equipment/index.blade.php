@@ -157,35 +157,41 @@ $(document).ready(function () {
     });
 
     $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var equipment_id = button.data('id');
-        $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
+    var button = $(event.relatedTarget);
+    var equipment_id = button.data('id');
+    var share = button.data('share') == "1"?"1":"0"; // Convert to boolean by comparing to "1"
+    var machine_id = button.data('machineid');
+    $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
 
 
-        $.ajax({
-            url: '{{ route("workout-habit-details") }}',
-            type: 'GET',
-            data: { id: equipment_id },
-            success: function (response) {
-                if (response.success){
-                    var equipment = response.equipment;
-                    console.log(equipment);
-                    const modal = $('#viewEquipmentHabit');
-                    // Use a slight delay to ensure data is fully populated before showing the modal
-                    setTimeout(function() {
-                        displayDetails(equipment, modal);
-                        modal.modal('show'); // Ensure the modal is shown after data is set
-                        modal.find('.loading').html(''); // Clear loading message or replace with actual content
-
-                    }, 200); 
-                }else{
+    $.ajax({
+        url: '{{ route("workout-habit-details") }}',
+        type: 'GET',
+        data: { id: equipment_id
+        },
+        success: function (response) {
+            if (response.success){
+                var equipment = response.equipment;
+                console.log(equipment);
+                const modal = $('#viewEquipmentHabit');
+                // Use a slight delay to ensure data is fully populated before showing the modal
+                setTimeout(function() {
+                    displayDetails(equipment, modal);
+                    modal.modal('show'); // Ensure the modal is shown after data is set
                     modal.find('.loading').html(''); // Clear loading message or replace with actual content
-                }
-            },
-        });
+
+                }, 200); 
+            }else{
+                modal.find('.loading').html(''); // Clear loading message or replace with actual content
+            }
+        },
     });
 
     function displayDetails(equipment, modal) {
+        if(share){
+            modal.find('#machine_id').val(machine_id);
+        }
+        modal.find('#share').val(share);
         modal.find('#reps').val("");
         modal.find('#sets').val("");
         modal.find('#weights').val("");
@@ -215,6 +221,7 @@ $(document).ready(function () {
         modal.find('#workout_habit_id').val(equipment.workout_habit_id);
 
     }
+});
 });
 </script>
 @endpush

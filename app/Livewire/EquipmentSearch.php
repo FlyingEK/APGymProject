@@ -29,6 +29,11 @@ class EquipmentSearch extends Component
         $gymUser = GymUser::where('user_id', $userId)->first();
         $gymUserId = $gymUser->gym_user_id;
 
+        $allowSharing = collect(Equipment::getAllowSharingEquipment());
+        $allowSharing = $allowSharing->filter(function ($item) {
+            return stripos($item->name, $this->searchTerm) !== false;
+        });
+
         if($this->category !=""){
             $equipments = Equipment::where('is_deleted', false)
             ->where('name', 'like', '%' . $this->searchTerm . '%')
@@ -54,6 +59,7 @@ class EquipmentSearch extends Component
 
     return view('livewire.equipment-search', [
         'equipments' => $equipments,
+        'allowSharing' => $allowSharing,
     ]);
     }
 
