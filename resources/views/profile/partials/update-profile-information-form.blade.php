@@ -72,9 +72,9 @@
             @enderror
         </div>
         
-        <div class="mb-3">
-            <select name="gender" class="form-control form-select">
-                <option value="" disabled selected>Choose...</option>
+        <div class="mb-3 custom-select">
+            <select name="gender" class="form-control form-select ">
+                <option value="" disabled selected>Choose gender...</option>
                 <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Male</option>
                 <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Female</option>
             </select>
@@ -98,4 +98,6 @@
         @endif
     </form>
 </section>
+<script src="{{asset('/js/custom-select-box.js')}}">
+    </script>
 
