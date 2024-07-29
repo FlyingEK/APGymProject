@@ -48,7 +48,7 @@
             </div>
             <div class="row mb-4">
                     <div class="col-lg-3 col-md-4 label">Role:</div>
-                    <div class="col-lg-9 col-md-8">{{ $user->gender }}</div>
+                    <div class="col-lg-9 col-md-8">{{ $user->role }}</div>
             </div>
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">

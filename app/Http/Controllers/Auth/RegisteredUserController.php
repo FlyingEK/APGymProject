@@ -55,7 +55,8 @@ class RegisteredUserController extends Controller
         'username' => $validatedData['username'], 
         'email' => $validatedData['email'],
         'password' => Hash::make($validatedData['password']),
-        'status' => 'active'
+        'status' => 'active',
+        'role' => 'user',
     ]);
 
     // If user creation is successful
