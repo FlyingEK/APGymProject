@@ -176,6 +176,8 @@ window.workout_id;
     window.workout_id = "{{$workout->workout_id}}";
 @endif
 
+console.log(has_weight, workout_id);
+
 $('#removeQueue').submit(function(e){
     e.preventDefault();
     Swal.fire({

@@ -434,13 +434,7 @@ class EquipmentController extends Controller
             if (!$workout) {
                 return redirect()->back()->with('error', 'No workout in progress.');
             }
-            if($workout->equipmentMachine->equipment->has_weight == 1){
-                $workout->weight = $data['weight'] ?? null;
-                $workout->set = $data['set'] ?? null;
-                $workout->repetition = $data['rep'] ?? null;
-            }
-           
-            $workout->duration = $data['duration'] ?? null;  
+
             $workout->end_time = now();
             $workout->status = 'completed';
             $workout->save();
@@ -464,73 +458,7 @@ class EquipmentController extends Controller
                 $equipmentMachine->status = 'available';
                 $equipmentMachine->save();
             }
-    
-            // Update goal progress
-            $strengthGoal = StrengthEquipmentGoal::with(['goal','equipment'])
-            ->where('equipment_id', $equipmentMachine->equipment_id)
-            ->whereHas('goal', function($query) use($workoutQueue) {
-                $query->where('status', 'active');
-                $query->where('gym_user_id', $workoutQueue->gym_user_id);
-            })
-            ->first();
-    
-            // $user = User::with('gymUser')->whereHas('gymUser', function($query) use($workoutQueue) {
-            //     $query->where('gym_user_id', $workoutQueue->gym_user_id);
-            // })->first();
-    
-            if ($strengthGoal) {
-                $strengthGoal->progress = $data['weight'] > $strengthGoal->progress ? $data['weight'] : $strengthGoal->progress;
-                if ($strengthGoal->progress >= $strengthGoal->weight) {
-                    $strengthGoal->goal->status = 'completed';
-                    $strengthGoal->goal->save();
-                    Notification::send(User::find($workout->gymUser->user->user_id), new GoalCompleted($strengthGoal));
-                }
-                $strengthGoal->save();
-            }
-            $overallGoal = OverallGoal::with('goal')
-            ->whereHas('goal', function($query) use($workoutQueue) {
-                $query->where('status', 'active')
-                ->where('gym_user_id', $workoutQueue->gym_user_id);
-            })
-            ->first();
-        
-            if ($overallGoal) {
-                $overallGoal->progress = intval($data['duration']) / 60 + $overallGoal->progress;
-                if ($overallGoal->progress >= $overallGoal->workout_hour) {
-                    $overallGoal->goal->status = 'completed';
-                    $overallGoal->goal->save();
-                    Notification::send(User::find($workout->gymUser->user->user_id), new GoalCompleted($overallGoal));
-                }
-                $overallGoal->save();
-            }
-            $gymUser = GymUser::with('gymUserAchievement')->where('gym_user_id',$workout->gym_user_id )->firstOrFail();
-    
-            // check if achievement is unlocked
-            $totalHours = Workout::where('gym_user_id', $workout->gym_user_id)
-                                 ->where('status', 'completed')
-                                 ->sum('duration') / 60;
-                $achievements = [
-                6 => 10,  // Achievement ID 6 for 10 hours
-                7 => 50,  
-                8 => 100, 
-            ];
-    
-            foreach ($achievements as $achievementId => $requiredHours) {
-                // Check if the user already has this achievement
-                if (!$gymUser->gymUserAchievement()->where('achievement_id', $achievementId)->exists()) {
-                    // Check if the user meets the condition for this achievement
-                    if ($totalHours >= $requiredHours) {
-                        // Unlock the achievement
-                        GymUserAchievement::create([
-                            'gym_user_id' => $gymUser->gym_user_id,
-                            'achievement_id' => $achievementId,
-                        ]);
-                        $condition = Achievement::find($achievementId)->condition;
-                        Notification::send(User::find($gymUser->user_id), new AchievementUnlocked(lcfirst($condition)));
-    
-                    }
-                }
-            }
+            
             $workoutController = new WorkoutController();
             $workoutController->callNextInQueue($equipmentMachine->equipment->equipment_id);
         }else{

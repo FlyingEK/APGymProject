@@ -64,9 +64,12 @@
         @endif
         <div class="row mt-4 mb-3">
             <div class="  col-12 d-flex justify-content-end" style="gap:10px;">
-                @if ($issue->status == "pending" || $issue->status == "reported")
-                    <button class="btn formBtn myBtn blueBtn" data-bs-toggle="modal"  data-bs-target="#updateIssueModal">Update Status</button>
+                @if ($issue->status == "pending")
+                    <button class="btn formBtn myBtn blueBtn" data-bs-toggle="modal"  data-bs-target="#updateIssueModal">Send Issue to Admin</button>
                 @endif
+                @if ($issue->status == "reported")
+                <button class="btn formBtn myBtn blueBtn" data-bs-toggle="modal"  data-bs-target="#updateIssueModal">Update Status</button>
+                 @endif
                 @if ($issue->status == "pending")
                     <button type="submit" data-bs-toggle="modal" data-bs-target="#rejectIssueModal" class=" btn formBtn myBtn redBtn">Reject</button>
                     @endif

@@ -33,7 +33,7 @@
                             <div class="mb-3">
                                 <label for="rep" class="form-label"><strong>Repititions:</strong></label>
                                 <input type="number" name="rep" class="form-control p-2" id="reps" placeholder="Number of Repititions" aria-label="Request Name">
-                                @error('repetition')
+                                @error('rep')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -76,7 +76,7 @@
         console.log("HI");
         e.preventDefault();
         swal.fire({
-            text: "Do you want to save this workout plan to your workout habit?",
+            text: "Do you want to save this workout plan to your workout habit? You can manage your workout habit in Workout tab later." ,
             icon: "question",
             showCancelButton: true,
             cancelButtonText: "Not for this time",

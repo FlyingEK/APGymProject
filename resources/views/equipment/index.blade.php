@@ -182,9 +182,18 @@ $(document).ready(function () {
 
                 }, 200); 
             }else{
+                const modal = $('#viewEquipmentHabit');
+
+                console.log(response.message);
                 modal.find('.loading').html(''); // Clear loading message or replace with actual content
+                modal.modal('show');
             }
         },
+        error: function (xhr, status, error) {
+        var modal = $('#viewEquipmentHabit');
+        console.error('AJAX error:', error);
+        modal.find('.loading').html('An error occurred while fetching the details. Please try again later.');
+    }
     });
 
     function displayDetails(equipment, modal) {

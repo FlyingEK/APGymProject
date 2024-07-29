@@ -160,7 +160,7 @@ class WorkoutController extends Controller
                     ],
                     );
         
-                    return response()->json(['success' => true, 'message' => 'Workout started successfully!']);
+                    return response()->json(['success' => true, 'message' => 'Workout started! Enjoy your workout.']);
                 }
             }
         } catch (\Exception $e) {
@@ -329,10 +329,27 @@ class WorkoutController extends Controller
             'cardio_workout_habit.duration as duration'
         )
         ->first();
-        $equipmentWithHabit->equipment_id=  $equipmentId;
+
         if (!$equipmentWithHabit) {
-            return response()->json(['success' => false, 'error' => 'Equipment with workout habit not found.'], 404);
+            // Return only the equipment details if no habits are found
+            $equipment = DB::table('equipment')
+                ->where('equipment_id', $equipmentId)
+                ->where('is_deleted', false)
+                ->first();
+
+            if (!$equipment) {
+                return response()->json(['success' => false, 'message' => 'Equipment not found.'], 404); // Not Found
+            }
+
+            return response()->json([
+                'success' => true,
+                'equipment' => $equipment,
+                'message' => 'No workout habits found for this equipment.'
+            ]);
         }
+        
+
+
         return response()->json(['success' => true, 'equipment' => $equipmentWithHabit]);
     }       
 
@@ -511,9 +528,9 @@ class WorkoutController extends Controller
             ],
             );
 
-            return redirect()->route('workout-index');
+            return redirect()->route('workout-index')->with('success', 'Workout started! Enjoy your workout.');;
         }
-        return redirect()->route('workout-index')->with('success', 'Workout habit updated successfully!');
+        return redirect()->route('workout-index')->with('success', 'You are now queueing for this equipment!');
     }
 
     public function endWorkout(Request $request){

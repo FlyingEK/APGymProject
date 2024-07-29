@@ -14,7 +14,7 @@
             <div style="font-size:15px;font-weight:bold;" >Current queue: {{ $currentQueueCount }} people</div>
             @elseif(!$gymIsFull)
             <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Gym status: Not full</div>
-                <div style="font-size:22px;font-weight:bold;" text-wrap="wrap">Check in to the gym to access to the equipment.</div>
+                <div style="font-size:15px;font-weight:bold;" text-wrap="wrap">Check in to the gym to access to the equipment.</div>
             @endif
         </div>
         <div class="m-3 d-flex justify-content-end">

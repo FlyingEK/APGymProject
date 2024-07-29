@@ -21,7 +21,7 @@ function incTimer() {
 }
 
 function saveTimerToSession() {
-
+    console.log(has_weight);
     sessionStorage.setItem('totalSecs', totalSecs);
     sessionStorage.setItem('setNo', setNo);
     sessionStorage.setItem('workoutId', workout_id);
@@ -51,7 +51,7 @@ $(document).ready(function() {
     if(workout_id && sessionStorage.getItem('workoutId') == workout_id){
         loadTimerFromSession();
     }
-
+    console.log(has_weight);
     // Store the original beforeunload event handler
     var originalBeforeUnload = window.onbeforeunload;
 
@@ -169,7 +169,8 @@ $(document).ready(function() {
     $("#pause").click(function () {
 
         if (timerInterval) {
-            if(has_weight){
+            if(has_weight == 1){
+                console.log(has_weight);
                 Swal.fire({
                     title: "Finish this set?",
                     text: "The timer will be paused and you can rest for a while before another set.",
