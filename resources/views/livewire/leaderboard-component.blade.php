@@ -127,20 +127,23 @@
             //     $position="N/A";
             // }
             $name = $currentUser->username;
-            $position = 'N/A';
+            $image = $currentUser->image;
+
+            $position =  'N/A';
             $result = '-';
+            
             if(isset($currentUserOverall ) && !empty($currentUserOverall )){
                 $position = $currentUserOverallPosition;
-                $result = isset($currentUserOverall->max_weight)?$currentUserOverall->max_weight:$currentUserOverall->total_duration;
+                $result = isset($currentUserOverall['max_weight']) ? $currentUserOverall['max_weight'] : $currentUserOverall['total_duration'];
             } elseif(isset($currentUserDaily ) && !empty($currentUserDaily )){
                 $position = $currentUserDailyPosition;
-                $result = isset($currentUserDaily->max_weight)?$currentUserDaily->max_weight:$currentUserDaily->total_duration;
+                $result = isset($currentUserDaily['max_weight']) ? $currentUserDaily['max_weight'] : $currentUserDaily['total_duration'];
             } 
             @endphp
 
-            <td class="rank">{{$position}}</td>
+            <td class="rank">{{$currentUserOverallPosition != "N/A"?$currentUserOverallPosition:$currentUserDailyPosition}}</td>
             <td class="player-info">
-                <img class="leaderboardImg rounded-circle" src="https://cdn-icons-png.flaticon.com/512/186/186037.png" alt="Username">
+                <img class="leaderboardImg rounded-circle" src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('/img/user.jpg') }}" alt="Username">
                 {{$name }}(You)
             </td>
             <td class="score">{{$result}}</td>

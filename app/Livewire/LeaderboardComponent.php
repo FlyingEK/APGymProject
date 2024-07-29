@@ -13,12 +13,12 @@ class LeaderboardComponent extends Component
 {
     public $topOverall = [];
     public $restOverall = [];
-    public $currentUserOverall;
-    public $currentUserDaily;
+    public $currentUserOverall = [];
+    public $currentUserDaily = [];
     public $filter = 'hour';
     public $period = 'daily';
-    public $currentUserOverallPosition;
-    public $currentUserDailyPosition;
+    public $currentUserOverallPosition = "N/A";
+    public $currentUserDailyPosition = "N/A";
     public $equipmentId;
 
     public $allEquipments;
@@ -28,7 +28,7 @@ class LeaderboardComponent extends Component
     {
         $this->currentUser = Auth::user();
         $this->getAllEquipments();
-        $this->updateLeaderboard();
+        // $this->updateLeaderboard();
 
     }
 
@@ -69,6 +69,7 @@ class LeaderboardComponent extends Component
 
     private function updateLeaderboard()
     {
+
         if ($this->filter == 'hour') {
             if ($this->period == 'overall') {
                 $this->getOverallBoard();
@@ -83,6 +84,7 @@ class LeaderboardComponent extends Component
             }
         }
         // $this->render();
+
     }
 
     public function getOverallBoard()
@@ -97,11 +99,12 @@ class LeaderboardComponent extends Component
         if(!$overallLeaderboard->isEmpty()){
             $this->topOverall = $overallLeaderboard->take(3)->toArray();
             $this->restOverall = $overallLeaderboard->slice(3);
-            $this->updateCurrentUserPosition($overallLeaderboard, true);
+            $this->updateCurrentUserPosition($overallLeaderboard, false);
         }else{
             $this->topOverall = [];
             $this->restOverall = [];
             $this->currentUserOverallPosition = "N/A";
+
         }
     }
 
@@ -157,22 +160,46 @@ class LeaderboardComponent extends Component
     }
 
     private function updateCurrentUserPosition($leaderboard, $isDaily = false)
-    {
-        $gymUser = GymUser::where('user_id', Auth::id())->first();
+    {          
+        $this->currentUserDaily = [];
+        $this->currentUserOverall = [];
+        $currentUser = Auth::user();
+        if (!$currentUser) {
+            return;
+        }
+        $gymUser = GymUser::where('user_id', $currentUser->user_id)->first();
         $gymUserId = $gymUser->gym_user_id;
-
+        if (!$gymUser) {
+            // Handle the case where the gym user is not found
+            if ($isDaily) {
+                $this->currentUserDailyPosition = "N/A";
+            } else {
+                $this->currentUserOverallPosition = "N/A";
+            }
+            return;
+        }
         if ($isDaily) {
-            $this->currentUserDaily = $leaderboard->where('gym_user_id', $gymUserId)->first();
+
+            $currentUserDaily = $leaderboard->where('gym_user_id', $gymUserId)->first();
             $position = $leaderboard->search(function ($item) use ($gymUserId) {
                 return $item->gym_user_id == $gymUserId;
             });
+            if($currentUserDaily){
+                $this->currentUserDaily = $currentUserDaily->toArray();
+            }
             $this->currentUserDailyPosition = $position !== false ? $position + 1 : "N/A";
         } else {
-            $this->currentUserOverall = $leaderboard->where('gym_user_id', $gymUserId)->first();
+
+            $currentUserOverall = $leaderboard->where('gym_user_id', $gymUserId)->first();
+            if($currentUserOverall){
+                $this->currentUserDaily = $currentUserOverall->toArray();
+            }
             $position = $leaderboard->search(function ($item) use ($gymUserId) {
                 return $item->gym_user_id == $gymUserId;
             });
-            $this->currentUserOverallPosition = $position !== false ? $position + 1 : "N/A";
+            
+            $this->currentUserOverallPosition = $position != false ? $position + 1 : "N/A";
+
         }
     }
 
@@ -194,11 +221,12 @@ class LeaderboardComponent extends Component
         if(!$overallLeaderboard->isEmpty()){
             $this->topOverall = $overallLeaderboard->take(3)->toArray();
             $this->restOverall = $overallLeaderboard->slice(3);
-            $this->updateCurrentUserPosition($overallLeaderboard, true);
+            $this->updateCurrentUserPosition($overallLeaderboard, false);
         }else{
             $this->topOverall = [];
             $this->restOverall = [];
             $this->currentUserOverallPosition = "N/A";
+
         }
     }
 
