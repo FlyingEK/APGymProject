@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="pagetitle">
-    <h1>Add Equipment</h1>
+    <h1>Edit Equipment</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('equipment-all') }}">Equipment</a></li>

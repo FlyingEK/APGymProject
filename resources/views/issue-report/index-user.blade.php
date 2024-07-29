@@ -75,11 +75,11 @@
                     }
                 @endphp
                 <tr class="position-relative">
-                    <td>{{ $issue->created_at->format('d M y')}}<a href="{{route('issue-user-view')}}" class="stretched-link"></a>
+                    <td>{{ $issue->created_at->format('d M y')}}
                     </td>
                     <td>{{ $issue->title }}</td>
-                    <td><span class="rounded-pill text-white {{$color}} px-1" style=" font-size: 12px !important;">{{ ucfirst($issue->status) }}</td></td>
-                        <td>
+                    <td><span class="rounded-pill text-white {{$color}} px-1" style=" font-size: 12px !important;">{{ ucfirst($issue->status) }}
+
                         <a href="{{route('issue-user-view',$issue->issue_id)}}" class="stretched-link"></a>
                     </td>
                 </tr>

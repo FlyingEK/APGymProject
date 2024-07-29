@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="pagetitle">
-    <h1>Add Gym Constraint</h1>
+    <h1>Edit Gym Constraint</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('constraint-all') }}">Gym Constraint</a></li>

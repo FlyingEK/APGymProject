@@ -52,7 +52,7 @@
             </div>
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">
-                    <button type="submit" class="btn blueBtn">Save Change</button>
+                    {{-- <button type="submit" class="btn blueBtn">Save Change</button> --}}
                     <a onclick="confirmDelete()" class="btn redBtn">Deactivate User</a>
                 </div>
             </div>

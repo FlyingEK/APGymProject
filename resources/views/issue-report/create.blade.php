@@ -15,6 +15,7 @@
                         </div>
                         <div class="mb-3">
                             <select class="form-select p-2" id="issueType" name="type" aria-label="Issue Type">
+                                <option value="">Issue Type</option>
                                 <option value="gym" {{ old('type') == "gym"? 'selected' : '' }}>Gym Issue</option>
                                 <option value="equipment" {{ old('type') == "equipment"? 'selected' : '' }}>Equipment Issue</option>
                                 <option value="other" {{ old('type') == "other" ? 'selected' : '' }}>Other</option>
@@ -82,7 +83,6 @@
     <script src="{{ asset('/js/img-preview.js') }}"></script>
     <script src="{{ asset('js/custom-select-box.js') }}"></script>
     <script>
-        console.log("SS");
     $(document).ready(function() {
         var oldEquipmentMachineId = '{{ old("equipment_machine_id") }}';
 
@@ -95,10 +95,12 @@
 
             if (type == 'equipment') {
                 $equipmentSelect.prop("disabled", false);
-                $machineSelect.prop("disabled", false);
+                // $machineSelect.prop("disabled", false);
             } else {
                 $equipmentSelect.prop("disabled", true);
                 $machineSelect.prop("disabled", true);
+                $('#equipment-name4').val('').trigger('change');
+
             }
         }
         function populateMachines() {
@@ -109,17 +111,21 @@
             $machineSelect.empty();
             $machineSelect.append('<option value="" selected>Choose an equipment label...</option>');
             console.log(equipmentId);
+            $machineSelect.prop('disabled', true); // Enable the select box after fetching
+
             if (equipmentId) {
                 $.ajax({
                     url: '{{ route("get-equipment-machines") }}',
                     type: 'GET',
                     data: { equipment_id: equipmentId },
                     success: function(data) {
-                        console.log(data);
 
                         $.each(data, function(index, machine) {
+                            console.log(machine);
+
                             $machineSelect.append('<option value="'+ machine.equipment_machine_id +'" '+ (oldEquipmentMachineId == machine.equipment_machine_id ? 'selected' : '') +'>'+ machine.label +'</option>');
                         });
+                        $machineSelect.prop('disabled', false); // Enable the select box after fetching
                         $machineSelect.trigger('change');
                     },
                     error: function(xhr, status, error) {

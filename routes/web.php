@@ -188,12 +188,24 @@ Route::group(['middleware' => ['auth','verified']],function(){
 Route::get('/test', [NotificationController::class, 'test'])->name('test');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::group(['middleware' => 'role:trainer|user'],function(){
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    });
+});
+
+Route::middleware('auth')->group(function () {
+    Route::group(['middleware' => 'role:admin'],function(){
+        Route::get('/profile/adminedit', [ProfileController::class, 'adminedit'])->name('profile.admin.edit');
+
+    });
+});
+
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
     Route::patch('/profile/edit', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/edit', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/profileDetails', [ProfileController::class, 'profileDetails'])->name('profile-details');
-
     Route::put('/notifications/read-all', function () {
         Auth::user()->unreadNotifications->markAsRead();
         return response()->json(['notisuccess' => 'success']);

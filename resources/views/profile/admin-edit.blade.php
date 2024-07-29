@@ -1,10 +1,4 @@
-{{-- @if(Auth::user()->role == 'admin')
-    @extends('layouts.adminLayout') --}}
-{{-- @else
-    @extends('layouts.userLayout')
-@endif --}}
-@extends('layouts.userLayout')
-
+@extends('layouts.adminLayout')
 @section('content')
     <div class="container py-4">
         <div class="row">

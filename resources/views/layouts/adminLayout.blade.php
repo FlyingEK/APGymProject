@@ -39,7 +39,7 @@
         </div><!-- Authentication -->
         <div class="ml-auto"></div>
         <div class = "d-flex align-items-center mx-3">
-            <a href={{route("profile.edit")}}>
+            <a href={{route("profile.admin.edit")}}>
                 <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('/img/user.jpg') }}" class="rounded " style="height:50px;width:50px;">
                 <span style="color:#192126;" class="Inter">{{ Auth::user()->username}}</span>
             </a>
@@ -60,7 +60,7 @@
             </a>
             <a class="nav-link collapsed"  href="{{route('issue-reported')}}">
                 <span class="material-symbols-outlined">
-                    supervisor_account
+                    construction
                     </span>  &nbsp&nbsp<span>Reported Issues</span><i class="fas fa-chevron-down ms-auto"></i>
             </a>
             <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
@@ -125,7 +125,7 @@
             </a>
             <ul id="badge-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="{{ route('achievement-create') }}">
+                    <a href="{{ route('achievement-all') }}">
                         <i class="bi bi-circle"></i><span>All Achievement Badges</span>
                     </a>
                 </li>

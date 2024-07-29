@@ -140,7 +140,6 @@ class WorkoutAnalyticController extends Controller
                 [
                 'gym_user_id' => $gymUserId,
                 'start_date' => now()->toDateString(),
-                'per' => $data['per'],
                 'status' => "active",
                 ]
             );
@@ -149,6 +148,7 @@ class WorkoutAnalyticController extends Controller
                 [
                 'goal_id' => $goal->goal_id,
                 'workout_hour' => $data['workout_hour'],
+                'per' => $data['per'],
                 'target_date' => $target_date,
                 'progress' => $progress,
                 ]

@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="pagetitle">
-    <h1>Add Achievement Badge</h1>
+    <h1>Edit Achievement Badge</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('achievement-all') }}">Achievement Badge</a></li>

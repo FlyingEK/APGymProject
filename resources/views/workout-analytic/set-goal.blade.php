@@ -57,14 +57,14 @@
                     <table class="w-100 goalInput mb-3" style="border:none;" id="dynamic_field_goal">
                         <tr>
                             <th style="width:60%;">Equipment</th>
-                            <th style="width:30%;">Targeted Weight</th>
-                            <th style="width:10%;"></th>
+                            <th style="width:35%;">Targeted Weight</th>
+                            <th style="width:5%;"></th>
                         <tr class="my-2">
                                 {{-- every row add a hidden rowid --}}
                                 @if($strengthGoal->isNotEmpty())
                                 @foreach($strengthGoal as $index => $goal)
                                 <tr id="row{{ $index + 1 }}" class="my-2">
-                                    <td > <select class="select2 form-control form-select mb-3" name="equipment_ids[]" id="equipment-name2" required>
+                                    <td > <select class="select2 form-control form-select mb-3" name="equipment_ids[]"  required>
                                         <option value="" data-has-weight="0" selected>Choose an equipment...</option>
                                         @foreach($allEquipment as $equip)
                                             <option value="{{ $equip->equipment_id }}" data-has-weight="{{ $equip->has_weight }}" {{$goal->equipment_id == $equip->equipment_id?"selected":""}}>{{ $equip->name }}</option>
@@ -79,9 +79,10 @@
                                         <td><button type="button" class="btn btn-danger btn_remove" id="{{ $index + 1 }}">X</button></td>
                                     @endif
                                     </tr>
+
                                 @endforeach
                                 @else
-                                    <tr id="row1" class="my-2">
+                                    <tr id="row0" class="my-2">
                                         {{-- <td><select class="select2 form-control form-select mb-3" name="equipment_ids[]" id="equipment-name2" required>
                                             <option value="" data-has-weight="0" selected>Choose an equipment...</option>
                                             @foreach($allEquipment as $equip)
@@ -92,7 +93,6 @@
                                     <td><input type="number" name="goalValues[]" placeholder="Weight" class="form-control" /></td> --}}
                                     <td></td><td></td>
                                     <td><button type="button" class="btn blueBtn" name="add" id="addGoal" style="padding: 6px 8px;">Add</button></td>  
-                                
                                     </tr>
                                 @endif
                             </td>
@@ -121,7 +121,11 @@
 
 <script>
 $(document).ready(function() {
-    $('#equipment-name2').select2({
+    // $('#equipment-name2').select2({
+    //     placeholder: 'Equipment',
+    // });
+
+    $('.select2').select2({
         placeholder: 'Equipment',
     });
    

@@ -72,6 +72,8 @@ class IssueReportController extends Controller
             'equipment_machine_id' => 'required_if:type,equipment|exists:equipment_machine,equipment_machine_id',
             'description' => 'nullable',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ],[
+            'equipment_machine_id.required_if' => 'Issue type is equipment. The equipment label field is required. '
         ]);
         $imagePath = null;
         if($request->hasFile('image')){

@@ -44,7 +44,7 @@
             @endif
         </div>
     </div>
-    @if($isCheckIn)
+    {{-- @if($isCheckIn)
     <div class="row mb-4">
         <div class="  col-12 d-flex justify-content-end" style="gap:10px;">
             <button type="button" class="myBtn btnFront btn btn-primary redBtn shadow-none">
@@ -52,6 +52,6 @@
             </button>
         </div>
     </div>
-    @endif
+    @endif --}}
 </div>
 @endsection
