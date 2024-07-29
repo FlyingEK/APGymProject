@@ -91,6 +91,7 @@ class AchievementController extends Controller
         } else {
             $imagePath = $achievement->image;
         }
+        $achievement->image = $imagePath;
         $achievement->condition = $request->input('condition');
         $achievement->save();
 

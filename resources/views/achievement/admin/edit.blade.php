@@ -13,7 +13,7 @@
 
 <div class="container rounded-2 shadow" style="background-color:white;position: relative;">
     <div class="pagetitle p-3">
-        <h1>Constraint Details</h1>
+        <h1>Achievement Badge Details</h1>
     </div>
     <form action="{{route('achievement-update', $achievement->achievement_id)}}" method="POST" enctype="multipart/form-data">
         @csrf

@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="pagetitle">
-    <h1>Add User</h1>
+    <h1>Create Trainer Account</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('user-all') }}">User</a></li>

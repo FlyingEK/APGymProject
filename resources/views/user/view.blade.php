@@ -53,8 +53,8 @@
             <div class="row mb-4">
                 <div class="col-lg-12 d-flex justify-content-end gap-2">
                     {{-- <button type="submit" class="btn blueBtn">Save Change</button> --}}
-                    <a onclick="confirmDelete()" class="btn redBtn">Deactivate User</a>
-                </div>
+                    <a class="btn redBtn" onclick="deactivateUser('{{$user->user_id}}')">Deactivate User</a>
+                    </div>
             </div>
         </form>
 
@@ -63,3 +63,70 @@
 </div>
 
 @endsection
+@push('script')
+<script>
+function deactivateUser(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn redBtn',
+            cancelButton: 'btn blueBtn'
+        },
+        confirmButtonText: 'Yes, deactive the user!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            setTimeout(() => {
+                token = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: '{{ route("user-deactivate") }}',
+                    type: 'POST',
+                    data: { 
+                        _token: token, 
+                        _method: 'PUT',
+                        id: id 
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'User has been deactivated successfully',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to deactivate user',
+                                timer: 1500,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to deactivate user',
+                            timer: 1500,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }, 1000);
+        }
+    });
+}
+
+</script>
+@endpush

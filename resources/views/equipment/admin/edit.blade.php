@@ -6,7 +6,7 @@
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('equipment-all') }}">Equipment</a></li>
-            <li class="breadcrumb-item active">Add Equipment</li>
+            <li class="breadcrumb-item active">Edit Equipment</li>
         </ol>
     </nav>
 </div>
