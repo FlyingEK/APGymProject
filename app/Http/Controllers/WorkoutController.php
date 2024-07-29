@@ -320,6 +320,7 @@ class WorkoutController extends Controller
                   ->orWhereNull('workout_habit.gym_user_id');
         })
         ->select(
+            'equipment.equipment_id',
             'equipment.*',
             'workout_habit.*',
             'strength_workout_habit.set as set',
@@ -346,9 +347,9 @@ class WorkoutController extends Controller
                 'equipment' => $equipment,
                 'message' => 'No workout habits found for this equipment.'
             ]);
+        }else{
+            $equipmentWithHabit->equipment_id = $equipmentId;
         }
-        
-
 
         return response()->json(['success' => true, 'equipment' => $equipmentWithHabit]);
     }       
@@ -455,8 +456,18 @@ class WorkoutController extends Controller
             return redirect()->back()->with('error', 'You can only queue for 2 equipment at a time.');
         }
 
+        #workout in progress
+        $workoutInProgress = Workout::where('gym_user_id', $gymUserId)
+        ->where('status', 'in_progress')
+        ->first();
+
+        if($workoutInProgress){
+            return redirect()->back()->with('error', 'You cannot access to other equipment while you are in workout.');
+        }
+
         $startTime = now();
         if($saveHabit == 1){
+           
             $workoutHabit = WorkoutHabit::updateOrCreate(
                 ['gym_user_id' => $gymUserId, 'equipment_id' => $request->equipment_id],
                 ['gym_user_id' => $gymUserId, 'equipment_id' => $request->equipment_id]
@@ -546,10 +557,15 @@ class WorkoutController extends Controller
             'duration.required_if' => 'The duration field is required.',
         ]);
 
-        $workout = Workout::with('gymUser.user')
-                ->where('equipment_machine_id', $request->machine_id)
-                ->where('status', 'in_progress')
-                ->first();
+            $workout = Workout::with('gymUser.user')
+            ->where('workout_id', $request->workout_id)
+            ->where('status', 'in_progress')
+            ->first();
+        
+            // $workout = Workout::with('gymUser.user')
+            // ->where('equipment_machine_id', $request->machine_id)
+            // ->where('status', 'in_progress')
+            // ->first();
 
 
         if (!$workout) {

@@ -163,7 +163,7 @@ $(document).ready(function () {
     var machine_id = button.data('machineid');
     $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
 
-
+        console.log(equipment_id);  
     $.ajax({
         url: '{{ route("workout-habit-details") }}',
         type: 'GET',
@@ -183,7 +183,6 @@ $(document).ready(function () {
                 }, 200); 
             }else{
                 const modal = $('#viewEquipmentHabit');
-
                 console.log(response.message);
                 modal.find('.loading').html(''); // Clear loading message or replace with actual content
                 modal.modal('show');

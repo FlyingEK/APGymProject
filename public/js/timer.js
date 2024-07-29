@@ -230,7 +230,7 @@ $(document).ready(function() {
             var seconds = parseInt(timeParts[2], 10);
             var totalMinutes = (hours * 60) + minutes + Math.floor(seconds / 60);
 
-            if(has_weight){
+            if(has_weight == 1){
                 $('#modalSet').val(setNo); // Example value for set
             }
             $('#modalDuration').val(totalMinutes); // Example value for duration
@@ -249,17 +249,17 @@ $(document).ready(function() {
         }, 1000);
     }
 
-    function submitEndWorkout(){
-        $('#endWorkoutForm').on('submit', function(e){
 
-            clearInterval(timerInterval);
-            timerInterval = null;
-            totalSecs = 0;
-            isTimerRunning = false;
-            $("#timer").text("00:00:00");
+    $('#endWorkoutForm').on('submit', function(e){
 
-        });
-    }
+        clearInterval(timerInterval);
+        timerInterval = null;
+        totalSecs = 0;
+        isTimerRunning = false;
+        $("#timer").text("00:00:00");
+
+    });
+    
 
     function endHold(button) {
         clearTimeout(holdTimeout);

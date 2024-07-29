@@ -88,6 +88,7 @@
 $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var equipment_id = button.data('id');
+    console.log(equipment_id);
     var share = button.data('share') == "1"?"1":"0"; // Convert to boolean by comparing to "1"
     var machine_id = button.data('machineid');
     $('#viewEquipmentHabit .loading').html('<strong>Loading...</strong><div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>');
@@ -117,6 +118,8 @@ $('#viewEquipmentHabit').on('shown.bs.modal', function (event) {
     });
 
     function displayDetails(equipment, modal) {
+        console.log(equipment);
+        console.log(equipment.equipment_id );
         if(share){
             modal.find('#machine_id').val(machine_id);
         }

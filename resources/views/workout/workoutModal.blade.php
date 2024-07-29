@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body border-0">
                 <div class="form-container">
-                    <form action="{{route('workout-end')}}" method="POST">
+                    <form action="{{route('workout-end')}}" id="endWorkoutForm" method="POST">
                         @csrf
                         @method('PUT')
                     <input type ="hidden" id="modalSet" name="set" value="">
