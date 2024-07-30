@@ -104,7 +104,7 @@
         </div>
 
         @endforeach
-        @if($equipmentsWithHabit)
+        @if($equipmentsWithHabit->isNotEmpty())
             <div class="row mt-3">
                 <div class="col-12 d-flex justify-content-end">
                     <a href="{{route('workout-habit-add')}}" class="btn redBtn">Add Workout Habit</a>

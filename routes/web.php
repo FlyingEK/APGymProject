@@ -26,7 +26,7 @@ Route::get('/', function () {
     } elseif ($user->role == 'trainer') {
         return redirect()->intended(route('gym-index'));
     } elseif ($user->role == 'admin') {
-        return redirect()->intended(route('equipment-all'));
+        return redirect()->intended(route('gym-log-admin'));
     }
 })->middleware(['auth', 'verified']);
 

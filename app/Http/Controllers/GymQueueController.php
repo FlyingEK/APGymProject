@@ -174,10 +174,12 @@ class GymQueueController extends Controller
     }
 
     public function callNextInEquipmentQueue($equipmentId){
+        $gymUserId = $this->getGymUserId();
         //call next in queue
         $nextInQueue = WorkoutQueue::with(['gymUser.user', 'workout'])
         ->where('status', 'queueing')
         ->where('equipment_id', $equipmentId)
+        ->where('gym_user_id', '!=', $gymUserId)
         ->whereDoesntHave('gymUser.queue', function ($query) {
             $query->where('status', 'reserved');
         })

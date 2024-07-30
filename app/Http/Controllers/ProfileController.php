@@ -71,7 +71,7 @@ class ProfileController extends Controller
              return response()->json([
                  'success' => true,
                  'user' => $user,
-                 'achievement' => $achievement,
+                 'achievement' => $achievement??null,
              ]);
          } else {
              return response()->json([

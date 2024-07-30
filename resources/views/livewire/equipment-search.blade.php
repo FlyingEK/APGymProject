@@ -8,7 +8,7 @@
     <div class="card equipment shadow-sm mt-2 p-2">
         <div class="row">
             <div class="col-5 ">
-                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('/img/treadmill.jpg') }}" alt="Work Order Image" ><br/>
+                    <img class="img-fluid equipmentImg" style="height: 100px;" src="{{ asset('storage/'.$equipment->image) }}" alt="Work Order Image" ><br/>
             </div>
             <div class="col-7" style="padding-left: 5px">
                 <div class=" mt-md-3 no-wrap">
@@ -24,12 +24,14 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                         {{$equipment->status}}
                     </div><br>
-                    <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
-                        {{$equipment->statusDetail['currentPersonInQueue']}} in queue
-                    </div>
-                    <div class = "myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
-                        Estimated wait time: {{$equipment->statusDetail['totalEstimatedTime']}} mins
-                    </div>
+                        @if($equipment->statusDetail['totalEstimatedTime']>0)
+                            <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                                {{$equipment->statusDetail['currentPersonInQueue']}} in queue
+                            </div>
+                            <div class = "myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                                Estimated wait time: {{$equipment->statusDetail['totalEstimatedTime']}} mins
+                            </div>
+                        @endif
                     @endif
                     <a href="{{route('equipment-view',$equipment->equipment_id)}}" class="stretched-link"></a>
                     @if ($isCheckIn)

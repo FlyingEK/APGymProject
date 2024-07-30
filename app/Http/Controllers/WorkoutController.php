@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\EquipmentReserved;
 use App\Models\GymUserAchievement;
 use App\Notifications\JoinedEquipmentSharing;
+use App\Http\Controllers\EquipmenController;
 
 use Exception;
 
@@ -205,8 +206,14 @@ class WorkoutController extends Controller
         ->where('status', 'queueing')
         ->get();
         // Apply status logic to queueEquipments
-        $queuedEquipments->each(function ($queue) {
+        // Instantiate the EquipmentController class
+        $equipmentController = new EquipmentController();
+
+
+        $queuedEquipments->each(function ($queue) use($equipmentController, $gymUserId){
             $queue->status = $queue->equipment->available_machines_count > 1 ? 'Available' : 'Not available';
+            $queue->statusDetail = $equipmentController->getInUseStatus($queue->equipment_id, $gymUserId);
+
         });
 
         $reservedEquipments = WorkoutQueue::where('gym_user_id', $gymUserId)->with(['equipment', 'equipmentMachine'])

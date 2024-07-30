@@ -819,6 +819,9 @@ body {
     border-radius: 50%;
 }
 
+.sm-text{
+    font-size: 13px;
+}
 
 .timer h1{
     font-size: 45px;

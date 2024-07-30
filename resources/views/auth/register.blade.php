@@ -32,12 +32,15 @@
             </div>
             <div class="mb-3">
                 <input type="email" class="form-control" placeholder="Email" name="email" value="{{ old('email') }}">
+                <div class = "sm-text text-danger">*Please use your APU email</div>
                 @error('email')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
             <div class="mb-3">
                 <input type="password" class="form-control" placeholder="Password" name="password">
+                <div class="sm-text text-danger">*Password must contain at least 8 characters.</div>
+                <div class="sm-text text-danger">*Password must contain at least one uppercase letter, one lowercase letter, one number and one special character.</div>
                 @error('password')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

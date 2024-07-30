@@ -165,7 +165,6 @@ class EquipmentController extends Controller
             $query->where('status', 'available');
         }])
         ->get();
-
         $allowSharing = collect(Equipment::getAllowSharingEquipment());
         $allowSharing = $allowSharing->filter(function ($item) {
             return $item->status !== 'available';
@@ -173,7 +172,7 @@ class EquipmentController extends Controller
         // Adding status to each equipment
         $gymUserId = Auth::user()->gymUser->gym_user_id;
         $equipment->each(function ($item) use ($gymUserId) {
-            $item->status = $item->available_machines_count > 1 ? 'Available' : 'Not available';
+            $item->status = $item->available_machines_count >= 1 ? 'Available' : 'Not available';
             $item->statusDetail = $this->getInUseStatus($item->equipment_id, $gymUserId);
         });
 

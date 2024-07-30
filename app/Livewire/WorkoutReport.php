@@ -66,15 +66,18 @@ class WorkoutReport extends Component
         $this->totalDays = $workouts->groupBy('date')->count();
         $totalTimeMinutes = $workouts->sum('duration');
         $this->totalTime = round($totalTimeMinutes / 60);
-        $this->mostUsedEquipment = $workouts->groupBy('equipment_machine_id')
-            ->map(function ($group) {
-                $totalDurationMinutes = $group->sum('duration');
-
-                return [
-                    'duration' => round($totalDurationMinutes / 60), // convert to hours and round up
-                    'image' => $group->first()->equipmentMachine->equipment->image
-                ];
-            })->sortDesc()->take(3);
+        $this->mostUsedEquipment = $workouts->groupBy(function ($workout) {
+            return $workout->equipmentMachine->equipment_id;
+        })->map(function ($group) {
+            $totalDurationMinutes = $group->sum('duration');
+        
+            return [
+                'duration' => round($totalDurationMinutes / 60), // convert to hours and round up
+                'image' => $group->first()->equipmentMachine->equipment->image
+            ];
+        })->sortDesc()->take(3);
+        
+        
     }
 
     public function getWeeklyReport()

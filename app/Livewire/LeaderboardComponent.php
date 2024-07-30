@@ -28,7 +28,7 @@ class LeaderboardComponent extends Component
     {
         $this->currentUser = Auth::user();
         $this->getAllEquipments();
-        // $this->updateLeaderboard();
+        $this->updateLeaderboard();
 
     }
 
@@ -198,7 +198,7 @@ class LeaderboardComponent extends Component
                 return $item->gym_user_id == $gymUserId;
             });
             
-            $this->currentUserOverallPosition = $position != false ? $position + 1 : "N/A";
+            $this->currentUserOverallPosition = $position !== false ? $position + 1 : "N/A";
 
         }
     }

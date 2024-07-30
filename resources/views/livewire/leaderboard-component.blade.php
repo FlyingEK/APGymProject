@@ -211,6 +211,7 @@ $(document).ready(function () {
 
   function displayDetails(user, achievement, modal) {
       modal.find('.username').text(user.username);
+      modal.find('.profileImg').attr('src', '{{ asset('/img/user.jpg') }}');
       if(user.image) {
           modal.find('.profileImg').attr('src', '{{ asset('storage') }}/' + user.image);
       }

@@ -52,7 +52,7 @@ class EquipmentSearch extends Component
         }
 
         $equipments->each(function ($item)  use ($gymUserId){
-            $item->status = $item->available_machines_count > 1 ? 'Available' : 'Not available';
+            $item->status = $item->available_machines_count >= 1 ? 'Available' : 'Not available';
             $item->statusDetail = $this->getInUseStatus($item->equipment_id, $gymUserId);
 
         });

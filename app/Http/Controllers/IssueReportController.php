@@ -42,8 +42,7 @@ class IssueReportController extends Controller
 
     public function reportedIssue()
     {
-        $openIssues = Issue::where('status', "pending")
-        ->orWhere('status', 'reported')
+        $openIssues = Issue::where('status', 'reported')
         ->orWhere('status', 'resolved')
         ->get();
 
@@ -174,7 +173,7 @@ class IssueReportController extends Controller
         $data = $request->validate([
             'status' => 'required|in:reported,resolved,rejected',
         ]);
-        $issue->update($data);
+       $issue->update($data);
         if($data['status'] == 'resolved' || $data['status'] == 'rejected' && $issue->equipment_machine_id){
             $issue->equipmentMachine()->update([
                 'status' => 'available'
@@ -193,8 +192,9 @@ class IssueReportController extends Controller
                 }
             }
         }
-        if($request->has('comment')){
-            if($issue->comment()){
+
+        if($request->comment != null){
+            if($issue->comment && $issue->comment->comment_id ){
                 $issue->comment()->update([
                     'comment' => $request->comment,
                     'created_by' => Auth::user()->user_id,

@@ -25,12 +25,14 @@
                         <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                             {{$item->status}}
                         </div><br>
+                        @if($item->statusDetail['totalEstimatedTime']>0)
                         <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                             {{$item->statusDetail['currentPersonInQueue']}} in queue
                         </div>
                         <div class = "myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                             Estimated wait time: {{$item->statusDetail['totalEstimatedTime']}} mins
                         </div>
+                    @endif
                     @endif
                     <a href="{{route('equipment-view', $item->equipment_id)}}" class="stretched-link"></a>
                     @if($isCheckIn)

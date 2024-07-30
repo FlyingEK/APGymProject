@@ -129,6 +129,14 @@
                     <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
                         {{$equipment->status}}
                     </div><br>
+                    @if($equipment->status != 'Available')
+                    <div class="myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                        {{$equipment->statusDetail['currentPersonInQueue']}} in queue
+                    </div>
+                    <div class = "myBtn btn m-2 equipmentTag btn-sm btn-outline-{{$color}} shadow-none">
+                        Estimated wait time: {{$equipment->statusDetail['totalEstimatedTime']}} mins
+                    </div>
+                    @endif
                     @if($equipment->status == 'Available' && !$workout)
                     <div class="d-flex justify-content-end">
                         <button type="button" class="start myBtn btnFront btn btn-primary redBtn shadow-none" data-id={{$equipment->workout_queue_id}}>
