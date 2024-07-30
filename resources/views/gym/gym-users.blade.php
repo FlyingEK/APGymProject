@@ -14,7 +14,7 @@
       @forelse ($currentUsers as $user)
       <tr data-bs-toggle="modal" data-bs-target="#viewProfile" data-id={{$user->gymUser->user->user_id}}>
         <td class="player-info">
-          <img class="leaderboardImg rounded-circle" src="{{ asset('storage/'.$user->gymUser->user->image) }}" alt="profile">
+          <img class="leaderboardImg rounded-circle" src="{{$user->gymUser->user->image?asset('storage/'.$user->gymUser->user->image):asset('/img/user.jpg')}}" alt="profile">
           {{ $user->gymUser->user->first_name }} {{ $user->gymUser->user->last_name }}
         </td>
         <td class="">{{$user->entered_at}}</td>

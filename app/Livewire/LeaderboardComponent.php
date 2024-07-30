@@ -95,7 +95,10 @@ class LeaderboardComponent extends Component
             ->groupBy('gym_user_id')
             ->orderBy('total_duration', 'desc')
             ->get();
-
+            $overallLeaderboard->transform(function ($item) {
+                $item->total_duration = round($item->total_duration / 60, 1);
+                return $item;
+            });
         if(!$overallLeaderboard->isEmpty()){
             $this->topOverall = $overallLeaderboard->take(3)->toArray();
             $this->restOverall = $overallLeaderboard->slice(3);
@@ -118,7 +121,10 @@ class LeaderboardComponent extends Component
             ->groupBy('gym_user_id')
             ->orderBy('total_duration', 'desc')
             ->get();
-
+            $dailyLeaderboard->transform(function ($item) {
+                $item->total_duration = round($item->total_duration / 60, 1);
+                return $item;
+            });
         if(!$dailyLeaderboard->isEmpty()){
             $this->topOverall = $dailyLeaderboard->take(3)->toArray();
             $this->restOverall = $dailyLeaderboard->slice(3);

@@ -205,6 +205,8 @@ class WorkoutController extends Controller
         }])
         ->where('status', 'queueing')
         ->get();
+
+
         // Apply status logic to queueEquipments
         // Instantiate the EquipmentController class
         $equipmentController = new EquipmentController();
@@ -637,7 +639,7 @@ class WorkoutController extends Controller
             ->where('gym_user_id', $workoutQueue->gym_user_id);
         })
         ->first();
-    
+    dd($overallGoal);
         if ($overallGoal) {
             $overallGoal->progress = intval($data['duration']) / 60 + $overallGoal->progress;
             if ($overallGoal->progress >= $overallGoal->workout_hour) {

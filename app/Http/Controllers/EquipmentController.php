@@ -43,7 +43,7 @@ class EquipmentController extends Controller
         $equipmentWorkouts = Workout::whereIn('equipment_machine_id', $equipmentMachines)
                         ->whereIn('status', ['in_progress', 'in_use'])
                         ->get();
-    
+
         $queueWorkouts = WorkoutQueue::where('equipment_id', $equipmentId)
                                      ->where('status', 'queueing')
                                      ->orWhere('status', 'reserved')
@@ -60,6 +60,7 @@ class EquipmentController extends Controller
             if ($currentTime->lt($estimatedEndTime)) {
                 $remainingTime = abs($estimatedEndTime->diffInMinutes($currentTime));
                 $totalEstimatedTime += $remainingTime;
+
             }
         }
     $a = $totalEstimatedTime;
@@ -172,6 +173,7 @@ class EquipmentController extends Controller
         // Adding status to each equipment
         $gymUserId = Auth::user()->gymUser->gym_user_id;
         $equipment->each(function ($item) use ($gymUserId) {
+            
             $item->status = $item->available_machines_count >= 1 ? 'Available' : 'Not available';
             $item->statusDetail = $this->getInUseStatus($item->equipment_id, $gymUserId);
         });

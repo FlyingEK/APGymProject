@@ -51,16 +51,17 @@
         <div class="row mb-4">
             <div class="col-5 label">Status:</div>
             <div class="col-7 ">
-                <span class=" badge {{ $color}} rounded-pill">Pending</span>
+                <span class=" badge {{ $color}} rounded-pill">{{$issue->status}}</span>
             </div>
         </div>
         @if($issue->comment)
         <div class="row mb-3 d-flex justify-content-center">
             <div class="text-success">Reply: {{$issue->comment->comment}}</div>
         </div>
+        @endif
         <div class="row mt-4 mb-3">
             <div class="  col-12 d-flex justify-content-end" style="gap:10px;">
-                @if ($issue->status == 'pending')
+                @if ($issue->status== 'pending')
                     <a href="{{ route('issue-edit', $issue->issue_id) }}" class="btn formBtn myBtn blueBtn">Edit</a>
                     <form action="{{ route('issue-cancel', $issue->issue_id) }}" method="POST" id="cancelIssueForm" >
                         @csrf
@@ -71,7 +72,7 @@
 
             </div>
         </div>
-        @endif
+        
     </div>
 </div>
 @endsection

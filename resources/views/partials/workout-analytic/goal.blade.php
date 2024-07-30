@@ -74,7 +74,7 @@
 <script>
 @if($overallGoal)
 const progressPercent = {{ round($overallGoal->progress / $overallGoal->workout_hour * 100) }} > 100 ? 100 : {{ round($overallGoal->progress / $overallGoal->workout_hour * 100) }};
-
+console.log(progressPercent);
     function setProgress(element, progress) {
     const radius = element.querySelector('.fg').r.baseVal.value;
     const circumference = radius * 2 * Math.PI;
@@ -82,25 +82,11 @@ const progressPercent = {{ round($overallGoal->progress / $overallGoal->workout_
 
     element.style.setProperty('--progress', progress);
     element.querySelector('.fg').style.strokeDashoffset = offset;
-    element.querySelector('#progress-value').textContent = `${Math.round(progress / 100 * 30)} hours`; // Adjust this calculation based on your total value
-}
-
-function animateProgress(element, targetProgress, duration) {
-    let start = null;
-    const initialProgress = 0;
-    const step = (timestamp) => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const currentProgress = initialProgress + progress * (targetProgress - initialProgress);
-        setProgress(element, currentProgress * 100);  
-        if (progress < 1) {
-            window.requestAnimationFrame(step);
-        }
-    };
-    window.requestAnimationFrame(step);
+    element.querySelector('#progress-value').textContent = `${Math.round(progress / 100 * 30)} hours`; 
 }
 
 const circularProgress = document.querySelector('.circular-progress');
-animateProgress(circularProgress, progressPercent, 1700);
+setProgress(circularProgress,progressPercent);
+
 @endif
 </script>

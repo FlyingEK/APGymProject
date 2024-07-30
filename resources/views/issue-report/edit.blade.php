@@ -97,10 +97,11 @@
         
 
         var oldEquipmentMachineId = '{{ $issue->equipment_machine_id }}';
+        console.log(oldEquipmentMachineId);
 
     function populateField() {
             var type = $('#issueType').val();
-            var $equipmentSelect = $('#equipment-name');
+            var $equipmentSelect = $('#equipment-name3');
             var $machineSelect = $('#equipment_machine');
 
             if (type == 'equipment') {
@@ -112,7 +113,7 @@
             }
         }
         function populateMachines() {
-            var equipmentId = $('#equipment-name').val();
+            var equipmentId = $('#equipment-name3').val();
             var $machineSelect = $('#equipment_machine');
             $machineSelect.empty();
             $machineSelect.append('<option value="" selected>Choose an equipment label...</option>');
@@ -123,6 +124,8 @@
                     type: 'GET',
                     data: { equipment_id: equipmentId },
                     success: function(data) {
+                    console.log(data);
+
                         $.each(data, function(index, machine) {
                             $machineSelect.append('<option value="'+ machine.equipment_machine_id +'" '+ (oldEquipmentMachineId == machine.equipment_machine_id ? 'selected' : '') +'>'+ machine.label +'</option>');
                         });
@@ -139,7 +142,7 @@
             clearTimeout(this.populateTimeout);
             this.populateTimeout = setTimeout(populateMachines, 300);
         }
-        $('#equipment-name').select2({
+        $('#equipment-name3').select2({
             placeholder: 'Select the equipment',
         });
 
@@ -153,7 +156,7 @@
 
         $('#issueType').on('change',populateField);
 
-        $('#equipment-name').on('change', function(){
+        $('#equipment-name3').on('change', function(){
             clearTimeout(this.populateTimeout);
             this.populateTimeout = setTimeout(populateMachines, 300);
         });

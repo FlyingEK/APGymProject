@@ -97,20 +97,24 @@
                 <tbody>
                     <!-- Repeat this block for the first 10 users -->
                     @forelse($restOverall as $index => $leader)
-                        <tr data-bs-toggle="modal" data-bs-target="#viewProfile" data-id= "{{ $leader->gym_user->user->user_id}}">
-                            <td class="rank">{{ $index + 4 }}</td>
+                        <tr class="mb-5" data-bs-toggle="modal" data-bs-target="#viewProfile" data-id= "{{ $leader->gymUser->user->user_id}}">
+                            <td class="rank">{{ $index +1 }}</td>
                             <td class="player-info">
-                                <img class="leaderboardImg rounded-circle" src="https://cdn-icons-png.flaticon.com/512/186/186037.png" alt="Sebastian">
-                                {{ $leader->gym_user->user->name }}
+                                <img class="leaderboardImg rounded-circle" src="{{$leader->gymUser->user->image?asset('storage/'.$leader->gymUser->user->image):asset('/img/user.jpg')}}" alt="Sebastian">
+                                {{ $leader->gymUser->user->username }}
                             </td>
-                            <td class="score">{{ $leader->result }}</td>
-                        </tr>
+                            @php
+                                $result = isset($leader['max_weight']) ? $leader['max_weight'] : $leader['total_duration'];
 
+                            @endphp
+                            <td class="score">{{ $result  }}</td>
+                        </tr>
                         @empty
                         <tr>
                             <td colspan=3 class="text-center"> No user yet</td>
                         </tr>
                     @endforelse
+                    
                 </tbody>
             </table>
         </div>

@@ -2,7 +2,7 @@
 @section('content')
 <div class="content container p-1">
     <p> {{ !isset($queuedEquipments) }}</p>
-    @if(!$workout && (!$reservedEquipments ||$reservedEquipments->isEmpty() ) && (!$queuedEquipments ||$queuedEquipments->isEmpty()))
+    @if(!$workout && (!$reservedEquipments ||is_null($reservedEquipments) ) && (!$queuedEquipments ||$queuedEquipments->isEmpty()))
         <div class="row mt-3">
             <div class="page-title" style="padding-right: 0px;">You are currently not using or queueing for any equipments </div>
             <br>
@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <div class="row mb-4">
                         <div class="col-5">
-                            <h4>{{$workout->equipmentMachine->equipment->name}} </h4>
+                            <h4>{{$workout->equipmentMachine->equipment->name}} <span style="text-decoration: underline;">#{{$workout->equipmentMachine->label}}</span></h4>
                         </div>
                         <div class="col-7">
                             <div class=" sharing d-flex justify-content-end">
@@ -109,7 +109,7 @@
     </div>
     @endif
 
-    @if(!$queuedEquipments->isEmpty())
+    @if($queuedEquipments->isNotEmpty())
     <div class="row mt-3">
         <div class="page-title" style="padding-right: 0px;">Queued Equipment</div>
     </div>
@@ -177,8 +177,8 @@
 
 window.workoutStartRoute = '{{ route("workout-start") }}'; // Pass the route URL to a global JavaScript variable
 window.workoutIndex = '{{ route("workout-index") }}'; // Pass the route URL to a global JavaScript variable
-window.has_weight;
-window.workout_id;
+window.has_weight = '';
+window.workout_id ='';
 @if($workout && $workout->equipmentMachine && $workout->equipmentMachine->equipment)
     window.has_weight = "{{ $workout->equipmentMachine->equipment->has_weight }}";
     window.workout_id = "{{$workout->workout_id}}";
