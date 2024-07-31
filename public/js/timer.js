@@ -76,7 +76,7 @@ $(document).ready(function() {
         if (!timerInterval) {
             Swal.fire({
                 title: "Start workout?",
-                html: "<p>Please proceed to the treadmill labeled <strong style='color: red;'>"+machineLabel+"</strong></p>",
+                html: "<p>Please proceed to the equipment labeled <strong style='color: red;'>"+machineLabel+"</strong></p>",
                 imageUrl: '/img/workoutIcon.png',
                 imageWidth:70,
                 imageHeight: 70,
