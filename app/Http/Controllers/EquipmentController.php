@@ -208,7 +208,7 @@ class EquipmentController extends Controller
             $query->where('status', 'available');
         }])
         ->findOrFail($id);
-        $equipment->status = $equipment->available_machines_count > 1 ? 'Available' : 'Not available';
+        $equipment->status = $equipment->available_machines_count >= 1 ? 'Available' : 'Not available';
 
         return view('equipment.view', compact('isCheckIn','equipment'));
     }
@@ -217,11 +217,11 @@ class EquipmentController extends Controller
     {
         $equipmentId = $request->input('id');
 
-        $equipment = Equipment::find($equipmentId);
-
+        $equipment = Equipment::with('equipmentMachines')->find($equipmentId);
         if ($equipment) {
             $equipment->is_deleted = true;
             $equipment->save();
+            EquipmentMachine::where('equipment_id', $equipmentId)->delete();
             return response()->json(['success' => true]);
         } else {
             return response()->json(['success' => false]);
@@ -238,7 +238,7 @@ class EquipmentController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'category' => 'required|in:upper body machines,leg machines,cardio machines,free weightss',
+            'category' => 'required|in:upper body machines,leg machines,cardio machines,free weights',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'quantity' => 'nullable|integer',
             'tutorial_youtube' => 'nullable|url|max:2083',
@@ -290,7 +290,7 @@ class EquipmentController extends Controller
          // Save the equipment labels
          if ($request->has('machineLabels')) {
             foreach ($request->machineLabels as $label) {
-                $equipment->equipmentMachines()->create(['label' => $label]);
+                $equipment->equipmentMachines()->create(['label' => $label, 'status' => 'available']);
             }
         }
 

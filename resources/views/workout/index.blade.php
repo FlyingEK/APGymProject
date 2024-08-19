@@ -174,7 +174,19 @@
 @stop
 @push('script')
 <script>
-
+@if(session('workoutSuccess'))
+    Swal.fire({
+        title: "Workout Completed!",
+        text: "You are stronger than you think.",
+        imageUrl: '/img/tada.png',
+        imageWidth: 60,
+        imageHeight: 60,
+        imageAlt: "Tada",
+        customClass: {
+            confirmButton: 'btn redBtn'
+        }
+    });
+@endif
 window.workoutStartRoute = '{{ route("workout-start") }}'; // Pass the route URL to a global JavaScript variable
 window.workoutIndex = '{{ route("workout-index") }}'; // Pass the route URL to a global JavaScript variable
 window.has_weight = '';
@@ -184,7 +196,6 @@ window.workout_id ='';
     window.workout_id = "{{$workout->workout_id}}";
 @endif
 
-console.log(has_weight, workout_id);
 
 $('#removeQueue').submit(function(e){
     e.preventDefault();
@@ -249,19 +260,7 @@ $('#viewProfile').on('shown.bs.modal', function (event) {
       }
   }
 
-@if(session('workoutSuccess'))
-    Swal.fire({
-        title: "Workout Completed!",
-        text: "You are stronger than you think.",
-        imageUrl: '/img/tada.png',
-        imageWidth: 60,
-        imageHeight: 60,
-        imageAlt: "Tada"
-        customClass: {
-            confirmButton: 'btn redBtn'
-        }
-    });
-@endif
+
 </script>
 @endpush
 

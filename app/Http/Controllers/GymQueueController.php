@@ -261,8 +261,8 @@ class GymQueueController extends Controller
             $totalDaysCheckedIn = GymQueue::where('gym_user_id', $gymUser->gym_user_id)
             ->whereNotNull('entered_at')
             ->select(DB::raw('DATE(entered_at) as date'))
-            ->groupBy(DB::raw('DATE(entered_at)'))
-            ->count();
+            ->distinct()
+            ->count(DB::raw('DATE(entered_at)'));
 
             // Define the achievements with their conditions
             $achievements = [
@@ -270,7 +270,6 @@ class GymQueueController extends Controller
             3 => 30,  
             4 => 100,  
             ];
-
             foreach ($achievements as $achievementId => $requiredDays) {
                 // Check if the user already has this achievement
                 if (!$gymUser->gymUserAchievement()->where('achievement_id', $achievementId)->exists()) {

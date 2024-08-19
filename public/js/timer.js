@@ -132,11 +132,7 @@ $(document).ready(function() {
                         });
                     }
                 });
-                    // $('#ongoingWorkout').removeClass('d-none');
-                    // $("#workoutStatus").html('Working Out');
-                    // $("#setNo").html("Set "+setNo);
-                    // $('.turnEquipment').addClass('d-none');
-                    //timerInterval = setInterval(incTimer, 1000);
+
                 }else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel

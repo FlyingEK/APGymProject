@@ -113,8 +113,8 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         var notificationsDropdown = document.getElementById('notificationsDropdown');
-
-        notificationsDropdown.addEventListener('click', function () {
+        if(notificationsDropdown){
+            notificationsDropdown.addEventListener('click', function () {
             // Make an AJAX request to mark notifications as read
             fetch('{{ route('notifications.readAll') }}', {
                 method: 'PUT',
@@ -135,6 +135,8 @@
             })
             .catch(error => console.error('Error:', error));
         });
+        }
+        
     });
 </script>
 @stack("script")

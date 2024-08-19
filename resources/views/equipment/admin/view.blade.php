@@ -139,11 +139,13 @@ function deleteEquipment(id) {
                         }
                     },
                     error: function (xhr, status, error) {
+                        console.log(xhr.responseText); // Log the error message
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
                             text: 'Failed to delete equipment',
-                            timer: 1500,
+                            timer: 3000,
                             showConfirmButton: false,
                         }).then(() => {
                             location.reload();
